@@ -19,7 +19,7 @@
 </div>
 
 > [!IMPORTANT]
-> **简体中文汉化版。** 本仓库是 [BrenninhoTools/V-Converter](https://github.com/BrenninhoTools/V-Converter) 的汉化分支，由 [YLuzew](https://github.com/YLuzew) 和 [LS_Xenith](https://github.com/LS_Xenith)（玄虚）汉化。
+> **简体中文汉化版。** 本仓库是 [BrenninhoTools/V-Converter](https://github.com/BrenninhoTools/V-Converter) 的汉化分支，由 [YLuzew](https://github.com/YLuzew) 和 [LS_Xenith](https://github.com/LSVoiid)（玄虚）汉化。
 > 汉化只改字符串字面量（界面文案），转换逻辑、生成器、文件格式一行未动 —— 用它转出来的模组和原版完全一样。
 > 覆盖 Android / Windows / Linux / macOS / iOS 共用的那套 Compose 界面，桌面图标名也改成了「V-转换器」。漏翻、翻错的，提到[本仓库的 issue](https://github.com/YLuzew/V-Converter/issues)。
 
@@ -506,7 +506,7 @@ iOS 版是把桌面版那套界面用 Compose Multiplatform 重新构建的（iP
 
 ### 致谢
 
-**简体中文汉化**：[YLuzew](https://github.com/YLuzew)（发起与维护）、[LS_Xenith](https://github.com/LS_Xenith)（玄虚，汉化）
+**简体中文汉化**：[YLuzew](https://github.com/YLuzew)（发起与维护）、[LS_Xenith](https://github.com/LSVoiid)（玄虚，汉化）
 
 - 压缩包用 `java.util.zip`（ZIP）和 [7-Zip-JBinding-4Android](https://github.com/omicronapps/7-Zip-JBinding-4Android) / [7-Zip-JBinding](https://sevenzipjbind.sourceforge.net/)（Windows、Linux 和 Intel Mac 上解 RAR、RAR5、7z；Apple Silicon 的 Mac 上这些包得先解压）解
 - 桌面版谱面编辑器用 [VorbisSPI](https://github.com/pdudits/soundlibs) 和 MP3SPI 播 `.ogg` 和 `.mp3`；iOS 上 `.ogg` 用 Sean Barrett 的 [stb_vorbis](https://github.com/nothings/stb)（公有领域）解码

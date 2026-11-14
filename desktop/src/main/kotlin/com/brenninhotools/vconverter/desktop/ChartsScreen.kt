@@ -191,7 +191,7 @@ private fun Stats(preview: ChartPreview, accent: Color) {
         "玩家音符" to preview.playerNotes.toString(),
         "对手音符" to preview.opponentNotes.toString(),
         "Holds" to preview.holdNotes.toString(),
-        "Peak NPS" to formatBpm(preview.peakNps),
+        "峰值 NPS" to formatBpm(preview.peakNps),
         "Length" to formatDuration(preview.length),
         "BPM" to if (low == high) formatBpm(low) else "${formatBpm(low)}–${formatBpm(high)}",
         "Time signature" to preview.signatures.joinToString(" · ") { "$it/4" },
@@ -227,7 +227,7 @@ private fun Compare(before: ChartPreview, after: ChartPreview) {
         verticalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         Text(
-            if (checks.isEmpty()) "✓ 所有音符、长条和 BPM 变化都完整过来了。" else "转换后有些数量变了：",
+            if (checks.isEmpty()) "✓ Every note, hold and BPM change made it across." else "转换后有些数量变了：",
             style = MaterialTheme.typography.bodySmall,
             color = Palette.Text
         )
@@ -242,10 +242,10 @@ private fun OptionsCard(files: FileTabState, accent: Color) {
     val sample = files.before.firstOrNull()
     val enabled = !files.busy
     Card {
-        SectionTitle("Options", accent)
+        SectionTitle("选项", accent)
         Text("Empty fields keep what the chart already uses.", style = MaterialTheme.typography.bodySmall, color = Palette.Muted)
         if (ChartField.SONG_NAME in fields) {
-            CompactField(tweaks.songName, { v -> files.updateTweaks { it.copy(songName = v) } }, "Song name", accent, enabled, Modifier.fillMaxWidth())
+            CompactField(tweaks.songName, { v -> files.updateTweaks { it.copy(songName = v) } }, "歌曲名", accent, enabled, Modifier.fillMaxWidth())
         }
         if (ChartField.ARTIST in fields) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

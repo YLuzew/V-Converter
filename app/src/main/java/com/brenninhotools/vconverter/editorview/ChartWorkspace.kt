@@ -124,13 +124,13 @@ fun ChartToolbar(state: ChartEditorState, modifier: Modifier = Modifier) {
     val position = state.position
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            ToolButton(EditorIcons.ToStart, "Go to start") { state.seek(0.0) }
+            ToolButton(EditorIcons.ToStart, "回到开头") { state.seek(0.0) }
             ToolButton(EditorIcons.Back, "上一个小节") { state.jumpMeasure(-1) }
             ToolButton(if (state.playing) EditorIcons.Pause else EditorIcons.Play, if (state.playing) "Pause" else "Play", active = state.playing) { state.togglePlay() }
             ToolButton(EditorIcons.Forward, "下一个小节") { state.jumpMeasure(1) }
             ToolButton(EditorIcons.Undo, "Undo", enabled = state.canUndo) { state.undo() }
             ToolButton(EditorIcons.Redo, "Redo", enabled = state.canRedo) { state.redo() }
-            ToolButton(EditorIcons.ZoomOut, "Zoom out") { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.25f) }
+            ToolButton(EditorIcons.ZoomOut, "缩小") { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.25f) }
             ToolButton(EditorIcons.ZoomIn, "Zoom in") { state.zoom = (state.zoom * 1.25f).coerceAtMost(6f) }
             ToolButton(if (state.hitsounds) EditorIcons.Sound else EditorIcons.Mute, "Hitsounds", active = state.hitsounds) { state.hitsounds = !state.hitsounds }
             CompactChoice("Snap", state.snap, state.snaps.map { it to "1/$it" }) { state.snap = it }

@@ -85,7 +85,7 @@ class PsychToCodenameMod(
         report.stat("Files", written)
         if (scan.placeholders.isNotEmpty()) report.section("已移除空的占位文件夹", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
         if (scan.ignored.isNotEmpty()) report.section("其他文件已跳过", limited(scan.ignored.map(scan::relative)))
-        if (scan.otherRoots.isNotEmpty()) report.warn("压缩包里不止一个模组。只转换了「${scan.root.ifEmpty { "/" }}\" was converted; also found: ${scan.otherRoots.joinToString()}.")
+        if (scan.otherRoots.isNotEmpty()) report.warn("The archive has more than one mod. Only \"${scan.root.ifEmpty { "/" }}\" was converted; also found: ${scan.otherRoots.joinToString()}.")
         return ModConversionResult(written, report.build())
     }
 
@@ -266,7 +266,7 @@ class PsychToCodenameMod(
                     (source.song.events + song.extraEvents).filter { it.name == "Change Character" }.forEach { chars += it.value2.trim() }
                 }
                 mergeDifficulties(result.report.warnings, result.charts.keys).forEach { report.warn("Song ${song.id}: $it") }
-                result.report.sections.filter { it.title != "Difficulties" }.forEach { report.section("Song ${song.id} · ${it.title}", it.lines) }
+                result.report.sections.filter { it.title != "难度" }.forEach { report.section("Song ${song.id} · ${it.title}", it.lines) }
                 if (song.audio.none { it.substringAfterLast('/').startsWith("Inst", ignoreCase = true) }) report.warn("Song ${song.id}: no Inst audio found in songs/${song.id}/.")
                 song.audio.forEach { copy(it, "songs/${song.id}/song/${it.substringAfterLast('/')}") }
             } catch (e: Exception) {
@@ -298,7 +298,7 @@ class PsychToCodenameMod(
                 val atlas = animationPath?.let { path ->
                     val spritemaps = atlasPaths.filter { it != path && AnimateAtlases.isAtlasFile(it.substringAfterLast('/')) }.sortedBy { it.lowercase() }
                     runCatching { AnimateAtlas.parse(files.readText(path), spritemaps.map { files.readText(it) }) }
-                        .onFailure { report.warn("Character $id: Animate 图集 could not be read (${it.message}).") }
+                        .onFailure { report.warn("Character $id: Animate atlas could not be read (${it.message}).") }
                         .getOrNull()
                 }
                 val result = PsychToCodenameCharacter.convert(id, character, slot, atlas, atlasFiles = if (animationPath != null) atlasPaths.map { it.substringAfterLast('/') } else emptyList())
@@ -348,14 +348,14 @@ class PsychToCodenameMod(
         menu.forEach { (name, character) ->
             val result = PsychToCodenameWeek.menuCharacter(name, character)
             result.files.forEach { write(it.path, it.text) }
-            result.report.warnings.forEach { report.warn("周目人物 $name: $it") }
+            result.report.warnings.forEach { report.warn("Week character $name: $it") }
         }
-        if (locked.isNotEmpty()) report.warn("周目锁定（weekBefore/startUnlocked）在 Codename 里没有对应物，所以这些周目永远解锁：${locked.joinToString()}.")
+        if (locked.isNotEmpty()) report.warn("Week locking (weekBefore/startUnlocked) has no Codename equivalent, so these weeks are always unlocked: ${locked.joinToString()}.")
         if (storyWeeks.isNotEmpty()) write("data/weeks/weeks.txt", storyWeeks.joinToString("\n") + "\n")
         val loose = songs.map { it.id }.filter { it !in freeplay && it !in hidden }
         val list = (freeplay + loose).distinct().filter { id -> songs.any { it.id == id } }
         if (list.isNotEmpty()) write("data/config/freeplaySonglist.txt", list.joinToString("\n") + "\n")
-        if (hidden.isNotEmpty()) report.section("Freeplay", listOf("Psych 里从自由游玩隐藏的歌曲（${hidden.joinToString()}) were left out of data/config/freeplaySonglist.txt."))
+        if (hidden.isNotEmpty()) report.section("Freeplay", listOf("Songs hidden from freeplay in Psych (${hidden.joinToString()}) were left out of data/config/freeplaySonglist.txt."))
     }
 
     private fun description(name: String): String? {
@@ -387,7 +387,7 @@ class PsychToCodenameMod(
         if (handled.isNotEmpty()) report.section("Events", handled)
         val unhandled = usedEvents.keys.filter { it !in names || (PsychToCodenameEvents.script(it) == null && modEvents.keys.none { k -> k.equals(it, true) }) }
             .filter { it !in PsychToCodenameChart.stageEvents }
-        if (unhandled.isNotEmpty()) report.warn("这个模组里没有脚本的事件（${unhandled.joinToString()}) are kept in the charts but nothing handles them in Codename.")
+        if (unhandled.isNotEmpty()) report.warn("Events with no script in this mod (${unhandled.joinToString()}) are kept in the charts but nothing handles them in Codename.")
     }
 
     private fun convertNoteTypes() {
@@ -415,13 +415,13 @@ class PsychToCodenameMod(
             val builtin = PsychToCodenameEvents.noteTypeScript(name, hurt)
             if (builtin != null) {
                 write("data/notes/$name.hx", builtin)
-                notes += "\"$name\" is recreated by data/notes/$name.hx" + if (name == "Hurt Note" && hurt == null) " (tinted dark, since the mod has no HURTNOTE_assets image)" else ""
+                notes += "\"$name\" is recreated by data/notes/$name.hx" + if (name == "Hurt Note" && hurt == null) "（染成深色，因为模组里没有 HURTNOTE_assets 图片）" else ""
             } else if (name !in setOf("Alt Anim Note", "No Anim Note")) {
                 missing += name
             }
         }
         if (notes.isNotEmpty()) report.section("Note types", notes)
-        if (missing.isNotEmpty()) report.warn("这个模组里没有脚本的音符类型只保留名字：${missing.joinToString()}.")
+        if (missing.isNotEmpty()) report.warn("Note types with no script in this mod only keep their name: ${missing.joinToString()}.")
     }
 
     private fun convertScripts(songs: List<LoadedSong>) {
@@ -451,7 +451,7 @@ class PsychToCodenameMod(
             report.section("人物脚本", listOf("Psych 的人物脚本跟歌曲脚本一样跑，所以放进了用到这个人物 的歌曲里（Codename 的 data/characters/ 脚本是跑在人物内部的）。") + notes)
         }
         val others = scriptsOf(Kind.OTHER)
-        if (others.isNotEmpty()) report.warn("Psych 脚本文件夹之外的脚本跳过了：${others.joinToString { it.rel }}.")
+        if (others.isNotEmpty()) report.warn("Scripts outside Psych's script folders were skipped: ${others.joinToString { it.rel }}.")
     }
 
     private fun uniqueStem(script: ModScript): String {
@@ -499,7 +499,7 @@ class PsychToCodenameMod(
         step("modpack.ini")
         write("data/config/modpack.ini", CodenameWriters.modpack(info.title.ifBlank { "已转换模组" }, info.description, info.author, info.version))
         done = total
-        onProgress(ModProgress(total, total, "Done"))
+        onProgress(ModProgress(total, total, "完成"))
     }
 
     private fun write(path: String, text: String) {
@@ -507,7 +507,7 @@ class PsychToCodenameMod(
             writer.writeText(path, text)
             if (writtenPaths.add(path)) written++
         } catch (e: Exception) {
-            report.warn("写入失败：$path: ${e.message}")
+            report.warn("Could not write $path: ${e.message}")
         }
     }
 
@@ -516,7 +516,7 @@ class PsychToCodenameMod(
             writer.copy(target) { files.open(source) }
             if (writtenPaths.add(target)) written++
         } catch (e: Exception) {
-            report.warn("复制失败：$target: ${e.message}")
+            report.warn("Could not copy $target: ${e.message}")
         }
     }
 

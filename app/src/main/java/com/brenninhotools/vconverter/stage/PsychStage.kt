@@ -75,7 +75,7 @@ object PsychStageParser {
         val root = try {
             JSONObject(raw.trim().removePrefix("﻿"))
         } catch (e: JSONException) {
-            throw PsychStageException("该文件不是有效的 JSON：${e.message}", e)
+            throw PsychStageException("The file is not valid JSON: ${e.message}", e)
         }
         if (root.value("boyfriend") !is JSONArray && root.value("defaultZoom") == null && root.value("objects") !is JSONArray) {
             throw PsychStageException("这个 JSON 不像 Psych Engine 背景（没有 \"boyfriend\"、\"defaultZoom\" 或 \"objects\"）。")

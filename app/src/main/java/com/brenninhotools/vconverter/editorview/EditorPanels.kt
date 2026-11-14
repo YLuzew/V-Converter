@@ -157,8 +157,8 @@ fun DifficultyPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
             EditorChip("Copy ${state.difficulty}", false) {
                 runCatching { state.edit { it.addDifficulty(name, state.difficulty) } }.onSuccess { name = "" }.onFailure { error = it.message }
             }
-            EditorChip("Mirror notes", false) { state.edit { it.mirrorNotes(state.difficulty) } }
-            EditorChip("Clear notes", false) { state.edit { it.clearNotes(state.difficulty) }; state.clearSelection() }
+            EditorChip("镜像音符", false) { state.edit { it.mirrorNotes(state.difficulty) } }
+            EditorChip("清空音符", false) { state.edit { it.clearNotes(state.difficulty) }; state.clearSelection() }
             EditorChip("Delete ${state.difficulty}", false) {
                 runCatching { state.edit { it.removeDifficulty(state.difficulty) } }.onFailure { error = it.message }
             }
@@ -200,13 +200,13 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 }
             }
             draft != null -> {
-                EditorSectionTitle("添加事件于 ${formatTime(draft)}")
+                EditorSectionTitle("Add event at ${formatTime(draft)}")
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     EventTemplates.all.forEach { template -> EditorChip(template.title, false) { state.addEvent(template.kind, template.defaults()) } }
                 }
                 var kind by remember { mutableStateOf("") }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    OutlinedTextField(value = kind, onValueChange = { kind = it }, label = { Text("Custom event kind") }, singleLine = true, modifier = Modifier.weight(1f).typingField())
+                    OutlinedTextField(value = kind, onValueChange = { kind = it }, label = { Text("自定义事件类型") }, singleLine = true, modifier = Modifier.weight(1f).typingField())
                     TextButton(onClick = { if (kind.isNotBlank()) state.addEvent(kind.trim(), JSONObject()) }) { Text("Add") }
                 }
                 EditorChip("Cancel", false) { state.clearSelection() }
@@ -302,7 +302,7 @@ fun TimingPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
         }
         val playhead = state.document.conductor.floorSnap(state.position, 4)
         if (timing.none { abs(it.time - playhead) < 0.5 }) {
-            Text("新变化会吸附到拍点：${formatTime(playhead)}.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("New changes snap to the beat at ${formatTime(playhead)}.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -319,7 +319,7 @@ fun SongInfoPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
             if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
         }
         TextValueField("变体（留空 = 默认）", state.document.variation, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(variation = v.trim().lowercase()) } }
-        TextValueField("Song name", meta.songName, Modifier.fillMaxWidth()) { v -> update { it.copy(songName = v) } }
+        TextValueField("歌曲名", meta.songName, Modifier.fillMaxWidth()) { v -> update { it.copy(songName = v) } }
         TextValueField("Artist", meta.artist, Modifier.fillMaxWidth()) { v -> update { it.copy(artist = v) } }
         TextValueField("Charter", meta.charter, Modifier.fillMaxWidth()) { v -> update { it.copy(charter = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -332,7 +332,7 @@ fun SongInfoPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextValueField("Note style", meta.noteStyle, Modifier.weight(1f)) { v -> update { it.copy(noteStyle = v) } }
-            NumberField("Offset (ms)", meta.offset, Modifier.weight(1f)) { v -> update { it.copy(offset = v) } }
+            NumberField("偏移（毫秒）", meta.offset, Modifier.weight(1f)) { v -> update { it.copy(offset = v) } }
         }
     }
 }

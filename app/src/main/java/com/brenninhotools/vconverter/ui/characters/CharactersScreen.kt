@@ -59,7 +59,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                     onRemove = { viewModel.remove(index) },
                     tags = {
                         if (viewModel.isAnimate(item)) Tag("Animate 图集", Funkin.Up)
-                        else if (missing.isEmpty()) Tag("Sheet found", Funkin.Up) else Tag("Missing ${missing.size} sheet(s)", Funkin.Warning)
+                        else if (missing.isEmpty()) Tag("找到图集", Funkin.Up) else Tag("Missing ${missing.size} sheet(s)", Funkin.Warning)
                         Tag("${item.character.animations.size} anims", Funkin.Muted)
                         Tag("Scale ${item.character.scale}", Funkin.Muted)
                         if (item.character.atlasImages.size > 1) Tag("Multi-atlas", accent)
@@ -90,7 +90,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                         }
                         if (missing.isNotEmpty()) {
                             Text(
-                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate 图集)",
+                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate atlas)",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Funkin.Warning
                             )

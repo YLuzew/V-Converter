@@ -45,7 +45,7 @@ fun StageToolbar(state: StageEditorState, modifier: Modifier = Modifier) {
         EditorChip("Redo", false) { if (state.canRedo) state.redo() }
         EditorChip("Zoom -", false) { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.05f) }
         EditorChip("Zoom +", false) { state.zoom = (state.zoom * 1.25f).coerceAtMost(4f) }
-        EditorChip("Reset view", false) { state.resetView() }
+        EditorChip("重置视图", false) { state.resetView() }
         EditorChip("Parallax", state.parallax) { state.parallax = !state.parallax }
         EditorChip("Camera", state.showCamera) { state.showCamera = !state.showCamera }
     }
@@ -57,7 +57,7 @@ fun StageInfoPanel(state: StageEditorState, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         EditorSectionTitle("Stage")
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Stage id", doc.id, Modifier.weight(1f)) { v ->
+            TextValueField("背景 ID", doc.id, Modifier.weight(1f)) { v ->
                 val clean = v.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
                 if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
             }
@@ -96,20 +96,20 @@ fun StageLayersPanel(state: StageEditorState, modifier: Modifier = Modifier, onA
                     Text(detail, color = if (active) scheme.onPrimary.copy(alpha = 0.75f) else scheme.onSurfaceVariant, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 if (item is StageSelection.Prop && !doc.props[item.index].isSolid && state.imageFor(doc.props[item.index]) == null) {
-                    Text("no image", color = if (active) scheme.onPrimary else scheme.error, fontSize = 11.sp)
+                    Text("没有图片", color = if (active) scheme.onPrimary else scheme.error, fontSize = 11.sp)
                 }
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 4.dp)) {
-            if (onAddImage != null) EditorChip("Add image", false, onAddImage)
+            if (onAddImage != null) EditorChip("加图片", false, onAddImage)
             EditorChip("上移一层", false) { state.moveLayer(1) }
-            EditorChip("Send back", false) { state.moveLayer(-1) }
+            EditorChip("下移一层", false) { state.moveLayer(-1) }
             EditorChip("Duplicate", false) { state.duplicateSelected() }
             EditorChip("Delete", false) { state.deleteSelected() }
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextValueField("纯色（#RRGGBB）", color, Modifier.weight(1f)) { color = it }
-            EditorChip("Add color", false) {
+            EditorChip("添加颜色", false) {
                 val hex = color.trim().removePrefix("#")
                 if (hex.matches(Regex("[0-9A-Fa-f]{6}"))) {
                     val bf = state.document.spot(StageSlot.BOYFRIEND)
@@ -160,7 +160,7 @@ private fun PropEditor(state: StageEditorState, index: Int, prop: StageProp) {
             val clean = v.trim()
             if (clean.isNotEmpty() && state.document.props.none { it !== prop && it.name == clean }) update { it.copy(name = clean) }
         }
-        NumberField("Layer (z)", prop.zIndex.toDouble(), Modifier.weight(0.6f)) { v -> update { it.copy(zIndex = v.toInt()) } }
+        NumberField("图层（z）", prop.zIndex.toDouble(), Modifier.weight(0.6f)) { v -> update { it.copy(zIndex = v.toInt()) } }
     }
     TextValueField(if (prop.isSolid) "颜色（#RRGGBB）" else "图片（images/…）", prop.assetPath, Modifier.fillMaxWidth()) { v -> update { it.copy(assetPath = v.trim()) } }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -172,8 +172,8 @@ private fun PropEditor(state: StageEditorState, index: Int, prop: StageProp) {
         NumberField(if (prop.isSolid) "Height" else "Scale Y", prop.scaleY, Modifier.weight(1f)) { v -> update { it.copy(scaleY = v) } }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        NumberField("Scroll X", prop.scrollX, Modifier.weight(1f)) { v -> update { it.copy(scrollX = v) } }
-        NumberField("Scroll Y", prop.scrollY, Modifier.weight(1f)) { v -> update { it.copy(scrollY = v) } }
+        NumberField("滚动 X", prop.scrollX, Modifier.weight(1f)) { v -> update { it.copy(scrollX = v) } }
+        NumberField("滚动 Y", prop.scrollY, Modifier.weight(1f)) { v -> update { it.copy(scrollY = v) } }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         NumberField("Alpha", prop.alpha, Modifier.weight(1f)) { v -> update { it.copy(alpha = v.coerceIn(0.0, 1.0)) } }
@@ -197,13 +197,13 @@ private fun SpotEditor(state: StageEditorState, slot: StageSlot, spot: StageSpot
     fun update(change: (StageSpot) -> StageSpot) = state.edit { it.withSpot(slot, change(it.spot(slot))) }
     EditorSectionTitle(slot.label)
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        NumberField("X (feet)", spot.x, Modifier.weight(1f)) { v -> update { it.copy(x = v) } }
-        NumberField("Y (feet)", spot.y, Modifier.weight(1f)) { v -> update { it.copy(y = v) } }
-        NumberField("Layer (z)", spot.zIndex.toDouble(), Modifier.weight(0.7f)) { v -> update { it.copy(zIndex = v.toInt()) } }
+        NumberField("X（脚底）", spot.x, Modifier.weight(1f)) { v -> update { it.copy(x = v) } }
+        NumberField("Y（脚底）", spot.y, Modifier.weight(1f)) { v -> update { it.copy(y = v) } }
+        NumberField("图层（z）", spot.zIndex.toDouble(), Modifier.weight(0.7f)) { v -> update { it.copy(zIndex = v.toInt()) } }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         NumberField("Camera X", spot.cameraX, Modifier.weight(1f)) { v -> update { it.copy(cameraX = v) } }
-        NumberField("Camera Y", spot.cameraY, Modifier.weight(1f)) { v -> update { it.copy(cameraY = v) } }
+        NumberField("摄像机 Y", spot.cameraY, Modifier.weight(1f)) { v -> update { it.copy(cameraY = v) } }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         NumberField("Scroll", spot.scroll, Modifier.weight(1f)) { v -> update { it.copy(scroll = v) } }

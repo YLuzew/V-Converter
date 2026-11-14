@@ -140,7 +140,7 @@ class DesktopCharacterEditor(private val scope: CoroutineScope) {
                 output = null
                 status = Status.Info(
                     "Opened ${loaded.document.id} from ${loaded.source}: ${loaded.document.animations.size} animations" +
-                        if (sprite == null) ". Add the spritesheet (.png + .xml) to see it." else "."
+                        if (sprite == null) "。加上精灵图集（.png + .xml）才能看到它。" else "."
                 )
             } catch (e: Exception) {
                 status = Status.Error(e.message ?: "打开人物失败。")
@@ -156,7 +156,7 @@ class DesktopCharacterEditor(private val scope: CoroutineScope) {
                 val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("选图集的 .png 和它的 .xml。")
                 val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("把图集的 .xml 也选上。")
                 val text = sheet.second.toString(Charsets.UTF_8)
-                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is 不是 Sparrow 图集." }
+                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is not a Sparrow spritesheet." }
                 val sprite = withContext(Dispatchers.Default) { decode(png.second, text) }
                 editor.sprite = sprite
                 image = png.second
@@ -236,7 +236,7 @@ fun CharacterEditorScreen(state: AppState) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Primary("Open character…", accent, !model.busy) { model.open(Dialogs.openFiles("Open the character files, spritesheet or archive")) }
             Secondary("Open folder…", !model.busy) { Dialogs.chooseFolder("Choose the character or mod folder")?.let { model.open(listOf(it)) } }
-            Secondary(model.sheetName?.let { "图集：$it" } ?: "Add spritesheet…", !model.busy) { model.replaceSheet(Dialogs.openFiles("Pick the spritesheet .png and .xml")) }
+            Secondary(model.sheetName?.let { "Spritesheet: $it" } ?: "Add spritesheet…", !model.busy) { model.replaceSheet(Dialogs.openFiles("Pick the spritesheet .png and .xml")) }
             Secondary("新人物", !model.busy) { model.createNew() }
         }
         Text(

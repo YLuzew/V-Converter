@@ -54,7 +54,7 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
     val live = com.brenninhotools.vconverter.editorview.LiveSession(com.brenninhotools.vconverter.editorview.StageLiveAdapter(editor) { asset -> decode(asset) }) { block -> android.os.Handler(android.os.Looper.getMainLooper()).post(block) }
     var target by mutableStateOf(ExportTarget.VSLICE)
         private set
-    var source by mutableStateOf("New stage")
+    var source by mutableStateOf("新建一个背景")
         private set
     private var exportedRevision = -1
 
@@ -136,7 +136,7 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
 
     fun createNew() {
         editor.load(StageDocument("new-stage", "New Stage"), emptyMap(), emptyMap())
-        source = "New stage"
+        source = "新建一个背景"
         invalidate()
         status = StatusMessage.Info("已新建背景，人物位置用的是本体默认值。加上图片就能搭起来。")
     }
@@ -201,7 +201,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             StageLayersPanel(editor, onAddImage = { imagePicker.launch(arrayOf("image/png", "text/xml", "application/xml", "*/*")) })
         }
         FunkinCard {
-            SectionTitle("Stage info", accent, 4)
+            SectionTitle("背景信息", accent, 4)
             StageInfoPanel(editor)
         }
         FunkinCard {

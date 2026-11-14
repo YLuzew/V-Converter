@@ -55,7 +55,7 @@ fun StagesScreen(viewModel: StagesViewModel, modFolderName: String?, onSave: () 
                         if (animated.isNotEmpty()) Tag("${animated.count { it in sheets }}/${animated.size} spritesheets", if (animated.all { it in sheets }) Funkin.Up else Funkin.Muted)
                     }
                 ) {
-                    FunkinTextField(item.id, { viewModel.setId(index, it) }, "Stage id", accent, enabled = !busy)
+                    FunkinTextField(item.id, { viewModel.setId(index, it) }, "背景 ID", accent, enabled = !busy)
                 }
             }
         }

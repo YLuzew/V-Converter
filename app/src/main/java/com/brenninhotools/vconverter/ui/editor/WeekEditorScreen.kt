@@ -58,7 +58,7 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
     val live = com.brenninhotools.vconverter.editorview.LiveSession(com.brenninhotools.vconverter.editorview.WeekLiveAdapter(editor) { asset -> decode(asset) }) { block -> android.os.Handler(android.os.Looper.getMainLooper()).post(block) }
     var target by mutableStateOf(ExportTarget.VSLICE)
         private set
-    var source by mutableStateOf("New week")
+    var source by mutableStateOf("新建一个周目")
         private set
     private var exportedRevision = -1
 
@@ -147,7 +147,7 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
 
     fun createNew() {
         editor.load(WeekDocument("new-week", "New Week"), emptyMap(), emptyMap())
-        source = "New week"
+        source = "新建一个周目"
         invalidate()
         status = StatusMessage.Info("已新建周目，菜单人物用的是本体默认值。加上歌曲和标题图片就能用。")
     }
@@ -217,7 +217,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             WeekSongsPanel(editor)
         }
         FunkinCard {
-            SectionTitle("Week info", accent, 4)
+            SectionTitle("周目信息", accent, 4)
             WeekInfoPanel(editor)
             OutlineButton("标题图片（.png）", accent, onClick = { pick(WeekImageRole.TITLE) }, enabled = !busy)
             OutlineButton("背景图片（.png）", accent, onClick = { pick(WeekImageRole.BACKGROUND) }, enabled = !busy)

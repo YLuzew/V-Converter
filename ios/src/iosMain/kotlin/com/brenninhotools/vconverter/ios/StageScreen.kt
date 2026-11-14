@@ -55,7 +55,7 @@ class IosStageEditor(private val scope: CoroutineScope) {
     val editor = StageEditorState(StageDocument("new-stage", "New Stage"))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(com.brenninhotools.vconverter.editorview.StageLiveAdapter(editor) { asset -> decode(asset) }) { block -> runOnMain(block) }
     var target by mutableStateOf(ExportTarget.VSLICE)
-    var source by mutableStateOf("New stage")
+    var source by mutableStateOf("新建一个背景")
         private set
     var status by mutableStateOf<Status?>(null)
     var busy by mutableStateOf(false)
@@ -163,7 +163,7 @@ class IosStageEditor(private val scope: CoroutineScope) {
 
     fun createNew() {
         editor.load(StageDocument("new-stage", "New Stage"), emptyMap(), emptyMap())
-        source = "New stage"
+        source = "新建一个背景"
         output = null
         status = Status.Info("已新建背景，人物位置用的是本体默认值。加上图片就能搭起来。")
     }
@@ -218,7 +218,7 @@ fun StageEditorScreen(state: AppState) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Primary("Open stage…", accent, !model.busy) { Dialogs.openFiles("Open the stage files and images, or an archive") { model.open(it) } }
             Secondary("Open folder…", !model.busy) { Dialogs.chooseFolder("Choose the mod folder with the stage") { model.open(listOf(it)) } }
-            Secondary("New stage", !model.busy) { model.createNew() }
+            Secondary("新建一个背景", !model.busy) { model.createNew() }
         }
         Text(
             "A V-Slice or Psych stage .json (with its .lua) or a Codename stage .xml, plus the images. Opening the whole mod folder finds every image the stage uses. You can also drop files on the window.",

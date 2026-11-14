@@ -66,7 +66,7 @@ fun WeekInfoPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
                 val clean = v.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
                 if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
             }
-            TextValueField("Story name", doc.name, Modifier.weight(1f)) { v -> state.edit { it.copy(name = v) } }
+            TextValueField("故事名", doc.name, Modifier.weight(1f)) { v -> state.edit { it.copy(name = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextValueField("周目名（Psych 自由游玩）", doc.weekName, Modifier.weight(1f)) { v -> state.edit { it.copy(weekName = v) } }
@@ -93,7 +93,7 @@ fun WeekInfoPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
             WeekCheck("解锁前隐藏", doc.hiddenUntilUnlocked) { v -> state.edit { it.copy(hiddenUntilUnlocked = v) } }
         }
         Text(
-            if (doc.isLocked) "锁定直到「${doc.weekBefore}\" is beaten. V-Slice gets a level script for it (scripts/levels/), Psych keeps it in the week file; Codename has no week locking."
+            if (doc.isLocked) "Locked until \"${doc.weekBefore}\" is beaten. V-Slice gets a level script for it (scripts/levels/), Psych keeps it in the week file; Codename has no week locking."
             else "关掉「初始解锁」再填一个周目名，就能把这个周目锁到那个周目通关为止。",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -128,8 +128,8 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
         }
         if (doc.songs.isEmpty()) Text("还没有歌曲：把这一周的歌曲按播放顺序加到下面。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextValueField("Song name", draft, Modifier.weight(1f)) { draft = it }
-            EditorChip("Add song", false) {
+            TextValueField("歌曲名", draft, Modifier.weight(1f)) { draft = it }
+            EditorChip("添加歌曲", false) {
                 state.addSong(draft)
                 draft = ""
             }
@@ -154,7 +154,7 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 EditorChip("Move up", false) { state.moveSong(index, -1) }
-                EditorChip("Move down", false) { state.moveSong(index, 1) }
+                EditorChip("下移", false) { state.moveSong(index, 1) }
                 EditorChip("Remove", false) { state.removeSong(index) }
             }
             Text("图标和颜色供 Psych 的自由游玩使用；V-Slice 读歌曲自己的元数据。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
@@ -195,7 +195,7 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
                     state.edit { it.withProp(slot, WeekProp("storymenu/props/${it.id}-${slot.key}", offsetX = base.offsetX, offsetY = base.offsetY)) }
                 }
             }
-            if (onLoadImage != null) EditorChip("Load image…", false) { onLoadImage(slot) }
+            if (onLoadImage != null) EditorChip("加载图片…", false) { onLoadImage(slot) }
         }
         if (prop == null) return@Column
         PropFields(state, slot, prop)
@@ -212,7 +212,7 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
         if (state.imageFor(prop.assetPath) == null) {
             Text(
                 if (prop.isBase) "基础游戏的精灵没有打包进来，所以显示成方块；它不会被导出（游戏里本来就有）。"
-                else "还没有为 images/${prop.assetPath}.png yet: use \"Load image…\" with the .png and its .xml.",
+                else "No image loaded for images/${prop.assetPath}.png yet: use \"Load image…\" with the .png and its .xml.",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -234,13 +234,13 @@ private fun PropFields(state: WeekEditorState, slot: WeekSlot, prop: WeekProp) {
         }
     } else {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Idle prefix", idle, Modifier.weight(1f)) { v -> update { it.withPrefix(it.idleName, v) } }
+            TextValueField("待机前缀", idle, Modifier.weight(1f)) { v -> update { it.withPrefix(it.idleName, v) } }
             TextValueField("确认前缀", confirm, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
         }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        NumberField("Offset X", prop.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
-        NumberField("Offset Y", prop.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
+        NumberField("偏移 X", prop.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
+        NumberField("偏移 Y", prop.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
         NumberField("Scale", prop.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
     }
     Row(verticalAlignment = Alignment.CenterVertically) {

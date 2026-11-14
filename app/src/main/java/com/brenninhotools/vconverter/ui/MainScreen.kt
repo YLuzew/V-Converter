@@ -148,8 +148,8 @@ enum class PlayTab(
     override val title: String,
     override val description: String
 ) : AppTab {
-    PLAY("Play", R.drawable.ic_tab_chart, Funkin.Up, "PlayTest", "Play any song of a mod, a converter's result or the 谱面编辑器's chart, with its stage and characters, and see what is broken."),
-    REPORT("Report", R.drawable.ic_warning, Funkin.Warning, "PlayTest report", "在加载的这首歌的谱子、人物、背景、音频和转换结果里发现的问题。")
+    PLAY("Play", R.drawable.ic_tab_chart, Funkin.Up, "PlayTest", "随便播一首模组的歌、转换结果或谱面编辑器里的谱子，带上它的背景和人物，看看哪里坏了。"),
+    REPORT("Report", R.drawable.ic_warning, Funkin.Warning, "试玩报告", "在加载的这首歌的谱子、人物、背景、音频和转换结果里发现的问题。")
 }
 
 enum class OnlineTab(
@@ -159,8 +159,8 @@ enum class OnlineTab(
     override val title: String,
     override val description: String
 ) : AppTab {
-    MODS("Mods", R.drawable.ic_download, Funkin.Pink, "Mod Gallery", "在 V-Converter 服务器上找别人分享的模组并下载。"),
-    SHARE("Share", R.drawable.ic_share, Funkin.Up, "Share a mod", "把模组 .zip 上传到服务器画廊，让别人能下载。"),
+    MODS("Mods", R.drawable.ic_download, Funkin.Pink, "模组画廊", "在 V-Converter 服务器上找别人分享的模组并下载。"),
+    SHARE("Share", R.drawable.ic_share, Funkin.Up, "分享模组", "把模组 .zip 上传到服务器画廊，让别人能下载。"),
     ROOMS("Rooms", R.drawable.ic_tab_chart, Funkin.Left, "公开房间", "加入别人公开列出的多人编辑房间，一起编辑。"),
     NEWS("News", R.drawable.ic_warning, Funkin.Down, "News", "V-Converter 的新版本和服务器公告。")
 }
@@ -273,8 +273,8 @@ enum class GenTab(
     SONG("Chart", R.drawable.ic_tab_chart, Funkin.Down, "谱面编辑器", "新建一首歌或打开任意谱子，然后跟着音乐摆音符、放事件、改 BPM。"),
     CHARACTER("Char", R.drawable.ic_tab_character, Funkin.Left, "人物编辑器", "打开任意人物或精灵图集，预览动画并修偏移、摄像机和缩放。"),
     STAGE("Stage", R.drawable.ic_tab_stage, Funkin.Up, "背景编辑器", "打开任意背景或从自己的图片开始，在游戏摄像机视角下摆物件和人物。"),
-    WEEK("Week", R.drawable.ic_tab_week, Funkin.Right, "Week Editor", "打开任意周目或新建一个，排布故事菜单、周目歌曲和解锁方式。"),
-    SCRIPT("Script", R.drawable.ic_tab_script, Funkin.Lavender, "New script", "可直接编辑的 V-Slice .hxc 类。")
+    WEEK("Week", R.drawable.ic_tab_week, Funkin.Right, "周目编辑器", "打开任意周目或新建一个，排布故事菜单、周目歌曲和解锁方式。"),
+    SCRIPT("Script", R.drawable.ic_tab_script, Funkin.Lavender, "新建脚本", "可直接编辑的 V-Slice .hxc 类。")
 }
 
 @Composable
@@ -409,7 +409,7 @@ fun MainScreen() {
 
             override fun chart(document: com.brenninhotools.vconverter.editor.ChartDocument, audio: List<com.brenninhotools.vconverter.editor.EditorAudio>) {
                 genSong.pause()
-                playtest.state.useChart(document, audio, "谱面编辑器 · ${document.meta.songName.ifBlank { document.id }}")
+                playtest.state.useChart(document, audio, "Chart Editor · ${document.meta.songName.ifBlank { document.id }}")
                 section = Section.PLAYTEST
                 playTab = PlayTab.PLAY
             }

@@ -278,7 +278,7 @@ class PsychHScriptWrapper(
         }
         PsychApi.callbacks.filter { it in functions }.forEach { callbacks[it] = CallbackRef(arities[it], true) }
         segs.filter { it.kind == "function" && it.name in PsychApi.unsupportedCallbacks }.forEach {
-            issue(it.line, "Psych 回调 '${it.name}' has no V-Slice event, so it never runs.")
+            issue(it.line, "Psych callback '${it.name}' has no V-Slice event, so it never runs.")
         }
 
         val text = ModuleWriter.write(
@@ -463,7 +463,7 @@ class PsychHScriptWrapper(
                 t.text in fields -> sb.append(memberPrefix).append(t.text)
                 t.text in bareVariables && !(tokens.getOrNull(n1)?.let { it.kind == Kind.PUNCT && it.text == ":" } == true) -> sb.append(bareVariables.getValue(t.text))
                 t.text in psychClasses -> {
-                    issue(t.line, "Psych 类 '${t.text}' does not exist in V-Slice.")
+                    issue(t.line, "Psych class '${t.text}' does not exist in V-Slice.")
                     sb.append(t.text)
                 }
                 else -> sb.append(t.text)

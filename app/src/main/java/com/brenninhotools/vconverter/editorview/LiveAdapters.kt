@@ -19,7 +19,7 @@ enum class LiveKind(val key: String, val label: String) {
     CHART("chart", "谱面编辑器"),
     CHARACTER("character", "人物编辑器"),
     STAGE("stage", "背景编辑器"),
-    WEEK("week", "Week Editor");
+    WEEK("week", "周目编辑器");
 
     companion object {
         fun of(key: String): LiveKind = entries.firstOrNull { it.key == key } ?: CHART

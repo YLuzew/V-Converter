@@ -3,25 +3,25 @@ package com.brenninhotools.vconverter.generator
 import com.brenninhotools.vconverter.core.ReportBuilder
 
 enum class ScriptKind(val label: String, val folder: String, val targetLabel: String) {
-    MODULE("Module", "modules", "Module id"),
+    MODULE("Module", "modules", "模块 id"),
     SONG("Song", "songs", "Song id"),
-    STAGE("Stage", "stages", "Stage id"),
+    STAGE("Stage", "stages", "背景 ID"),
     CHARACTER("Character", "characters", "人物 ID"),
-    EVENT("Song event", "events", "Event id"),
+    EVENT("Song event", "events", "事件 id"),
     NOTE_KIND("Note kind", "notekinds", "音符类型 ID")
 }
 
 enum class Callback(val method: String, val eventType: String, val label: String) {
     CREATE("onCreate", "ScriptEvent", "Create"),
     UPDATE("onUpdate", "UpdateScriptEvent", "Update"),
-    BEAT_HIT("onBeatHit", "SongTimeScriptEvent", "Beat hit"),
-    STEP_HIT("onStepHit", "SongTimeScriptEvent", "Step hit"),
+    BEAT_HIT("onBeatHit", "SongTimeScriptEvent", "拍击"),
+    STEP_HIT("onStepHit", "SongTimeScriptEvent", "步击"),
     COUNTDOWN_START("onCountdownStart", "CountdownScriptEvent", "Countdown"),
-    SONG_START("onSongStart", "ScriptEvent", "Song start"),
-    SONG_END("onSongEnd", "ScriptEvent", "Song end"),
+    SONG_START("onSongStart", "ScriptEvent", "歌曲开始"),
+    SONG_END("onSongEnd", "ScriptEvent", "歌曲结束"),
     NOTE_INCOMING("onNoteIncoming", "NoteScriptEvent", "Note spawn"),
-    NOTE_HIT("onNoteHit", "HitNoteScriptEvent", "Note hit"),
-    NOTE_MISS("onNoteMiss", "NoteScriptEvent", "Note miss"),
+    NOTE_HIT("onNoteHit", "HitNoteScriptEvent", "音符命中"),
+    NOTE_MISS("onNoteMiss", "NoteScriptEvent", "音符失误"),
     SONG_EVENT("onSongEvent", "SongEventScriptEvent", "Song event"),
     PAUSE("onPause", "PauseScriptEvent", "Pause"),
     GAME_OVER("onGameOver", "ScriptEvent", "Game over"),
@@ -30,7 +30,7 @@ enum class Callback(val method: String, val eventType: String, val label: String
 
 enum class CharacterRender(val label: String, val className: String) {
     SPARROW("Sparrow", "SparrowCharacter"),
-    MULTI_SPARROW("Multi-Sparrow", "MultiSparrowCharacter"),
+    MULTI_SPARROW("多 Sparrow", "MultiSparrowCharacter"),
     ATLAS("Animate 图集", "AnimateAtlasCharacter"),
     MULTI_ATLAS("Multi-atlas", "MultiAnimateAtlasCharacter"),
     PACKER("Packer", "PackerCharacter")
@@ -80,7 +80,7 @@ object ScriptGenerator {
         val className = Ids.className(spec.className.ifBlank { spec.targetId + spec.kind.label })
         val target = spec.targetId.trim()
         require(target.isNotEmpty()) { "Enter the ${spec.kind.targetLabel.lowercase()}." }
-        require(target.none { it == '"' || it == '\\' }) { "ID 里不能带引号。" }
+        require(target.none { it == '"' || it == '\\' }) { "The id can't contain quotes." }
         val source = when (spec.kind) {
             ScriptKind.EVENT -> event(className, target, spec)
             else -> scripted(className, target, spec)
@@ -97,11 +97,11 @@ object ScriptGenerator {
             listOf(
                 when (spec.kind) {
                     ScriptKind.MODULE -> "始终生效，所有状态都算。动游戏逻辑前先检查 PlayState.instance。"
-                    ScriptKind.SONG -> "只在歌曲「$target\" is playing."
-                    ScriptKind.STAGE -> "只在背景「$target\"; it replaces the stage's default class."
-                    ScriptKind.CHARACTER -> "每次用到人物「$target\" is used; its JSON must exist in data/characters/."
-                    ScriptKind.EVENT -> "Adds the \"$target\" event to the 谱面编辑器 and runs handleEvent when it fires; its other callbacks run in songs that use the event."
-                    ScriptKind.NOTE_KIND -> "对类型为「$target\"."
+                    ScriptKind.SONG -> "Only while the song \"$target\" is playing."
+                    ScriptKind.STAGE -> "Only on the stage \"$target\"; it replaces the stage's default class."
+                    ScriptKind.CHARACTER -> "Every time the character \"$target\" is used; its JSON must exist in data/characters/."
+                    ScriptKind.EVENT -> "Adds the \"$target\" event to the Chart Editor and runs handleEvent when it fires; its other callbacks run in songs that use the event."
+                    ScriptKind.NOTE_KIND -> "Runs for notes whose kind is \"$target\"."
                 }
             )
         )

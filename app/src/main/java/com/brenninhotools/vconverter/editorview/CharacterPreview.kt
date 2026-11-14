@@ -162,7 +162,7 @@ fun CharacterPreview(state: CharacterEditorState, modifier: Modifier = Modifier,
                     frames.getOrNull(state.frame.coerceIn(0, (frames.size - 1).coerceAtLeast(0)))?.let { drawFrame(sprite, document, current, it, reference, origin, zoom, 1f, null) }
                 }
             } else {
-                val text = measurer.measure("Open a spritesheet (.png + .xml) to preview the animations.", labelStyle)
+                val text = measurer.measure("打开一个图集（.png + .xml）就能预览动画。", labelStyle)
                 drawText(text, topLeft = Offset((size.width - text.size.width) / 2f, size.height / 2f - text.size.height))
             }
 

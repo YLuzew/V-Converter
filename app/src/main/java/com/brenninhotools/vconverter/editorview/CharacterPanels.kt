@@ -48,7 +48,7 @@ fun CharacterToolbar(state: CharacterEditorState, modifier: Modifier = Modifier)
         EditorChip("Stage", state.showBackground) { state.showBackground = !state.showBackground }
         EditorChip("Zoom -", false) { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.05f) }
         EditorChip("Zoom +", false) { state.zoom = (state.zoom * 1.25f).coerceAtMost(8f) }
-        EditorChip("Reset view", false) { state.resetView() }
+        EditorChip("重置视图", false) { state.resetView() }
     }
 }
 
@@ -56,7 +56,7 @@ fun CharacterToolbar(state: CharacterEditorState, modifier: Modifier = Modifier)
 @Composable
 fun DragModeBar(state: CharacterEditorState, modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text("Drag moves", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("拖动即移动", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         DragMode.entries.forEach { mode -> EditorChip(mode.label, mode == state.dragMode) { state.dragMode = mode } }
     }
 }
@@ -80,7 +80,7 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text(anim.name.ifEmpty { "(no name)" }, color = if (active) scheme.onPrimary else scheme.onSurface, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(anim.name.ifEmpty { "（未命名）" }, color = if (active) scheme.onPrimary else scheme.onSurface, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(anim.prefix, color = if (active) scheme.onPrimary.copy(alpha = 0.75f) else scheme.onSurfaceVariant, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 Text(
@@ -93,7 +93,7 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 4.dp)) {
             EditorChip(if (adding) "Close" else "加动画", adding) { adding = !adding }
             EditorChip("Move up", false) { state.moveSelected(-1) }
-            EditorChip("Move down", false) { state.moveSelected(1) }
+            EditorChip("下移", false) { state.moveSelected(1) }
             EditorChip("Delete", false) { state.removeSelected() }
         }
         if (adding) {
@@ -140,8 +140,8 @@ fun AnimationPanel(state: CharacterEditorState, modifier: Modifier = Modifier) {
             update { it.copy(indices = list) }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            NumberField("Offset X", anim.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
-            NumberField("Offset Y", anim.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
+            NumberField("偏移 X", anim.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
+            NumberField("偏移 Y", anim.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             EditorChip("← 1", false) { state.nudgeOffset(1.0, 0.0) }
@@ -181,26 +181,26 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
         ChoiceField("Side", doc.slot, CharacterSlot.entries.map { it to it.label }, Modifier.fillMaxWidth()) { v -> update { it.copy(slot = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NumberField("Scale", doc.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
-            NumberField("Sing time", doc.singTime, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(singTime = v) } }
+            NumberField("演唱时长", doc.singTime, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(singTime = v) } }
             NumberField("Dance every", doc.danceEvery, Modifier.weight(1f)) { v -> if (v >= 0) update { it.copy(danceEvery = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            NumberField("Position X", doc.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
-            NumberField("Position Y", doc.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
+            NumberField("位置 X", doc.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
+            NumberField("位置 Y", doc.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NumberField("Camera X", doc.cameraX, Modifier.weight(1f)) { v -> update { it.copy(cameraX = v) } }
-            NumberField("Camera Y", doc.cameraY, Modifier.weight(1f)) { v -> update { it.copy(cameraY = v) } }
+            NumberField("摄像机 Y", doc.cameraY, Modifier.weight(1f)) { v -> update { it.copy(cameraY = v) } }
             NumberField("预览缩放", state.stageZoom.toDouble(), Modifier.weight(1f)) { v -> if (v > 0) state.stageZoom = v.toFloat() }
         }
         Text(
-            "摄像机对焦点 = 人物中心 + 摄像机 X/Y + 背景给 ${doc.slot.label.lowercase()} side (${trim(doc.slot.cameraBaseX)}, ${trim(doc.slot.cameraBaseY)}), like V-Slice. The dashed frame is what a 1280×720 game camera sees at the preview zoom.",
+            "The camera point is the character's center plus Camera X/Y, plus the stage's default offset for the ${doc.slot.label.lowercase()} side (${trim(doc.slot.cameraBaseX)}, ${trim(doc.slot.cameraBaseY)}), like V-Slice. The dashed frame is what a 1280×720 game camera sees at the preview zoom.",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextValueField("Health icon", doc.healthIcon, Modifier.weight(1f)) { v -> update { it.copy(healthIcon = v.trim()) } }
-            CheckRow("Pixel icon", doc.healthIconPixel) { v -> update { it.copy(healthIconPixel = v) } }
+            TextValueField("血条头像", doc.healthIcon, Modifier.weight(1f)) { v -> update { it.copy(healthIcon = v.trim()) } }
+            CheckRow("像素头像", doc.healthIconPixel) { v -> update { it.copy(healthIconPixel = v) } }
         }
         val names = doc.animations.map { it.name }.filter { it.isNotEmpty() }
         if (names.isNotEmpty()) {
@@ -208,7 +208,7 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
         }
         Row {
             CheckRow("Flip X", doc.flipX) { v -> update { it.copy(flipX = v) } }
-            CheckRow("Pixel art", doc.isPixel) { v -> update { it.copy(isPixel = v) } }
+            CheckRow("像素画风", doc.isPixel) { v -> update { it.copy(isPixel = v) } }
         }
     }
 }

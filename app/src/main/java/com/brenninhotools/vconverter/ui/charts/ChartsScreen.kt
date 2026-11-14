@@ -146,7 +146,7 @@ fun ChartsScreen(viewModel: ChartsViewModel, modFolderName: String?, onSave: () 
                 }
             }
             if (viewModel.files.isNotEmpty()) {
-                OutlineButton("Clear all", Funkin.Muted, viewModel::clear, enabled = !busy, icon = R.drawable.ic_close)
+                OutlineButton("全部清空", Funkin.Muted, viewModel::clear, enabled = !busy, icon = R.drawable.ic_close)
             }
         }
 
@@ -274,7 +274,7 @@ private fun StatsGrid(preview: ChartPreview, accent: Color) {
         "玩家音符" to preview.playerNotes.toString(),
         "对手音符" to preview.opponentNotes.toString(),
         "Holds" to preview.holdNotes.toString(),
-        "Peak NPS" to formatBpm(preview.peakNps),
+        "峰值 NPS" to formatBpm(preview.peakNps),
         "Length" to formatDuration(preview.length),
         "BPM" to if (low == high) formatBpm(low) else "${formatBpm(low)}–${formatBpm(high)}",
         "Time sig." to preview.signatures.joinToString(" · ") { "$it/4" },
@@ -334,10 +334,10 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
     val tweaks = viewModel.tweaks
     val sample = viewModel.before.firstOrNull()
     FunkinCard {
-        SectionTitle("Options", accent, 3)
+        SectionTitle("选项", accent, 3)
         Text("留空就保持谱子原来的设置。", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
         if (ChartField.SONG_NAME in fields) {
-            FunkinTextField(tweaks.songName, { v -> viewModel.updateTweaks { it.copy(songName = v) } }, "Song name", accent, enabled = !busy)
+            FunkinTextField(tweaks.songName, { v -> viewModel.updateTweaks { it.copy(songName = v) } }, "歌曲名", accent, enabled = !busy)
         }
         if (ChartField.ARTIST in fields) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

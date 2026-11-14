@@ -114,7 +114,7 @@ fun ModScreen(
 
         if (viewModel.mod != null) {
             FunkinCard {
-                SectionTitle("Mod info", accent, 2)
+                SectionTitle("模组信息", accent, 2)
                 FunkinTextField(viewModel.title, { viewModel.title = it }, "Title", accent, enabled = !busy)
                 FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
                 FunkinTextField(viewModel.author, { viewModel.author = it }, "Author", accent, enabled = !busy)

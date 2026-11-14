@@ -177,12 +177,12 @@ $body
                     Plan(source, target, className, ScriptHost(ScriptBase.MODULE, if (className == keepName(stem)) stem else kebab(className)), null)
                 }
                 ScriptScope.SONG -> when {
-                    ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(pascal(key) + extra() + "Module", "本体的歌曲脚本已经覆盖了「$key\".")
+                    ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(pascal(key) + extra() + "Module", "the base game already has a Song script for \"$key\".")
                     !claimed.add("song:$key") -> module(pascal(key) + extra() + "Module", "song \"$key\" already has a Song script; V-Slice allows one per song.")
                     else -> Plan(source, target, unique(ScriptBases.classFor(ScriptBase.SONG, key, ::pascal)), ScriptHost(ScriptBase.SONG, key), null)
                 }
                 ScriptScope.STAGE -> when {
-                    ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(pascal(key) + extra() + "Module", "本体的背景脚本已经覆盖了「$key\".")
+                    ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(pascal(key) + extra() + "Module", "the base game already has a Stage script for \"$key\".")
                     !claimed.add("stage:$key") -> module(pascal(key) + extra() + "Module", "stage \"$key\" already has a Stage script; V-Slice allows one per stage.")
                     else -> Plan(source, target, unique(ScriptBases.classFor(ScriptBase.STAGE, key, ::pascal)), ScriptHost(ScriptBase.STAGE, key), null)
                 }
@@ -220,11 +220,11 @@ $body
                     PsychHScriptWrapper(className, host.id, target, siblings, noteTypeArray, eventNames, ownEvent, host = host).convert(source.text)
                 }
             } catch (e: Exception) {
-                report.warn("${source.path}: 没有转换 (${e.message}).")
+                report.warn("${source.path}: could not be converted (${e.message}).")
                 return@forEach
             }
             if (generated.source.isEmpty()) {
-                report.warn("${source.path}: ${generated.issues.firstOrNull()?.message ?: "没有转换"}")
+                report.warn("${source.path}: ${generated.issues.firstOrNull()?.message ?: "could not be converted"}")
                 return@forEach
             }
             val fileName = if (target.scope == ScriptScope.GLOBAL) keepFileName(source.path.substringAfterLast('/').substringBeforeLast('.')) else className
@@ -244,13 +244,13 @@ $body
 
         report.stat("Scripts", converted)
         report.stat("Callbacks", hooks)
-        report.stat("API calls", apiUsed.size)
+        report.stat("API 调用", apiUsed.size)
         val unsupported = apiUsed.filter { it in PsychApi.notImplemented }
         if (unsupported.isNotEmpty()) {
-            report.warn("这些 Psych 函数在 V-Slice 里没有对应物，什么也不会做：${unsupported.joinToString()}.")
+            report.warn("These Psych functions have no V-Slice equivalent and do nothing: ${unsupported.joinToString()}.")
         }
         report.section(
-            "How it runs",
+            "运行方式",
             listOf(
                 "Each script became the V-Slice class made for its job: data/<song>/ scripts are Songs (scripts/songs), stages/ scripts are Stages (scripts/stages), custom_notetypes are NoteKinds (scripts/notekinds), custom_events are SongEvents (scripts/events) and global scripts are Modules (scripts/modules).",
                 "只有脚本的类装不下它时才会变成模块（同一首歌或背景的第二个脚本、需要比音符事件更多东西的音符类型，或者基础游戏已经脚本化的 id）；这个模块只在它那首歌、那个背景、那个事件或音符类型里跑。",

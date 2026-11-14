@@ -49,7 +49,7 @@ object ModGenerator {
         }
         report.stat("Files", files.size)
         report.section(
-            "Next steps",
+            "下一步",
             listOf(
                 "解压或者保存到 V-Slice 的 mods 文件夹里。",
                 "歌曲用 Song 生成器加，人物用 Character，背景用 Stage，周目用 Level。",

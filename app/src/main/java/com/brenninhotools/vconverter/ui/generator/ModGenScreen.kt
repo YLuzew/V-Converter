@@ -48,11 +48,11 @@ fun ModGenScreen(viewModel: ModGenViewModel, modFolderName: String?, onSave: () 
     val busy = viewModel.busy
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Mod info", accent, 1)
+            SectionTitle("模组信息", accent, 1)
             FunkinTextField(viewModel.title, { viewModel.title = it }, "Title", accent, enabled = !busy)
             FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
             FunkinTextField(viewModel.author, { viewModel.author = it }, "作者（逗号分隔）", accent, enabled = !busy)
-            FunkinTextField(viewModel.version, { viewModel.version = it }, "Mod version", accent, enabled = !busy)
+            FunkinTextField(viewModel.version, { viewModel.version = it }, "模组版本", accent, enabled = !busy)
             FunkinTextField(viewModel.homepage, { viewModel.homepage = it }, "主页（可选）", accent, enabled = !busy)
             FunkinTextField(viewModel.license, { viewModel.license = it }, "许可证（可选）", accent, enabled = !busy)
         }

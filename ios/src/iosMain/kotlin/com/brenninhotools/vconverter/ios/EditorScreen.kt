@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class IosEditor(private val scope: CoroutineScope) {
-    val editor = ChartEditorState(ChartDocument.blank("new-song", "New Song", 120.0, listOf("easy", "normal", "hard")))
+    val editor = ChartEditorState(ChartDocument.blank("new-song", "新歌曲", 120.0, listOf("easy", "normal", "hard")))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(
         com.brenninhotools.vconverter.editorview.ChartLiveAdapter(editor, { audio }, { track -> useAudio(audio.filterNot { it.name.equals(track.name, true) } + track) })
     ) { block -> runOnMain(block) }
@@ -89,7 +89,7 @@ class IosEditor(private val scope: CoroutineScope) {
             status = Status.Error("至少选一个难度。")
             return
         }
-        val name = newName.trim().ifEmpty { "New Song" }
+        val name = newName.trim().ifEmpty { "新歌曲" }
         editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in newDifficulties }))
         source = "New song"
         output = null
@@ -273,7 +273,7 @@ fun EditorScreen(state: AppState) {
         )
         if (showNew) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(2f)) { Field(model.newName, { model.newName = it }, "Song name", accent, !model.busy) }
+                Column(Modifier.weight(2f)) { Field(model.newName, { model.newName = it }, "歌曲名", accent, !model.busy) }
                 Column(Modifier.weight(1f)) { Field(model.newBpm, { model.newBpm = it }, "BPM", accent, !model.busy) }
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -307,7 +307,7 @@ fun EditorScreen(state: AppState) {
     Card {
         SectionTitle("Chart", accent)
         ChartEditorWorkspace(editor, Modifier.fillMaxWidth(), skin, eventIcon, gridHeight = 680.dp)
-        Secondary("PlayTest this chart") { state.playTestChart(editor.document, model.audio) }
+        Secondary("试玩这张谱子") { state.playTestChart(editor.document, model.audio) }
     }
 
     Card { com.brenninhotools.vconverter.editorview.LiveSessionPanel(model.live, cursor = editor.position to editor.difficulty) }

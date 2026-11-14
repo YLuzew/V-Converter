@@ -110,8 +110,8 @@ object CharacterExport {
         val names = animations.map { it.name }.toSet()
         val missing = listOf("idle", "singLEFT", "singDOWN", "singUP", "singRIGHT")
             .filter { it !in names && !(it == "idle" && "danceLeft" in names && "danceRight" in names) }
-        if (missing.isNotEmpty()) report.warn("缺这些常用动画：${missing.joinToString()}.")
-        if (image == null || xml == null) report.warn("还没加载图集：加上 images/$assetPath.png and .xml yourself.")
+        if (missing.isNotEmpty()) report.warn("Missing common animations: ${missing.joinToString()}.")
+        if (image == null || xml == null) report.warn("No spritesheet loaded: add images/$assetPath.png and .xml yourself.")
         return ConvertedOutput(files, report.build())
     }
 

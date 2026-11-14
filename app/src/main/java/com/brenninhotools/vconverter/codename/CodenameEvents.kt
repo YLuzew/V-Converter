@@ -41,8 +41,8 @@ object CodenameEvents {
             EventParam("amount", "Amount", ParamType.FLOAT, 0.1)
         )),
         EventDefinition("Camera Zoom", listOf(
-            EventParam("tween", "Tween Zoom?", ParamType.BOOL, true),
-            EventParam("zoom", "New Zoom", ParamType.FLOAT, 1.0),
+            EventParam("tween", "缓动缩放？", ParamType.BOOL, true),
+            EventParam("zoom", "新缩放", ParamType.FLOAT, 1.0),
             EventParam("camera", "Camera", ParamType.ENUM, "camGame", listOf("camGame", "camHUD")),
             EventParam("duration", "缓动时间（步数）", ParamType.FLOAT, 4.0),
             EventParam("ease", "Tween Ease", ParamType.ENUM, "linear", easeNames),
@@ -62,7 +62,7 @@ object CodenameEvents {
             EventParam("strumLine", "Strumline", ParamType.INTEGER, 0)
         )),
         EventDefinition("Continuous BPM Change", listOf(
-            EventParam("bpm", "Target BPM", ParamType.FLOAT, 100.0),
+            EventParam("bpm", "目标 BPM", ParamType.FLOAT, 100.0),
             EventParam("duration", "时间（步数）", ParamType.FLOAT, 4.0)
         ))
     ).associateBy { it.name }

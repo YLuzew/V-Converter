@@ -145,9 +145,9 @@ object WeekExport {
                     val className = PsychToVSliceLevel.levelClass(document.id)
                     files += OutputFile.of("scripts/levels/$className.hxc", PsychToVSliceLevel.levelScript(className, document.id, document.toPsychWeek(), document.isLocked), null)
                     report.section(
-                        "关卡脚本（scripts/levels/$className.hxc)",
+                        "Level script (scripts/levels/$className.hxc)",
                         listOfNotNull(
-                            if (document.isLocked) "通关后解锁：「${document.weekBefore.trim()}\"" else null,
+                            if (document.isLocked) "Unlocks after beating \"${document.weekBefore.trim()}\"" else null,
                             if (document.isLocked && document.hiddenUntilUnlocked) "解锁前在故事菜单里隐藏" else null,
                             if (document.isLocked) "锁定期间它的歌曲不出现在自由游玩里" else null,
                             if (document.hideFreeplay) "它的歌曲从自由游玩中隐藏，但故事模式里还能玩" else null
@@ -157,7 +157,7 @@ object WeekExport {
                 image(document.title)
                 if (!document.backgroundIsColor) image(document.background)
                 WeekSlot.entries.mapNotNull { document.prop(it) }.filterNot { it.isBase }.forEach { image(it.assetPath) }
-                if (document.difficulties != WeekDocument.DEFAULT_DIFFICULTIES) report.section("Difficulties", listOf("V-Slice 关卡没有难度列表；每首歌的元数据里列的是 ${document.difficulties.joinToString()}."))
+                if (document.difficulties != WeekDocument.DEFAULT_DIFFICULTIES) report.section("难度", listOf("V-Slice levels have no difficulty list; each song's metadata lists ${document.difficulties.joinToString()}."))
             }
             ExportTarget.PSYCH, ExportTarget.CODENAME -> {
                 val psych = psych(document, vslice, report)
@@ -204,7 +204,7 @@ object WeekExport {
         val copies = result.copies.toMutableList()
         val background = when {
             document.backgroundIsColor -> {
-                if (!document.background.trim().equals(WeekDocument.DEFAULT_BACKGROUND, true)) report.warn("Psych week 背景是图片; the color ${document.background} becomes Psych's default yellow.")
+                if (!document.background.trim().equals(WeekDocument.DEFAULT_BACKGROUND, true)) report.warn("Psych week backgrounds are images; the color ${document.background} becomes Psych's default yellow.")
                 ""
             }
             else -> {

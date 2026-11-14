@@ -55,7 +55,7 @@ fun ConvertSection(
                 SaveActions(viewModel, accent, modFolderName, onSave)
                 val launcher = com.brenninhotools.vconverter.ui.playtest.LocalPlayTest.current
                 if (launcher != null && output.files.any { playable(it.relativePath) }) {
-                    com.brenninhotools.vconverter.ui.components.OutlineButton("PlayTest the result", accent, onClick = {
+                    com.brenninhotools.vconverter.ui.components.OutlineButton("试玩转换结果", accent, onClick = {
                         launcher.files(output.files.map { it.relativePath to (it.bytes ?: it.content.toByteArray()) }, "$title result")
                     })
                 }

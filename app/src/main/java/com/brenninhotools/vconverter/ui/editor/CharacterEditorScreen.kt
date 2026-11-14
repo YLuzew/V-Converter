@@ -116,7 +116,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
                 invalidate()
                 status = StatusMessage.Info(
                     "Opened ${loaded.document.id} from ${loaded.source}: ${loaded.document.animations.size} animations" +
-                        if (sprite == null) ". Add the spritesheet (.png + .xml) to see it." else "."
+                        if (sprite == null) "。加上精灵图集（.png + .xml）才能看到它。" else "."
                 )
             } catch (e: Exception) {
                 status = StatusMessage.Error(e.message ?: "打开人物失败。")
@@ -132,7 +132,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
                 val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("选图集的 .png 和它的 .xml。")
                 val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("把图集的 .xml 也选上。")
                 val text = sheet.second.toString(Charsets.UTF_8)
-                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is 不是 Sparrow 图集." }
+                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is not a Sparrow spritesheet." }
                 val sprite = withContext(Dispatchers.Default) { decode(png.second, text) }
                 editor.sprite = sprite
                 image = png.second
@@ -212,7 +212,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
                 enabled = !busy,
                 onClick = { opener.launch(arrayOf("*/*")) }
             )
-            OutlineButton(viewModel.sheetName?.let { "图集：$it （替换）" } ?: "添加图集（.png + .xml）", accent, onClick = { sheetPicker.launch(arrayOf("*/*")) }, enabled = !busy)
+            OutlineButton(viewModel.sheetName?.let { "Spritesheet: $it (replace)" } ?: "添加图集（.png + .xml）", accent, onClick = { sheetPicker.launch(arrayOf("*/*")) }, enabled = !busy)
             OutlineButton("新建人物", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
@@ -235,7 +235,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             AnimationPanel(editor)
         }
         FunkinCard {
-            SectionTitle("Character info", accent, 4)
+            SectionTitle("人物信息", accent, 4)
             CharacterInfoPanel(editor)
         }
         FunkinCard {

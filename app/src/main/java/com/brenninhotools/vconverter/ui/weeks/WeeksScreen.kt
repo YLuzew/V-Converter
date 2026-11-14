@@ -57,7 +57,7 @@ fun WeeksScreen(viewModel: WeeksViewModel, modFolderName: String?, onSave: () ->
                     }
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FunkinTextField(item.id, { viewModel.setId(index, it) }, "Level id", accent, enabled = !busy)
+                        FunkinTextField(item.id, { viewModel.setId(index, it) }, "关卡 id", accent, enabled = !busy)
                         Text(
                             item.week.songs.joinToString(" · ") { it.name },
                             style = MaterialTheme.typography.bodySmall,

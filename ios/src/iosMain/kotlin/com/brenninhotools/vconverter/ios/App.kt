@@ -432,7 +432,7 @@ private fun ModScreen(state: AppState) {
     }
     if (mod.mod != null) {
         Card {
-            SectionTitle("Mod info", accent)
+            SectionTitle("模组信息", accent)
             Field(mod.title, { mod.title = it }, "Title", accent, !busy)
             Field(mod.description, { mod.description = it }, "Description", accent, !busy)
             Field(mod.author, { mod.author = it }, "Author", accent, !busy)
@@ -579,7 +579,7 @@ internal fun OutputCard(state: AppState, files: FileTabState, accent: Color) {
             Primary("Save into mod folder…", accent, !files.busy) { state.saveFiles(zip = false) }
             Secondary("Save as .zip…", !files.busy) { state.saveFiles(zip = true) }
             if (output.files.any { playableResult(it.relativePath) }) {
-                Secondary("PlayTest the result", !files.busy) { state.playTestFiles(output.files.map { it.relativePath to (it.bytes ?: it.content.encodeToByteArray()) }, "${state.tab.label} result") }
+                Secondary("试玩转换结果", !files.busy) { state.playTestFiles(output.files.map { it.relativePath to (it.bytes ?: it.content.encodeToByteArray()) }, "${state.tab.label} result") }
             }
         }
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {

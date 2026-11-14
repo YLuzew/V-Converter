@@ -51,7 +51,7 @@ object CodenameCharacterParser {
     fun parse(id: String, raw: String): CodenameCharacter {
         val root = XmlNode.parse(raw)
         if (!root.name.equals("character", ignoreCase = true)) {
-            throw IllegalArgumentException("这个 XML 不是 Codename Engine 的人物（根节点是 <${root.name}>).")
+            throw IllegalArgumentException("This XML is not a Codename Engine character (root is <${root.name}>).")
         }
         val defaultFps = root.double("defFps") ?: 24.0
         val anims = root.elements("anim").mapNotNull { node ->
@@ -129,7 +129,7 @@ object CodenamePsychCharacter {
         val images = character.images.toMutableList()
         if (gameOver != null) {
             if (gameOver.scale != character.scale) {
-                notes.warn("死亡人物「${gameOver.id}\" has a different scale; its animations were not merged.")
+                notes.warn("Game over character \"${gameOver.id}\" has a different scale; its animations were not merged.")
             } else {
                 val dx = (if (mirrored) -character.x else character.x) - gameOver.x
                 val dy = character.y - gameOver.y
@@ -177,7 +177,7 @@ object CodenamePsychCharacter {
             animations = animations
         )
         if (mirrored) {
-            notes.warn("这个人物是为「${if (character.playerOffsets) "player" else "opponent"} side and is used on the other one; Codename mirrors it at runtime, so singLEFT/singRIGHT were swapped and the offsets mirrored.")
+            notes.warn("This character was made for the ${if (character.playerOffsets) "player" else "opponent"} side and is used on the other one; Codename mirrors it at runtime, so singLEFT/singRIGHT were swapped and the offsets mirrored.")
         }
         if (character.animations.any { it.label }) {
             notes.warn("有些动画用了 Animate 帧标签；在转换后的人物里核对一下。")
@@ -208,7 +208,7 @@ object CodenameToVSliceCharacter {
         character.interval?.let { json.put("danceEvery", it.coerceAtLeast(1)) }
         val report = result.report.let { base ->
             base.copy(
-                warnings = base.warnings.filterNot { it.startsWith("Psych plays") } + built.notes.warnings.map { it.replace("在转换后的人物里检查它们", "V-Slice 需要符号名，所以在人物 JSON 里检查它们") },
+                warnings = base.warnings.filterNot { it.startsWith("Psych 播放") } + built.notes.warnings.map { it.replace("在转换后的人物里检查它们", "V-Slice 需要符号名，所以在人物 JSON 里检查它们") },
                 sections = base.sections.filterNot { it.title == "Notes" } + built.notes.sections
             )
         }

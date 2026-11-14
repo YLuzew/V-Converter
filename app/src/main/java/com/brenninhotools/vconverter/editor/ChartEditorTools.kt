@@ -76,8 +76,8 @@ object EventTemplates {
             "FocusCamera", "对准摄像机",
             listOf(
                 EventField("char", "Focus on", FieldType.CHOICE, 0, listOf(0 to "Player", 1 to "Opponent", 2 to "Girlfriend", -1 to "Position")),
-                EventField("x", "X offset", FieldType.NUMBER, 0.0),
-                EventField("y", "Y offset", FieldType.NUMBER, 0.0),
+                EventField("x", "X 偏移", FieldType.NUMBER, 0.0),
+                EventField("y", "Y 偏移", FieldType.NUMBER, 0.0),
                 EventField("duration", "时长（步数）", FieldType.NUMBER, 4.0),
                 EventField("ease", "Ease", FieldType.CHOICE, "CLASSIC", eases),
                 EventField("easeDir", "缓动方向", FieldType.CHOICE, "In", easeDirs)
@@ -92,7 +92,7 @@ object EventTemplates {
             )
         ),
         EventTemplate(
-            "ZoomCamera", "Zoom camera",
+            "ZoomCamera", "缩放摄像机",
             listOf(
                 EventField("zoom", "Zoom", FieldType.NUMBER, 1.0),
                 EventField("duration", "时长（步数）", FieldType.NUMBER, 4.0),
@@ -237,7 +237,7 @@ object ChartBundle {
         }
         val report = ReportBuilder()
         base.report.stats.forEach { report.stat(it.label, it.value) }
-        report.stat("Audio files", files.count { it.bytes != null })
+        report.stat("音频文件", files.count { it.bytes != null })
         base.report.sections.forEach { report.section(it.title, it.lines) }
         base.report.warnings.forEach { report.warn(it) }
         if (!roles.containsKey(AudioRole.INST)) report.warn("没选伴奏：自己把 Inst.ogg 加到歌曲文件夹里。")

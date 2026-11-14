@@ -57,7 +57,7 @@ class IosWeekEditor(private val scope: CoroutineScope) {
     val editor = WeekEditorState(WeekDocument("new-week", "New Week"))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(com.brenninhotools.vconverter.editorview.WeekLiveAdapter(editor) { asset -> decode(asset) }) { block -> runOnMain(block) }
     var target by mutableStateOf(ExportTarget.VSLICE)
-    var source by mutableStateOf("New week")
+    var source by mutableStateOf("新建一个周目")
         private set
     var status by mutableStateOf<Status?>(null)
     var busy by mutableStateOf(false)
@@ -171,7 +171,7 @@ class IosWeekEditor(private val scope: CoroutineScope) {
 
     fun createNew() {
         editor.load(WeekDocument("new-week", "New Week"), emptyMap(), emptyMap())
-        source = "New week"
+        source = "新建一个周目"
         output = null
         status = Status.Info("已新建周目，菜单人物用的是本体默认值。加上歌曲和标题图片就能用。")
     }
@@ -226,7 +226,7 @@ fun WeekEditorScreen(state: AppState) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Primary("Open week…", accent, !model.busy) { Dialogs.openFiles("Open the week files and images, or an archive") { model.open(it) } }
             Secondary("Open folder…", !model.busy) { Dialogs.chooseFolder("Choose the mod folder with the week") { model.open(listOf(it)) } }
-            Secondary("New week", !model.busy) { model.createNew() }
+            Secondary("新建一个周目", !model.busy) { model.createNew() }
         }
         Text(
             "A V-Slice level .json, a Psych week .json (with images/menucharacters/*.json) or a Codename week .xml (with data/weeks/characters/*.xml), plus the title and menu character images. Opening the whole mod folder also finds the song names.",

@@ -74,7 +74,7 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
                     if (version.page.isNotBlank()) EditorChip("发布页", false) { onOpenLink(version.page) }
                 }
             }
-            version.latest != null -> Text("已是最新版本（${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            version.latest != null -> Text("You have the latest version (${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         }
         state.announcements.forEach { a ->
             Column(
@@ -83,12 +83,12 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
             ) {
                 Text(a.title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = if (a.level == "warning") warning else scheme.onSurface)
                 if (a.body.isNotBlank()) Text(a.body, fontSize = 13.sp)
-                if (a.url.isNotBlank()) EditorChip("Open link", false) { onOpenLink(a.url) }
+                if (a.url.isNotBlank()) EditorChip("打开链接", false) { onOpenLink(a.url) }
             }
         }
         if (state.announcements.isEmpty() && version != null) Text("目前没有公告。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         state.newsError?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
-        EditorChip(if (state.newsLoading) "Checking…" else "Check again", false) { state.refreshNews() }
+        EditorChip(if (state.newsLoading) "Checking…" else "重新检查", false) { state.refreshNews() }
     }
 }
 
@@ -104,7 +104,7 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
             return@Column
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextValueField("Search mods", state.query, Modifier.weight(1f)) { state.query = it }
+            TextValueField("搜索模组", state.query, Modifier.weight(1f)) { state.query = it }
             EditorChip(if (state.loading) "Searching…" else "Search", false) { state.search() }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -164,14 +164,14 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
 fun ModSharePanel(state: OnlineState, onPickFile: () -> Unit, modifier: Modifier = Modifier) {
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        EditorSectionTitle("Share a mod")
+        EditorSectionTitle("分享模组")
         if (!state.configured) {
             NotConfigured()
             return@Column
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(state.file?.let { "${it.first} · ${size(it.second.size.toLong())}" } ?: "没有选择文件", fontSize = 13.sp, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
-            EditorChip("Pick .zip", false, onPickFile)
+            EditorChip("选择 .zip", false, onPickFile)
         }
         TextValueField("Title", state.title, Modifier.fillMaxWidth()) { state.title = it }
         TextValueField("Description", state.description, Modifier.fillMaxWidth()) { state.description = it }
@@ -194,14 +194,14 @@ fun ModSharePanel(state: OnlineState, onPickFile: () -> Unit, modifier: Modifier
                     Text("Mod id: ${done.mod.id}\nDelete key: ${done.deleteToken}\nLink: ${done.mod.downloadUrl}", fontSize = 12.sp)
                 }
                 Text("保管好删除密钥：以后只能靠它才能删掉这个模组。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
-                EditorChip("Remove it", false) { state.deleteUploaded() }
+                EditorChip("删除它", false) { state.deleteUploaded() }
             }
         }
         Text("只接受 .zip 文件。请分享你自己做的、或获得授权分享的模组。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
     }
 }
 
-private val roomKinds = listOf("chart" to "谱面编辑器", "character" to "人物编辑器", "stage" to "背景编辑器", "week" to "Week Editor")
+private val roomKinds = listOf("chart" to "谱面编辑器", "character" to "人物编辑器", "stage" to "背景编辑器", "week" to "周目编辑器")
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

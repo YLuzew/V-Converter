@@ -144,7 +144,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
         val chunk = try {
             LuaParser.parse(source)
         } catch (e: LuaSyntaxException) {
-            issues += ScriptIssue(e.line, "Lua 语法错误：${e.message?.substringAfter(": ")}")
+            issues += ScriptIssue(e.line, "Lua syntax error: ${e.message?.substringAfter(": ")}")
             return null
         }
 
@@ -796,7 +796,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
         return when (e.name) {
             "self" -> "self"
             "math", "string", "table", "os", "bit", "coroutine", "io" -> {
-                issue(e.line, "Lua 库 \"${e.name}' cannot be used as a value.")
+                issue(e.line, "The Lua library '${e.name}' cannot be used as a value.")
                 "null"
             }
             "_G" -> {
@@ -861,7 +861,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
             if (plain) return hxString(escapeRegex(pattern.value))
             val regex = LuaPattern.toRegex(pattern.value)
             if (regex != null) return hxString(regex)
-            issue(line, "Lua 模式 ${hxString(pattern.value)} uses features that cannot be converted; it is matched as plain text.")
+            issue(line, "The Lua pattern ${hxString(pattern.value)} uses features that cannot be converted; it is matched as plain text.")
             return hxString(escapeRegex(pattern.value))
         }
         helpers += "luaPatternToRegex"
@@ -1157,7 +1157,7 @@ class LuaToHScript(
         knownHaxeFields = declared.flatMap { it.second }.toSet()
         val result = transpile(source) ?: return GeneratedScript(className, moduleId, "", issues, emptyList(), emptySet())
         result.chunk.filterIsInstance<Stat.FunctionDecl>().filter { it.path.size == 1 && it.method == null && it.path[0] in PsychApi.unsupportedCallbacks }.forEach {
-            issue(it.line, "Psych 回调 '${it.path[0]}' has no V-Slice event, so it never runs.")
+            issue(it.line, "Psych callback '${it.path[0]}' has no V-Slice event, so it never runs.")
         }
         val callbacks = globalMethods().filter { it in PsychApi.callbacks }
         val sourceCode = assemble(result.boot, result.methods, callbacks)
@@ -1178,7 +1178,7 @@ class LuaToHScript(
         if (args.getOrNull(1)?.let { it !is Expr.Nil && it !is Expr.Table } == true) issue(line, "runHaxeCode(): the variables passed as the second argument must be a table to be converted.")
         val converted = haxeWrapper().inline(code, knownHaxeFunctions, knownHaxeFields + vars.map { it.name })
         haxeFields += vars.map { "hx_${it.name}" }
-        converted.issues.forEach { issue(line, "runHaxeCode：${it.message}") }
+        converted.issues.forEach { issue(line, "runHaxeCode: ${it.message}") }
         haxeImports += converted.imports
         haxeFields += converted.fields
         val repeated = converted.functions.keys.filter { it in haxeFunctions }
@@ -1186,7 +1186,7 @@ class LuaToHScript(
             if (n !in haxeFunctions) {
                 haxeFunctions[n] = arity
             } else {
-                issue(line, "runHaxeCode：function $n is defined twice; the first definition is kept.")
+                issue(line, "runHaxeCode: function $n is defined twice; the first definition is kept.")
             }
         }
         if (repeated.isEmpty()) haxeMembers += converted.members

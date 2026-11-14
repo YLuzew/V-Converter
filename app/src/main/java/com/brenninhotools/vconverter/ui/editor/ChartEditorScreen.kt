@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ChartEditorViewModel(application: Application) : BaseConverterViewModel(application) {
-    val editor = ChartEditorState(ChartDocument.blank("new-song", "New Song", 120.0, listOf("easy", "normal", "hard")))
+    val editor = ChartEditorState(ChartDocument.blank("new-song", "新歌曲", 120.0, listOf("easy", "normal", "hard")))
     private val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
     val live = com.brenninhotools.vconverter.editorview.LiveSession(
         com.brenninhotools.vconverter.editorview.ChartLiveAdapter(editor, { audio }, { track -> useAudio(audio.filterNot { it.name.equals(track.name, true) } + track) })
@@ -103,7 +103,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
             status = StatusMessage.Error("至少选一个难度。")
             return
         }
-        val name = newName.trim().ifEmpty { "New Song" }
+        val name = newName.trim().ifEmpty { "新歌曲" }
         editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in newDifficulties }))
         source = "New song"
         invalidate()
@@ -292,7 +292,7 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             SectionTitle("Chart", accent, 3)
             ChartEditorWorkspace(editor, Modifier.fillMaxWidth(), skin, eventIcon, gridHeight = 540.dp)
             com.brenninhotools.vconverter.ui.playtest.LocalPlayTest.current?.let { launcher ->
-                OutlineButton("PlayTest this chart", accent, onClick = { launcher.chart(editor.document, viewModel.audio) })
+                OutlineButton("试玩这张谱子", accent, onClick = { launcher.chart(editor.document, viewModel.audio) })
             }
         }
         FunkinCard {

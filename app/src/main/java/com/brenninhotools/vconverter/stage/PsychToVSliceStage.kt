@@ -79,7 +79,7 @@ object PsychToVSliceStage {
             if (objects == null) {
                 val base = baseStages[source.id.lowercase()]
                 report.warn(
-                    "这个背景没有 \"objects\" 列表，所以它的精灵是代码生成的（硬编码的 Psych 背景，或者 stages/${source.id}.lua/.hx). Character positions, cameras and zoom were converted; the props must be recreated in V-Slice." +
+                    "This stage has no \"objects\" list, so its sprites are built in code (a hardcoded Psych stage or stages/${source.id}.lua/.hx). Character positions, cameras and zoom were converted; the props must be recreated in V-Slice." +
                         if (base != null) " V-Slice already has this stage as \"$base\"." else ""
                 )
                 if (psych.preload.isNotEmpty()) report.section("背景预加载的图片", psych.preload.map { it.removePrefix("images/") })
@@ -115,7 +115,7 @@ object PsychToVSliceStage {
         if (objects != null && objects.isNotEmpty() && missing.size == 3) {
             notes.lines += "objects 列表里没有人物的层，所以人物放到了所有物件之上（在 Psych 里它们根本不会显示）。"
         } else if (objects != null && objects.isNotEmpty() && missing.isNotEmpty()) {
-            report.warn("objects 列表里没有对应的层：${missing.joinToString { it.label.lowercase() }}; Psych would not show ${if (missing.size == 1) "那个人物" else "那些人物"}, V-Slice puts ${if (missing.size == 1) "it" else "them"} on top.")
+            report.warn("The objects list has no layer for ${missing.joinToString { it.label.lowercase() }}; Psych would not show ${if (missing.size == 1) "that character" else "those characters"}, V-Slice puts ${if (missing.size == 1) "it" else "them"} on top.")
         }
 
         val characters = JSONObject()
@@ -138,10 +138,10 @@ object PsychToVSliceStage {
 
         if (skipped.isNotEmpty()) report.section("跳过的物件", skipped)
         if (psych.directory.isNotBlank() && directory != psych.directory.trim().lowercase()) {
-            notes.lines += "文件夹「${psych.directory}\" is not a V-Slice asset library (V-Slice stops with \"Missing library\" on unknown ones), so the stage uses \"shared\". Images in the mod's images/ folder load from there."
+            notes.lines += "The folder \"${psych.directory}\" is not a V-Slice asset library (V-Slice stops with \"Missing library\" on unknown ones), so the stage uses \"shared\". Images in the mod's images/ folder load from there."
         }
         if (psych.hideGirlfriend) notes.lines += "hide_girlfriend 变成了隐形的女友（透明度 0）；你也可以在歌曲元数据里把女友设成 none。"
-        if (psych.cameraSpeed != 1.0) report.warn("摄像机速度 ${psych.cameraSpeed} has no V-Slice stage setting; use a FocusCamera event with a duration, or a stage script, to change it.")
+        if (psych.cameraSpeed != 1.0) report.warn("Camera speed ${psych.cameraSpeed} has no V-Slice stage setting; use a FocusCamera event with a duration, or a stage script, to change it.")
         if (psych.isPixelStage) notes.lines += "像素背景：在用到它的歌曲元数据里把音符样式设成 \"pixel\"。"
         if (notes.exactOffsets > 0) notes.lines += "${notes.exactOffsets} animated prop(s) are scaled; their animation offsets were recalculated from the spritesheet frames so they draw exactly where Psych draws them."
         if (notes.approximateOffsets > 0) report.warn("${notes.approximateOffsets} scaled animated prop(s) have animation offsets but no spritesheet XML was given; offsets were divided by the scale and may be a few pixels off. Add the images' .xml files for an exact result.")

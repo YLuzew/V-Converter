@@ -352,7 +352,7 @@ class VSliceModConverter(
         }
         if (results.isNotEmpty() || failures.isNotEmpty()) {
             val scriptReport = HxcToPsych.report(results, failures)
-            scriptReport.sections.filter { it.title != "How it runs" }.forEach { report.section("Script · ${it.title}", it.lines) }
+            scriptReport.sections.filter { it.title != "运行方式" }.forEach { report.section("Script · ${it.title}", it.lines) }
             scriptReport.warnings.forEach(report::warn)
         }
     }
@@ -380,6 +380,6 @@ class VSliceModConverter(
             writer.copy("pack.png") { files.open(it) }
             written++
         }
-        onProgress(ModProgress(total, total, "Done"))
+        onProgress(ModProgress(total, total, "完成"))
     }
 }

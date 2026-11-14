@@ -139,7 +139,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
             return
         }
         connecting = true
-        status = "Creating a room…"
+        status = "正在创建房间…"
         val title = adapter.title()
         val listed = publicRoom
         val host = displayName()
@@ -154,7 +154,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
             } catch (e: Exception) {
                 post {
                     connecting = false
-                    status = e.message ?: "创建不了 the room."
+                    status = e.message ?: "Could not create the room."
                 }
             }
         }
@@ -275,7 +275,7 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
         EditorSectionTitle("Multieditor")
         if (!live.connected) {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                TextValueField("Your name", live.name, Modifier.weight(1f)) { live.name = it }
+                TextValueField("你的名字", live.name, Modifier.weight(1f)) { live.name = it }
                 TextValueField("Room code", live.code, Modifier.weight(1f)) { live.code = it.uppercase() }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -284,7 +284,7 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 EditorChip(if (live.connecting) "Connecting…" else "开一个房间", false) { live.host() }
-                EditorChip("Join room", false) { live.join() }
+                EditorChip("加入房间", false) { live.join() }
             }
             Text(
                 "两个或更多人一起编辑：开一个房间并分享房间码（或者公开列出），也可以加入别人的房间。每次改动都会实时同步，你加载的文件（图片、图集、歌曲音频）也会共享给房间。",

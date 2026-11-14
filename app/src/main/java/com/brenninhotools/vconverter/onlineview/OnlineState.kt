@@ -98,7 +98,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 version = v
                 announcements = list
             } catch (e: Exception) {
-                newsError = e.message ?: "连不上服务器."
+                newsError = e.message ?: "连不上服务器。"
             } finally {
                 newsLoading = false
             }

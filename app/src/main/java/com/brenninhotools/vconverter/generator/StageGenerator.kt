@@ -109,10 +109,10 @@ object StageGenerator {
         val missing = spec.props.filter { it.image == null }.map { "images/" + it.assetPath.ifBlank { "stages/$id/${Ids.of(it.name)}" } + ".png" }
         if (missing.isNotEmpty()) report.section("要添加的图片", missing)
         report.section(
-            "Next steps",
+            "下一步",
             listOf(
                 "Use this stage in a song with the id \"$id\".",
-                "Fine-tune positions in V-Slice's 背景编辑器."
+                "Fine-tune positions in V-Slice's Stage Editor."
             )
         )
         return Generated(files, report.build())

@@ -143,7 +143,7 @@ class CodenameScriptConverter(
         )
 
         private val codenameClasses = setOf(
-            "CoolUtil", "Options", "FunkinText", "HealthIcon", "Note", "Strum", "StrumLine", "ModState", "ModSubState",
+            "CoolUtil", "选项", "FunkinText", "HealthIcon", "Note", "Strum", "StrumLine", "ModState", "ModSubState",
             "GameOverSubstate", "PauseSubState", "PauseSubstate", "HudCamera", "CustomShader", "FunkinShader", "Logs", "Main",
             "Application", "FlxAnimate", "Boyfriend", "Character"
         )
@@ -180,7 +180,7 @@ class CodenameScriptConverter(
                 path.isNotEmpty() -> imports += path
             }
         }
-        functions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename 回调 $it() 在 V-Slice 里没有对应物，永远不会跑。") }
+        functions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename callback $it() has no V-Slice equivalent and never runs.") }
 
         val boot = mutableListOf<String>()
         val fieldInit = mutableListOf<String>()
@@ -807,7 +807,7 @@ $cases      default:
                     sb.append("Conductor.instance.").append(conductorMembers.getValue(member))
                     i = n2 + 1
                 }
-                t.text == "Options" && member != null -> {
+                t.text == "选项" && member != null -> {
                     val mapped = options[member]
                     if (mapped == null) issue(t.line, "Options.$member has no V-Slice equivalent and became null.")
                     sb.append(mapped ?: "null")
@@ -864,7 +864,7 @@ $cases      default:
                     i++
                 }
                 t.text in codenameClasses && !callNext -> {
-                    issue(t.line, "Codename 类 '${t.text}' does not exist in V-Slice.")
+                    issue(t.line, "Codename class '${t.text}' does not exist in V-Slice.")
                     sb.append(t.text)
                     i++
                 }

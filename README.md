@@ -23,6 +23,12 @@
 > 汉化只改字符串字面量（界面文案），转换逻辑、生成器、文件格式一行未动 —— 用它转出来的模组和原版完全一样。
 > 覆盖 Android / Windows / Linux / macOS / iOS 共用的那套 Compose 界面，桌面图标名也改成了「V-转换器」。漏翻、翻错的，提到[本仓库的 issue](https://github.com/YLuzew/V-Converter/issues)。
 
+> [!TIP]
+> **在线服务器（汉化版自建，可直接用）：`https://yluzewvconverter.dpdns.org`**
+> App 里打开「设置 → 服务器地址」，粘上面这行，「在线」页的**模组画廊、分享、房间（多人实时改谱）、新闻公告**就都能用了。
+> 这个服务器由汉化者 [YLuzew](https://github.com/YLuzew) 自建，不是原作者官方服务；域名是 Cloudflare 隧道，随开随关。
+> 想自己搭：服务端在 [`server/`](server/) 目录，Node 22+，有现成的 Dockerfile —— 见 [在线服务器](#在线服务器)。
+
 > [!NOTE]
 > **这个 App 是 vibe coding 写出来的。** V-Converter 靠 vibe coding 完成：代码是按提示词让 AI（Claude）写的，然后拿引擎源码逐条核对、实测。转换结果都验证过，但别指望一点毛刺没有；坏了就[开个 issue](https://github.com/BrenninhoTools/V-Converter/issues)。
 

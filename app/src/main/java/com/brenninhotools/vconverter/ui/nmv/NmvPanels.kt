@@ -129,7 +129,7 @@ private fun hint(direction: Direction, tab: Tab): String = when (direction.from)
         Tab.CHARTS -> "Pick data/<song>/<song>-<difficulty>.json and events.json."
         Tab.CHARACTERS -> "Pick characters/*.json (and their .lua/.hx scripts)."
         Tab.STAGES -> "Pick stages/*.json and stages/<stage>.lua or .hx."
-        Tab.WEEKS -> "Pick weeks/*.json and images/menucharacters/*.json."
+        Tab.WEEKS -> "选择 weeks/*.json 和 images/menucharacters/*.json。"
         else -> "Pick .lua and .hx scripts. Archives keep the folders, so scripts/, data/<song>/, stages/, custom_events/ and custom_notetypes/ keep their scope."
     }
     Engine.CODENAME -> when (tab) {

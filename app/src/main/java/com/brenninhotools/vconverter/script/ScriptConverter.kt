@@ -177,12 +177,12 @@ $body
                     Plan(source, target, className, ScriptHost(ScriptBase.MODULE, if (className == keepName(stem)) stem else kebab(className)), null)
                 }
                 ScriptScope.SONG -> when {
-                    ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(pascal(key) + extra() + "Module", "the base game already has a Song script for \"$key\".")
+                    ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(pascal(key) + extra() + "Module", "本体的歌曲脚本已经覆盖了「$key\".")
                     !claimed.add("song:$key") -> module(pascal(key) + extra() + "Module", "song \"$key\" already has a Song script; V-Slice allows one per song.")
                     else -> Plan(source, target, unique(ScriptBases.classFor(ScriptBase.SONG, key, ::pascal)), ScriptHost(ScriptBase.SONG, key), null)
                 }
                 ScriptScope.STAGE -> when {
-                    ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(pascal(key) + extra() + "Module", "the base game already has a Stage script for \"$key\".")
+                    ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(pascal(key) + extra() + "Module", "本体的背景脚本已经覆盖了「$key\".")
                     !claimed.add("stage:$key") -> module(pascal(key) + extra() + "Module", "stage \"$key\" already has a Stage script; V-Slice allows one per stage.")
                     else -> Plan(source, target, unique(ScriptBases.classFor(ScriptBase.STAGE, key, ::pascal)), ScriptHost(ScriptBase.STAGE, key), null)
                 }
@@ -190,7 +190,7 @@ $body
                     val kind = PsychToVSliceChart.noteKindFor(key)
                     when {
                         ScriptBases.isBaseGameId(ScriptBase.NOTE_KIND, kind) -> module(pascal(key) + "NoteTypeModule", "\"$kind\" is a base game note kind.")
-                        !fitsNoteKind(source.text) -> module(pascal(key) + "NoteTypeModule", "it uses callbacks a NoteKind never receives (only update, note and create/destroy events reach it).")
+                        !fitsNoteKind(source.text) -> module(pascal(key) + "NoteTypeModule", "它用了 NoteKind 收不到的回调（只有 update、note 和 create/destroy 事件能到它那里）。")
                         !claimed.add("notekind:$kind") -> module(pascal(key) + extra() + "NoteTypeModule", "note kind \"$kind\" already has a NoteKind script.")
                         else -> Plan(source, target, unique(ScriptBases.classFor(ScriptBase.NOTE_KIND, key, ::pascal)), ScriptHost(ScriptBase.NOTE_KIND, kind, key, noteStyles[kind]), null)
                     }
@@ -220,11 +220,11 @@ $body
                     PsychHScriptWrapper(className, host.id, target, siblings, noteTypeArray, eventNames, ownEvent, host = host).convert(source.text)
                 }
             } catch (e: Exception) {
-                report.warn("${source.path}: could not be converted (${e.message}).")
+                report.warn("${source.path}: 没有转换 (${e.message}).")
                 return@forEach
             }
             if (generated.source.isEmpty()) {
-                report.warn("${source.path}: ${generated.issues.firstOrNull()?.message ?: "could not be converted"}")
+                report.warn("${source.path}: ${generated.issues.firstOrNull()?.message ?: "没有转换"}")
                 return@forEach
             }
             val fileName = if (target.scope == ScriptScope.GLOBAL) keepFileName(source.path.substringAfterLast('/').substringBeforeLast('.')) else className
@@ -240,22 +240,22 @@ $body
             if (generated.issues.size > 40) lines += "…and ${generated.issues.size - 40} more notes"
             report.section(label, lines)
         }
-        if (fallbacks.isNotEmpty()) report.section("Scripts kept as Modules", fallbacks)
+        if (fallbacks.isNotEmpty()) report.section("脚本保留为模块", fallbacks)
 
         report.stat("Scripts", converted)
         report.stat("Callbacks", hooks)
         report.stat("API calls", apiUsed.size)
         val unsupported = apiUsed.filter { it in PsychApi.notImplemented }
         if (unsupported.isNotEmpty()) {
-            report.warn("These Psych functions have no V-Slice equivalent and do nothing: ${unsupported.joinToString()}.")
+            report.warn("这些 Psych 函数在 V-Slice 里没有对应物，什么也不会做：${unsupported.joinToString()}.")
         }
         report.section(
             "How it runs",
             listOf(
                 "Each script became the V-Slice class made for its job: data/<song>/ scripts are Songs (scripts/songs), stages/ scripts are Stages (scripts/stages), custom_notetypes are NoteKinds (scripts/notekinds), custom_events are SongEvents (scripts/events) and global scripts are Modules (scripts/modules).",
-                "A script only becomes a Module when its class can't carry it (a second script for the same song or stage, a note type that needs more than note events, or an id the base game already scripts); that Module only runs in its song, stage, event or note type.",
-                "The Psych functions a script uses are implemented inside its own class with V-Slice and Flixel code; no extra runtime is needed.",
-                "Psych events get V-Slice ids (\"Flash Camera\" → \"FlashCamera\") in charts and scripts alike; your scripts still see the original names in onEvent."
+                "只有脚本的类装不下它时才会变成模块（同一首歌或背景的第二个脚本、需要比音符事件更多东西的音符类型，或者基础游戏已经脚本化的 id）；这个模块只在它那首歌、那个背景、那个事件或音符类型里跑。",
+                "脚本用到的 Psych 函数，已经用它自己的类加上 V-Slice 和 Flixel 代码实现了；不需要额外的运行时。",
+                "Psych 事件在谱子和脚本里都会拿到 V-Slice 的 id（\"Flash Camera\" → \"FlashCamera\"）；你在 onEvent 里看到的还是原来的名字。"
             )
         )
         return ScriptBundle(files, report.build(), converted, noteKinds)

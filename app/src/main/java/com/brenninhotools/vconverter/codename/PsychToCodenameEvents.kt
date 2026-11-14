@@ -4,13 +4,13 @@ import com.brenninhotools.vconverter.script.hx.HxSource
 
 object PsychToCodenameEvents {
     private val descriptions = mapOf(
-        "Hey!" to listOf("Target (BF, GF or empty for both)", "Duration (seconds)"),
-        "Set GF Speed" to listOf("Speed (1 = every beat)", "Unused"),
-        "Screen Shake" to listOf("Game camera (duration, intensity)", "HUD camera (duration, intensity)"),
-        "Change Character" to listOf("Target (BF, Dad or GF)", "New character"),
-        "Set Property" to listOf("Property (e.g. boyfriend.alpha)", "Value"),
-        "Play Sound" to listOf("Sound (from sounds/)", "Volume (0 to 1)"),
-        "Alt Idle Animation" to listOf("Target (BF, Dad or GF)", "Idle suffix (e.g. -alt)")
+        "Hey!" to listOf("目标（BF、GF，留空表示两边都算）", "时长（秒）"),
+        "Set GF Speed" to listOf("速度（1 = 每拍一次）", "Unused"),
+        "Screen Shake" to listOf("游戏摄像机（时长，强度）", "HUD 摄像机（时长，强度）"),
+        "Change Character" to listOf("目标（BF、Dad 或 GF）", "新人物"),
+        "Set Property" to listOf("属性（例如 boyfriend.alpha）", "Value"),
+        "Play Sound" to listOf("音效（来自 sounds/）", "音量（0 到 1）"),
+        "Alt Idle Animation" to listOf("目标（BF、Dad 或 GF）", "待机后缀（例如 -alt）")
     )
 
     fun definition(name: String, titles: List<String> = emptyList()): String {

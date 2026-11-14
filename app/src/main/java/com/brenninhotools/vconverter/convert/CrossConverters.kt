@@ -92,7 +92,7 @@ class CodenameToPsychChartsConverter : CodenameToPsychConverter() {
             }
             file.path.replace('\\', '/').contains("data/events/", ignoreCase = true) -> {
                 CodenameEvents.parseDefinition(stem, text)
-                PickedText(file.path, file.name, file.path, text, "definition", "Event params")
+                PickedText(file.path, file.name, file.path, text, "definition", "事件参数")
             }
             else -> throw IllegalArgumentException("not a Codename chart, meta.json, events.json or data/events/*.json")
         }
@@ -145,7 +145,7 @@ class CodenameToPsychChartsConverter : CodenameToPsychConverter() {
         if (compat) outputs += out(CodenamePsychHelpers.COMPAT_SCRIPT, CodenamePsychHelpers.compatScript())
         if (scripted.isNotEmpty()) report.section("Events", scripted.map { "$it → custom_events/$it.hx" })
         val unscripted = customEvents.keys.filter { it !in scripted && it !in CodenameToPsychEvents.scripted }
-        if (unscripted.isNotEmpty()) report.warn("Mod events (${unscripted.joinToString()}) are kept in the charts; convert their data/events/*.hx in the Scripts tab so Psych can run them.")
+        if (unscripted.isNotEmpty()) report.warn("模组事件（${unscripted.joinToString()}) are kept in the charts; convert their data/events/*.hx in the Scripts tab so Psych can run them.")
         report.section("Audio", listOf("Copy songs/<song>/song/Inst.ogg and Voices.ogg to songs/<song>/ in the Psych mod (the whole-mod tab does this for you)."))
         require(outputs.isNotEmpty()) { "Nothing to convert: add a Codename chart (songs/<song>/charts/<difficulty>.json)." }
         return ConvertedOutput(outputs, report.build())
@@ -161,13 +161,13 @@ class CodenameToPsychCharactersConverter : CodenameToPsychConverter() {
 
     override fun classify(file: ImportedFile, text: String): PickedText {
         val id = file.name.substringBeforeLast('.')
-        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
+        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
         if (CodenameCharacterParser.isCharacterXml(text)) {
             val character = CodenameCharacterParser.parse(id, text)
             return PickedText(file.path, file.name, file.path, text, "character", "${character.animations.size} anims", CodenamePsychCharacter.defaultSlot(character))
         }
         val atlas = SparrowAtlas.parse(text)
-        require(atlas.frames.isNotEmpty()) { "not a Codename character XML or a Sparrow spritesheet" }
+        require(atlas.frames.isNotEmpty()) { "不是 Codename 人物 XML，也不是 Sparrow 图集" }
         return PickedText(file.path, file.name, file.path, text, "atlas", "${atlas.frames.size} frames")
     }
 
@@ -205,7 +205,7 @@ class CodenameToPsychStagesConverter : CodenameToPsychConverter() {
     override fun accept(file: ImportedFile) = file.extension == "xml"
 
     override fun classify(file: ImportedFile, text: String): PickedText {
-        require(CodenameStageParser.isStageXml(text)) { "not a Codename stage XML" }
+        require(CodenameStageParser.isStageXml(text)) { "不是 Codename 背景 XML" }
         val stage = CodenameStageParser.parse(file.name.substringBeforeLast('.'), text, includeLowMemory = true)
         return PickedText(file.path, file.name, file.path, text, "stage", "${stage.spriteNames.size} sprites")
     }
@@ -227,7 +227,7 @@ class CodenameToPsychStagesConverter : CodenameToPsychConverter() {
             result.report.sections.forEach { report.section("$id · ${it.title}", it.lines) }
             if (result.extensions.isNotEmpty()) report.warn("$id loads ${result.extensions.joinToString { "$it.hx" }}; convert those in the Scripts tab (they go to stages/extensions/).")
         }
-        report.section("Stage scripts", listOf("If the stage has data/stages/<stage>.hx, convert it in the Scripts tab together with the stage XML; it is merged with the generated stages/<stage>.hx."))
+        report.section("背景脚本", listOf("If the stage has data/stages/<stage>.hx, convert it in the Scripts tab together with the stage XML; it is merged with the generated stages/<stage>.hx."))
         report.stat("Stages", items.size)
         return ConvertedOutput(outputs.distinctBy { it.relativePath }, report.build())
     }
@@ -249,8 +249,8 @@ class CodenameToPsychWeeksConverter : CodenameToPsychConverter() {
                 PickedText(file.path, file.name, file.path, text, "meta", folder)
             }
             CodenameWeekParser.isWeekXml(text) -> PickedText(file.path, file.name, file.path, text, "week", "${CodenameWeekParser.parseWeek(id, text).songs.size} songs")
-            CodenameWeekParser.isMenuCharacterXml(text) -> PickedText(file.path, file.name, file.path, text, "menu", "Menu character")
-            else -> throw IllegalArgumentException("not a Codename week, week character XML or song meta.json")
+            CodenameWeekParser.isMenuCharacterXml(text) -> PickedText(file.path, file.name, file.path, text, "menu", "菜单人物")
+            else -> throw IllegalArgumentException("不是 Codename 的周目、周目人物 XML 或歌曲 meta.json")
         }
     }
 
@@ -282,7 +282,7 @@ class CodenameToPsychWeeksConverter : CodenameToPsychConverter() {
             if (result.copies.isNotEmpty()) report.section("$id · Images", result.copies.map { "Copy ${it.from} to ${it.to}" })
         }
         if (order.isNotEmpty()) outputs += out("weeks/weekList.txt", order.joinToString("\n") + "\n")
-        if (metas.isEmpty() && order.isNotEmpty()) report.warn("Add the songs' meta.json files so freeplay icons and colors match.")
+        if (metas.isEmpty() && order.isNotEmpty()) report.warn("把歌曲的 meta.json 也一起加上，自由游玩的图标和颜色才对得上。")
         report.stat("Weeks", order.size)
         return ConvertedOutput(outputs, report.build())
     }
@@ -311,8 +311,8 @@ class CodenameToPsychScriptsConverter : CodenameToPsychConverter() {
         val stem = file.name.substringBeforeLast('.')
         return when (file.extension) {
             "xml" -> {
-                require(CodenameStageParser.isStageXml(text)) { "only stage XMLs are used here (for the sprite names)" }
-                PickedText(file.path, file.name, file.path, text, "stage", "Stage sprites")
+                require(CodenameStageParser.isStageXml(text)) { "这里只用到背景 XML（为了取精灵名）" }
+                PickedText(file.path, file.name, file.path, text, "stage", "背景精灵")
             }
             "json" -> {
                 val def = CodenameEvents.parseDefinition(stem, text)
@@ -390,7 +390,7 @@ class PsychToCodenameChartsConverter : PsychToCodenameConverter() {
         val song = PsychChartParser.parse(text)
         val folder = songFolder(file.path, stem).lowercase()
         if (stem.equals("events", ignoreCase = true)) return PickedText(file.path, file.name, file.path, text, "events", "$folder · ${song.events.size} events")
-        require(song.sections.isNotEmpty()) { "not a Psych chart" }
+        require(song.sections.isNotEmpty()) { "不是 Psych 谱子" }
         val (id, difficulty) = PsychChartNames.split(stem, folder)
         return PickedText(file.path, file.name, file.path, text, "chart", "$id · $difficulty")
     }
@@ -437,7 +437,7 @@ class PsychToCodenameCharactersConverter : PsychToCodenameConverter() {
     override fun accept(file: ImportedFile) = file.extension == "json"
 
     override fun classify(file: ImportedFile, text: String): PickedText {
-        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
+        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
         val id = file.name.substringBeforeLast('.')
         val character = PsychCharacterParser.parse(text)
         return PickedText(file.path, file.name, file.path, text, "character", "${character.animations.size} anims", PsychToCodenameCharacter.defaultSlot(id, character))
@@ -526,7 +526,7 @@ class PsychToCodenameWeeksConverter : PsychToCodenameConverter() {
         val menu = pathParts(file.path).any { it.equals("menucharacters", ignoreCase = true) } || (text.contains("idle_anim") && !text.contains("weekCharacters"))
         return if (menu) {
             PsychWeekParser.parseMenuCharacter(text)
-            PickedText(file.path, file.name, file.path, text, "menu", "Menu character")
+            PickedText(file.path, file.name, file.path, text, "menu", "菜单人物")
         } else {
             val week = PsychWeekParser.parse(text)
             PickedText(file.path, file.name, file.path, text, "week", "${week.songs.size} songs")
@@ -583,7 +583,7 @@ class PsychToCodenameScriptsConverter : PsychToCodenameConverter() {
     override fun classify(file: ImportedFile, text: String): PickedText {
         if (file.extension == "json") {
             PsychStageParser.parse(text)
-            return PickedText(file.path, file.name, file.path, text, "stage", "Stage objects")
+            return PickedText(file.path, file.name, file.path, text, "stage", "背景物件")
         }
         val (scope, key) = scope(file.path)
         val label = scope.name.lowercase().replace('_', ' ').replaceFirstChar { it.uppercaseChar() } + if (key.isNotEmpty()) " · $key" else ""

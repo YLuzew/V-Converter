@@ -67,10 +67,10 @@ class CodenameModConverter(
         report.stat("Weeks", scan.weeks.size)
         report.stat("Assets", scan.assets.size)
         report.stat("Files", written)
-        if (scan.placeholders.isNotEmpty()) report.section("Empty placeholder folders removed", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
-        if (scan.ignored.isNotEmpty()) report.section("Other files skipped", limited(scan.ignored.map(scan::relative)))
-        if (scan.weekList != null) report.warn("Codename's weeks.txt order is not used by V-Slice; levels are listed in their own order.")
-        if (scan.stateScripts.isNotEmpty()) report.warn("State scripts (data/states/) were skipped; V-Slice modules can hook states with onStateChangeEnd instead: ${scan.stateScripts.joinToString { scan.relative(it) }}.")
+        if (scan.placeholders.isNotEmpty()) report.section("已移除空的占位文件夹", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
+        if (scan.ignored.isNotEmpty()) report.section("其他文件已跳过", limited(scan.ignored.map(scan::relative)))
+        if (scan.weekList != null) report.warn("V-Slice 不用 Codename 的 weeks.txt 顺序；关卡按自己的顺序排。")
+        if (scan.stateScripts.isNotEmpty()) report.warn("状态脚本（data/states/）跳过了；V-Slice 的模块可以改用 onStateChangeEnd 挂钩状态：${scan.stateScripts.joinToString { scan.relative(it) }}.")
         return ModConversionResult(written, report.build())
     }
 
@@ -232,11 +232,11 @@ class CodenameModConverter(
                 writer.writeText("data/characters/$id.json", json)
                 written++
                 result.report.warnings
-                    .filterNot { it.startsWith("Spritesheet XML not provided") }
+                    .filterNot { it.startsWith("没有提供图集 XML") }
                     .filterNot { id.endsWith("-dead") && it.startsWith("No \"idle\"") }
                     .filterNot { animate && it.startsWith("centercam") }
                     .forEach { report.warn("Character $id: $it") }
-                if (animate) report.warn("Character $id uses an Animate atlas (renderType \"animateatlas\"); its offsets are approximate, so check it in the V-Slice character editor.")
+                if (animate) report.warn("Character $id uses an Animate 图集 (renderType \"animateatlas\"); its offsets are approximate, so check it in the V-Slice character editor.")
                 else if (atlasMissing) report.warn("Character $id: spritesheet XML missing, so its position is approximate.")
                 result.report.sections.filter { it.title == "Game over" }.forEach { report.section("Character $id · game over", it.lines) }
             } catch (e: Exception) {
@@ -341,7 +341,7 @@ class CodenameModConverter(
             written++
             if (result.issues.isNotEmpty()) report.section("Script · ${scan.relative(job.path)}", result.issues.map { if (it.line > 0) "line ${it.line}: ${it.message}" else it.message })
         }
-        if (kept.isNotEmpty()) report.section("Scripts kept as Modules", kept)
+        if (kept.isNotEmpty()) report.section("脚本保留为模块", kept)
         val eventFiles = eventDefs.filter { def ->
             def.name !in CodenameEvents.nativeConversions && (def.name in CodenameEvents.implemented || definitions.containsKey(def.name)) &&
                 !(def.name == "Camera Zoom" && def.name !in keptEvents)
@@ -357,7 +357,7 @@ class CodenameModConverter(
             written++
         }
         val unhandled = keptEvents.keys.filter { name -> name !in CodenameEvents.implemented && name !in scan.eventScripts.keys }
-        if (unhandled.isNotEmpty()) report.warn("These events are kept in the charts but nothing handles them in V-Slice yet: ${unhandled.joinToString()}.")
+        if (unhandled.isNotEmpty()) report.warn("这些事件留在谱子里，但 V-Slice 里还没有东西处理它们：${unhandled.joinToString()}.")
         report.stat("Scripts", results.size)
     }
 
@@ -366,7 +366,7 @@ class CodenameModConverter(
             writer.copy(target) { files.open(source) }
             written++
         } catch (e: Exception) {
-            report.warn("Could not copy $target: ${e.message}")
+            report.warn("复制失败：$target: ${e.message}")
         }
     }
 
@@ -384,7 +384,7 @@ class CodenameModConverter(
         val contributors = JSONArray()
         if (info.author.isNotBlank()) contributors.put(JSONObject().put("name", info.author))
         val meta = JSONObject()
-            .put("title", info.title.ifBlank { "Converted Mod" })
+            .put("title", info.title.ifBlank { "已转换模组" })
             .put("description", info.description)
             .put("contributors", contributors)
             .put("homepage", "")

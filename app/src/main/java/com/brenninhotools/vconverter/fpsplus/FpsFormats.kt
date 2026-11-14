@@ -252,7 +252,7 @@ object FpsFormats {
             atlas -> {
                 lines += "info.spritePath = ${str(image)};"
                 lines += "info.frameLoadType = setAtlas();"
-                warnings += "$id is an Animate atlas: Psych plays symbols, FPS Plus plays frame labels, so check that the animations use labels with the same names."
+                warnings += "$id is an Animate 图集: Psych plays symbols, FPS Plus plays frame labels, so check that the animations use labels with the same names."
             }
             images.size > 1 -> {
                 lines += "info.spritePaths = [${images.joinToString(", ") { str(it) }}];"

@@ -135,7 +135,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
     fun host() {
         if (connecting || connected) return
         if (!Online.isConfigured) {
-            status = "Set the server address in the options first."
+            status = "先在选项里填服务器地址。"
             return
         }
         connecting = true
@@ -154,7 +154,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
             } catch (e: Exception) {
                 post {
                     connecting = false
-                    status = e.message ?: "Could not create the room."
+                    status = e.message ?: "创建不了 the room."
                 }
             }
         }
@@ -163,7 +163,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
     fun join(room: String = code) {
         if (connecting || connected) return
         if (!Online.isConfigured) {
-            status = "Set the server address in the options first."
+            status = "先在选项里填服务器地址。"
             return
         }
         val clean = room.trim().uppercase()
@@ -280,14 +280,14 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = live.publicRoom, onCheckedChange = { live.publicRoom = it })
-                Text("List my room publicly (anyone can join from Online → Rooms)", fontSize = 13.sp)
+                Text("公开我的房间（任何人都能从在线 → 房间进来）", fontSize = 13.sp)
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                EditorChip(if (live.connecting) "Connecting…" else "Start a room", false) { live.host() }
+                EditorChip(if (live.connecting) "Connecting…" else "开一个房间", false) { live.host() }
                 EditorChip("Join room", false) { live.join() }
             }
             Text(
-                "Edit together with two or more people: start a room and share its code (or list it publicly), or join someone's room. Every change syncs live, and the files you load (images, spritesheets, song audio) are shared with the room.",
+                "两个或更多人一起编辑：开一个房间并分享房间码（或者公开列出），也可以加入别人的房间。每次改动都会实时同步，你加载的文件（图片、图集、歌曲音频）也会共享给房间。",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -297,7 +297,7 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
                 if (live.publicRoom) Text("public", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 EditorChip("Leave", false) { live.leave() }
             }
-            Text(if (live.peers.isEmpty()) "Nobody else is here yet." else "With: " + live.peers.joinToString { it.name }, fontSize = 13.sp)
+            Text(if (live.peers.isEmpty()) "还没有别人进来。" else "With: " + live.peers.joinToString { it.name }, fontSize = 13.sp)
             if (live.files > 0) Text("${live.files} shared file(s)", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             live.cursors.values.forEach { c ->
                 Text("${c.name} · ${formatTime(c.time)} · ${c.difficulty}", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)

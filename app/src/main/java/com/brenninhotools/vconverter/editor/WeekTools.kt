@@ -106,7 +106,7 @@ object WeekLoader {
             return LoadedWeek(document, assets, "Codename Engine")
         }
 
-        throw IllegalArgumentException("No week found. Pick a V-Slice level .json, a Psych week .json or a Codename week .xml, with its images.")
+        throw IllegalArgumentException("没找到周目。选一个 V-Slice 关卡 .json、Psych 周目 .json 或 Codename 周目 .xml，连同它的图片一起。")
     }
 }
 
@@ -116,8 +116,8 @@ object WeekExport {
     private fun capitalize(value: String) = value.replaceFirstChar { it.titlecase() }
 
     fun build(document: WeekDocument, target: ExportTarget, assets: Map<String, StageAsset>): ConvertedOutput {
-        require(document.id.isNotBlank()) { "Enter a week id." }
-        require(document.songs.isNotEmpty()) { "Add at least one song." }
+        require(document.id.isNotBlank()) { "输入周目 ID。" }
+        require(document.songs.isNotEmpty()) { "至少添加一首歌。" }
         val duplicate = document.songs.groupBy { it.id }.entries.firstOrNull { it.value.size > 1 }?.key
         require(duplicate == null) { "The song \"$duplicate\" is listed twice." }
         val report = ReportBuilder()
@@ -145,19 +145,19 @@ object WeekExport {
                     val className = PsychToVSliceLevel.levelClass(document.id)
                     files += OutputFile.of("scripts/levels/$className.hxc", PsychToVSliceLevel.levelScript(className, document.id, document.toPsychWeek(), document.isLocked), null)
                     report.section(
-                        "Level script (scripts/levels/$className.hxc)",
+                        "关卡脚本（scripts/levels/$className.hxc)",
                         listOfNotNull(
-                            if (document.isLocked) "Unlocks after beating \"${document.weekBefore.trim()}\"" else null,
-                            if (document.isLocked && document.hiddenUntilUnlocked) "Hidden from the story menu until unlocked" else null,
-                            if (document.isLocked) "Its songs stay out of freeplay while it is locked" else null,
-                            if (document.hideFreeplay) "Its songs are hidden from freeplay but still play in story mode" else null
+                            if (document.isLocked) "通关后解锁：「${document.weekBefore.trim()}\"" else null,
+                            if (document.isLocked && document.hiddenUntilUnlocked) "解锁前在故事菜单里隐藏" else null,
+                            if (document.isLocked) "锁定期间它的歌曲不出现在自由游玩里" else null,
+                            if (document.hideFreeplay) "它的歌曲从自由游玩中隐藏，但故事模式里还能玩" else null
                         )
                     )
                 }
                 image(document.title)
                 if (!document.backgroundIsColor) image(document.background)
                 WeekSlot.entries.mapNotNull { document.prop(it) }.filterNot { it.isBase }.forEach { image(it.assetPath) }
-                if (document.difficulties != WeekDocument.DEFAULT_DIFFICULTIES) report.section("Difficulties", listOf("V-Slice levels have no difficulty list; each song's metadata lists ${document.difficulties.joinToString()}."))
+                if (document.difficulties != WeekDocument.DEFAULT_DIFFICULTIES) report.section("Difficulties", listOf("V-Slice 关卡没有难度列表；每首歌的元数据里列的是 ${document.difficulties.joinToString()}."))
             }
             ExportTarget.PSYCH, ExportTarget.CODENAME -> {
                 val psych = psych(document, vslice, report)
@@ -186,9 +186,9 @@ object WeekExport {
             }
         }
         report.stat("Songs", document.songs.size)
-        report.stat("Menu characters", WeekSlot.entries.count { document.prop(it) != null })
+        report.stat("菜单人物", WeekSlot.entries.count { document.prop(it) != null })
         report.stat("Files", files.size)
-        if (missing.isNotEmpty()) report.section("Images to add", missing.distinct())
+        if (missing.isNotEmpty()) report.section("要添加的图片", missing.distinct())
         return ConvertedOutput(files, report.build())
     }
 
@@ -197,14 +197,14 @@ object WeekExport {
     private fun psych(document: WeekDocument, vslice: String, report: ReportBuilder): PsychWeekFiles {
         val songs = document.songs.associate { it.id to LevelSongInfo(it.displayName, it.icon.ifBlank { "face" }, document.difficulties) }
         val result = VSliceToPsychLevel.convert(document.id, VSliceParser.level(vslice), songs)
-        result.report.warnings.filterNot { it.contains("backgrounds are images") || it.startsWith("No metadata") }.forEach(report::warn)
+        result.report.warnings.filterNot { it.contains("背景是图片") || it.startsWith("No metadata") }.forEach(report::warn)
         val root = JSONObject(result.json)
         val songArray = JSONArray()
         document.songs.forEach { song -> songArray.put(JSONArray().put(song.displayName).put(song.icon.ifBlank { "face" }).put(JSONArray(WeekDocument.rgb(song.color)))) }
         val copies = result.copies.toMutableList()
         val background = when {
             document.backgroundIsColor -> {
-                if (!document.background.trim().equals(WeekDocument.DEFAULT_BACKGROUND, true)) report.warn("Psych week backgrounds are images; the color ${document.background} becomes Psych's default yellow.")
+                if (!document.background.trim().equals(WeekDocument.DEFAULT_BACKGROUND, true)) report.warn("Psych week 背景是图片; the color ${document.background} becomes Psych's default yellow.")
                 ""
             }
             else -> {

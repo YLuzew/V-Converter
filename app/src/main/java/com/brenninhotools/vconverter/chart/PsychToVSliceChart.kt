@@ -83,12 +83,12 @@ object PsychToVSliceChart {
     )
 
     fun convert(sources: List<ChartSource>, options: ConversionOptions = ConversionOptions()): ConversionResult {
-        require(sources.isNotEmpty()) { "Select at least one Psych Engine chart." }
+        require(sources.isNotEmpty()) { "至少选择一个 Psych Engine 谱子。" }
 
         val normalized = sources.map { it.copy(difficulty = normalizeDifficulty(it.difficulty)) }
         normalized.groupBy { it.difficulty }.forEach { (difficulty, group) ->
-            require(difficulty.isNotEmpty()) { "Every chart needs a difficulty name." }
-            require(group.size == 1) { "The difficulty \"$difficulty\" is assigned to more than one chart." }
+            require(difficulty.isNotEmpty()) { "每个谱子都需要一个难度名。" }
+            require(group.size == 1) { "难度「$difficulty\" is assigned to more than one chart." }
         }
 
         val ordered = normalized.sortedWith(compareBy({ difficultyRank(it.difficulty) }, { it.difficulty }))

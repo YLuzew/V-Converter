@@ -47,7 +47,7 @@ class ConversionReport {
             appendLine()
             appendLine("Note kinds used")
             appendLine("  ${noteKinds.joinToString(", ")}")
-            appendLine("  V-Slice only reacts to a note kind when a NoteKind script with that id exists in your mod.")
+            appendLine("  只有模组里存在对应 id 的 NoteKind 脚本时，V-Slice 才会响应这种音符类型。")
         }
         if (warnings.isNotEmpty()) {
             appendLine()
@@ -68,25 +68,25 @@ class ConversionReport {
             )
         )
         builder.section(
-            if (keptPsychEvents > 0) "Kept with their Psych names (scripts and generated SongEvents handle them)" else "Skipped events (no V-Slice equivalent yet)",
+            if (keptPsychEvents > 0) "保留 Psych 的原名（由脚本和生成的 SongEvents 处理）" else "跳过的事件（V-Slice 里还没有对应物）",
             unsupportedEvents.map { (name, count) -> "$name ×$count" }
         )
         builder.section(
-            "Duplicates removed",
+            "去掉的重复项",
             duplicateNotes.map { (difficulty, count) -> "$difficulty: $count stacked notes" }
         )
         if (variations.isNotEmpty()) {
             builder.section("Variations", variations.map { (name, difficulties) -> "$name: ${difficulties.joinToString(", ")}" })
         }
         if (offsetApplied != 0.0) {
-            builder.section("Audio offset", listOf("The Psych chart offset (${formatMs(offsetApplied)}) was written to the metadata's instrumental offset."))
+            builder.section("音频偏移", listOf("Psych 谱子的偏移（${formatMs(offsetApplied)}) was written to the metadata's instrumental offset."))
         }
         if (noteKinds.isNotEmpty()) {
             builder.section(
                 "Note kinds",
                 listOf(
                     noteKinds.joinToString(", "),
-                    "V-Slice only reacts to a note kind when a NoteKind script with that id exists in your mod."
+                    "只有模组里存在对应 id 的 NoteKind 脚本时，V-Slice 才会响应这种音符类型。"
                 )
             )
         }

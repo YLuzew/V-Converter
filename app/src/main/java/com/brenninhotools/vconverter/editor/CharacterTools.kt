@@ -45,7 +45,7 @@ object CharacterLoader {
                 val id = Ids.of(stem(path)).ifEmpty { "character" }
                 CharacterDocument.fromAtlas(id, SpriteAtlas.parse(text), "characters/${stem(path)}") to "Spritesheet"
             }
-            ?: throw IllegalArgumentException("No character found. Pick a V-Slice or Psych character .json, a Codename character .xml, or a spritesheet .png + .xml.")
+            ?: throw IllegalArgumentException("没有找到人物。请选择 V-Slice 或 Psych 的人物 .json、Codename 的人物 .xml，或者精灵图集 .png + .xml。")
 
         val wanted = key(document.assetPath)
         val sheet = sheets.firstOrNull { key(it.first) == wanted } ?: sheets.firstOrNull()
@@ -70,7 +70,7 @@ object CharacterExport {
     private fun imagePath(raw: String): String = raw.trim().replace('\\', '/').substringAfter(':').removePrefix("images/").removeSuffix(".png")
 
     fun build(document: CharacterDocument, target: ExportTarget, image: ByteArray?, xml: String?): ConvertedOutput {
-        require(document.id.isNotBlank()) { "Enter a character id." }
+        require(document.id.isNotBlank()) { "输入人物 ID。" }
         val animations = document.animations.filter { it.name.isNotBlank() && it.prefix.isNotBlank() }
         require(animations.isNotEmpty()) { "Give at least one animation a name and a prefix." }
         val duplicate = animations.groupBy { it.name }.entries.firstOrNull { it.value.size > 1 }?.key
@@ -110,8 +110,8 @@ object CharacterExport {
         val names = animations.map { it.name }.toSet()
         val missing = listOf("idle", "singLEFT", "singDOWN", "singUP", "singRIGHT")
             .filter { it !in names && !(it == "idle" && "danceLeft" in names && "danceRight" in names) }
-        if (missing.isNotEmpty()) report.warn("Missing common animations: ${missing.joinToString()}.")
-        if (image == null || xml == null) report.warn("No spritesheet loaded: add images/$assetPath.png and .xml yourself.")
+        if (missing.isNotEmpty()) report.warn("缺这些常用动画：${missing.joinToString()}.")
+        if (image == null || xml == null) report.warn("还没加载图集：加上 images/$assetPath.png and .xml yourself.")
         return ConvertedOutput(files, report.build())
     }
 

@@ -272,18 +272,29 @@ function opponentNoteHitPre(note:Note)
     }
 
     fun description(name: String, params: List<String> = emptyList()): String = when (name) {
-        "Camera Movement" -> "Moves the camera to a character in the middle of a section.\nValue 1: dad, bf or gf\nValue 2: snap to jump there instantly"
-        "Camera Position" -> "Codename camera position.\nValue 1: X, Y, tween?, tween steps\nValue 2: ease, ease type, is offset?"
-        "Camera Bop" -> "Extra camera bop.\nValue 1: amount (1 = one normal bop)"
-        "Camera Zoom" -> "Codename camera zoom.\nValue 1: tween?, zoom, camera (camGame/camHUD), steps\nValue 2: ease, ease type, mode (direct/stage), multiplicative?"
-        "Camera Modulo Change" -> "Changes how often the camera bops.\nValue 1: interval, strength\nValue 2: BEAT/MEASURE/STEP, offset"
-        "Camera Flash" -> "Flashes the camera.\nValue 1: reversed?, color\nValue 2: steps, camera (camGame/camHUD)"
+        "Camera Movement" -> "在 section 中途把摄像机移到某个人物上。
+值 1：dad、bf 或 gf
+值 2：snap 表示瞬间跳过去"
+        "Camera Position" -> "Codename 的摄像机位置。
+值 1：X、Y、是否缓动？、缓动步数
+值 2：缓动曲线、缓动类型、是否为偏移？"
+        "Camera Bop" -> "额外的摄像机律动。
+值 1：幅度（1 = 一次正常律动）"
+        "Camera Zoom" -> "Codename 的摄像机缩放。
+值 1：是否缓动？、缩放、摄像机（camGame/camHUD）、步数
+值 2：缓动曲线、缓动类型、模式（direct/stage）、是否叠加？"
+        "Camera Modulo Change" -> "改变摄像机律动的频率。
+值 1：间隔、强度
+值 2：BEAT/MEASURE/STEP、偏移"
+        "Camera Flash" -> "闪一下摄像机。
+值 1：是否反向？、颜色
+值 2：步数、摄像机（camGame/camHUD）"
         "HScript Call" -> "Calls a function in every script.\nValue 1: function name\nValue 2: arguments, split with commas"
         else -> {
             val (v1, v2) = if (params.size <= 2) listOf(params.getOrNull(0)).filterNotNull() to listOf(params.getOrNull(1)).filterNotNull()
             else params.take((params.size + 1) / 2) to params.drop((params.size + 1) / 2)
             buildString {
-                append("Converted from Codename Engine by V-Converter.")
+                append("由 V-Converter 从 Codename Engine 转换。")
                 if (v1.isNotEmpty()) append("\nValue 1: ").append(v1.joinToString(", "))
                 if (v2.isNotEmpty()) append("\nValue 2: ").append(v2.joinToString(", "))
             }

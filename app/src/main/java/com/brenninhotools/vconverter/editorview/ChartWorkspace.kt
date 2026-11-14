@@ -125,9 +125,9 @@ fun ChartToolbar(state: ChartEditorState, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             ToolButton(EditorIcons.ToStart, "Go to start") { state.seek(0.0) }
-            ToolButton(EditorIcons.Back, "Previous measure") { state.jumpMeasure(-1) }
+            ToolButton(EditorIcons.Back, "上一个小节") { state.jumpMeasure(-1) }
             ToolButton(if (state.playing) EditorIcons.Pause else EditorIcons.Play, if (state.playing) "Pause" else "Play", active = state.playing) { state.togglePlay() }
-            ToolButton(EditorIcons.Forward, "Next measure") { state.jumpMeasure(1) }
+            ToolButton(EditorIcons.Forward, "下一个小节") { state.jumpMeasure(1) }
             ToolButton(EditorIcons.Undo, "Undo", enabled = state.canUndo) { state.undo() }
             ToolButton(EditorIcons.Redo, "Redo", enabled = state.canRedo) { state.redo() }
             ToolButton(EditorIcons.ZoomOut, "Zoom out") { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.25f) }

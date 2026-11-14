@@ -45,11 +45,11 @@ object PsychCharacterParser {
         val root = try {
             JSONObject(raw.trim().removePrefix("﻿"))
         } catch (e: JSONException) {
-            throw PsychCharacterException("The file is not valid JSON: ${e.message}", e)
+            throw PsychCharacterException("该文件不是有效的 JSON：${e.message}", e)
         }
         val animArray = root.value("animations") as? JSONArray
         if (animArray == null || root.value("image") == null) {
-            throw PsychCharacterException("This JSON does not look like a Psych Engine character (missing \"animations\" or \"image\").")
+            throw PsychCharacterException("这个 JSON 不像 Psych Engine 人物（缺 \"animations\" 或 \"image\"）。")
         }
 
         val animations = (0 until animArray.length()).mapNotNull { i ->

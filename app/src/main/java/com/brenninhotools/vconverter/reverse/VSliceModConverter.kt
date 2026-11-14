@@ -167,8 +167,8 @@ class VSliceModConverter(
         report.stat("Weeks", scan.levels.size)
         report.stat("Scripts", scan.scripts.size)
         report.stat("Files", written)
-        if (scan.placeholders.isNotEmpty()) report.section("Empty placeholder folders removed", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
-        if (scan.ignored.isNotEmpty()) report.section("Other files skipped", scan.ignored.take(40) + if (scan.ignored.size > 40) listOf("…and ${scan.ignored.size - 40} more") else emptyList())
+        if (scan.placeholders.isNotEmpty()) report.section("已移除空的占位文件夹", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
+        if (scan.ignored.isNotEmpty()) report.section("其他文件已跳过", scan.ignored.take(40) + if (scan.ignored.size > 40) listOf("…and ${scan.ignored.size - 40} more") else emptyList())
         return ModConversionResult(written, report.build())
     }
 
@@ -369,7 +369,7 @@ class VSliceModConverter(
 
     private fun writePack(info: ModInfo) {
         val pack = JSONObject()
-            .put("name", info.title.ifBlank { "Converted Mod" })
+            .put("name", info.title.ifBlank { "已转换模组" })
             .put("description", info.description)
             .put("restart", false)
             .put("runsGlobally", false)

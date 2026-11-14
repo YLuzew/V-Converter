@@ -50,7 +50,7 @@ import kotlinx.coroutines.withContext
 private const val STAGE_BACKGROUND = "images/ui/character/stage.png"
 
 class CharacterEditorViewModel(application: Application) : BaseConverterViewModel(application) {
-    val editor = CharacterEditorState(CharacterDocument("new-character", "New Character"))
+    val editor = CharacterEditorState(CharacterDocument("new-character", "新建人物"))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(
         com.brenninhotools.vconverter.editorview.CharacterLiveAdapter(editor, { image to xml }, { png, text -> receiveSheet(png, text) })
     ) { block -> android.os.Handler(android.os.Looper.getMainLooper()).post(block) }
@@ -64,7 +64,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
     }
     var target by mutableStateOf(ExportTarget.VSLICE)
         private set
-    var source by mutableStateOf("New character")
+    var source by mutableStateOf("新人物")
         private set
     var sheetName by mutableStateOf<String?>(null)
         private set
@@ -94,7 +94,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
         var sample = 1
         while (bounds.outWidth / sample > 4096 || bounds.outHeight / sample > 4096 || (bounds.outWidth.toLong() / sample) * (bounds.outHeight / sample) > 16_000_000L) sample *= 2
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size, BitmapFactory.Options().apply { inSampleSize = sample })
-            ?: throw IllegalArgumentException("Could not read the spritesheet image.")
+            ?: throw IllegalArgumentException("读不到图集图片。")
         return CharacterSprite(bitmap.asImageBitmap(), SpriteAtlas.parse(xmlText), bitmap.width.toFloat() / bounds.outWidth.coerceAtLeast(1))
     }
 
@@ -119,7 +119,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
                         if (sprite == null) ". Add the spritesheet (.png + .xml) to see it." else "."
                 )
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the character.")
+                status = StatusMessage.Error(e.message ?: "打开人物失败。")
             }
         }
     }
@@ -129,10 +129,10 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
         runTask {
             try {
                 val files = readAll(uris)
-                val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("Pick the spritesheet .png and its .xml.")
-                val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("Pick the spritesheet .xml too.")
+                val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("选图集的 .png 和它的 .xml。")
+                val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("把图集的 .xml 也选上。")
                 val text = sheet.second.toString(Charsets.UTF_8)
-                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is not a Sparrow spritesheet." }
+                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is 不是 Sparrow 图集." }
                 val sprite = withContext(Dispatchers.Default) { decode(png.second, text) }
                 editor.sprite = sprite
                 image = png.second
@@ -146,20 +146,20 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
                 invalidate()
                 status = StatusMessage.Info("Loaded ${sprite.atlas.frames.size} frames from ${sheetName}.")
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not read the spritesheet.")
+                status = StatusMessage.Error(e.message ?: "读不到图集。")
             }
         }
     }
 
     fun createNew() {
-        editor.load(CharacterDocument("new-character", "New Character"))
+        editor.load(CharacterDocument("new-character", "新建人物"))
         editor.sprite = null
         image = null
         xml = null
         sheetName = null
-        source = "New character"
+        source = "新人物"
         invalidate()
-        status = StatusMessage.Info("Started a new character. Add its spritesheet to pick the animations.")
+        status = StatusMessage.Info("已新建人物。加上它的图集就能挑动画了。")
     }
 
     fun export() {
@@ -173,7 +173,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Could not export the character.")
+                status = StatusMessage.Error(e.message ?: "导出人物失败。")
             }
         }
     }
@@ -205,15 +205,15 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             SectionTitle("Character", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
-                title = "Open a character",
-                hint = "Pick a V-Slice or Psych character .json or a Codename character .xml together with its spritesheet .png + .xml. A spritesheet alone starts a new character with guessed animations. Archives (.zip/.rar/.7z) work too.",
+                title = "打开人物",
+                hint = "选一个 V-Slice 或 Psych 的人物 .json，或者 Codename 的人物 .xml，连它的图集 .png + .xml 一起选。只给图集的话会新建一个人物，动画靠猜。压缩包（.zip/.rar/.7z）也行。",
                 accent = accent,
                 icon = R.drawable.ic_tab_character,
                 enabled = !busy,
                 onClick = { opener.launch(arrayOf("*/*")) }
             )
-            OutlineButton(viewModel.sheetName?.let { "Spritesheet: $it (replace)" } ?: "Add spritesheet (.png + .xml)", accent, onClick = { sheetPicker.launch(arrayOf("*/*")) }, enabled = !busy)
-            OutlineButton("Start a new character", accent, onClick = viewModel::createNew, enabled = !busy)
+            OutlineButton(viewModel.sheetName?.let { "图集：$it （替换）" } ?: "添加图集（.png + .xml）", accent, onClick = { sheetPicker.launch(arrayOf("*/*")) }, enabled = !busy)
+            OutlineButton("新建人物", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
             SectionTitle("Preview", accent, 2)
@@ -242,7 +242,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             com.brenninhotools.vconverter.editorview.LiveSessionPanel(viewModel.live)
         }
         FunkinCard {
-            SectionTitle("Export format", accent, 5)
+            SectionTitle("导出格式", accent, 5)
             ChoiceChips(
                 options = ExportTarget.entries,
                 label = { it.label },
@@ -269,7 +269,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "Export ${viewModel.target.label}",
+            buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

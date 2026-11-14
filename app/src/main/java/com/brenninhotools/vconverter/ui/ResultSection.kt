@@ -28,7 +28,7 @@ fun ConvertSection(
     onSave: () -> Unit,
     modFolderName: String?,
     title: String = "Convert",
-    buttonText: String = "Convert to V-Slice",
+    buttonText: String = "转换为 V-Slice",
     @DrawableRes buttonIcon: Int = R.drawable.ic_swap
 ) {
     FunkinCard(accent = if (viewModel.output != null) accent else null) {

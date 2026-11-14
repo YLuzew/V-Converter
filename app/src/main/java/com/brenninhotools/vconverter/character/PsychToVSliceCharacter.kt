@@ -131,8 +131,8 @@ object PsychToVSliceCharacter {
                 merged = true
             }
             if (merged) {
-                report.section("Game over", listOf("firstDeath, deathLoop and deathConfirm come from \"${source.gameOverId}\" (${deadImage}), placed where Psych's game over screen draws them."))
-                if (deadFirst == null) report.warn("Add the game over spritesheet XML ($deadImage) for an exact game over position.")
+                report.section("Game over", listOf("firstDeath、deathLoop 和 deathConfirm 来自「${source.gameOverId}\" (${deadImage}), placed where Psych's game over screen draws them."))
+                if (deadFirst == null) report.warn("把死亡动画的图集 XML 也加上（$deadImage) for an exact game over position.")
                 if (gameOver.scale != scale) report.warn("\"${source.gameOverId}\" has scale ${gameOver.scale} but V-Slice plays game over animations at the character's scale ($scale).")
             }
         }
@@ -165,33 +165,33 @@ object PsychToVSliceCharacter {
         report.stat("Accuracy", if (exact) "Exact" else "Approximate")
 
         if (missingAtlases.isNotEmpty()) {
-            report.warn("Spritesheet XML not provided for ${missingAtlases.joinToString { "\"$it\"" }}. Positions and camera are approximate; add the XML for an exact conversion.")
+            report.warn("没有提供图集 XML：${missingAtlases.joinToString { "\"$it\"" }}. Positions and camera are approximate; add the XML for an exact conversion.")
         } else if (idleFrame == null) {
-            report.warn("The idle animation (\"${idleAnim?.prefix ?: "idle"}\") was not found in the spritesheet, so positions are approximate.")
+            report.warn("待机动画（「${idleAnim?.prefix ?: "idle"}\") was not found in the spritesheet, so positions are approximate.")
         }
         if (missingPrefixes.isNotEmpty()) {
-            report.warn("These animations have no matching frames in the spritesheet and will not play: ${missingPrefixes.joinToString()}.")
+            report.warn("这些动画在图集里没有对应帧，不会播放：${missingPrefixes.joinToString()}.")
         }
         if (psych.animations.none { it.anim == "idle" } && !psych.hasDanceLeftRight) {
-            report.warn("No \"idle\" or \"danceLeft\"/\"danceRight\" animation found; V-Slice needs one to idle.")
+            report.warn("没找到 \"idle\" 或 \"danceLeft\"/\"danceRight\" 动画；V-Slice 得有一个才能待机。")
         }
         val loopAnims = psych.animations.filter { it.anim.endsWith("-loop") }.map { it.anim }
         if (loopAnims.isNotEmpty()) {
-            report.section("Loop animations", listOf("Psych's \"<anim>-loop\" animations became V-Slice's \"<anim>-hold\", which V-Slice plays the same way after the animation ends: ${loopAnims.joinToString()}."))
+            report.section("循环动画", listOf("Psych 的 \"<anim>-loop\" 动画换成了 V-Slice 的 \"<anim>-hold\"，V-Slice 会在动画放完后照样循环：${loopAnims.joinToString()}."))
         }
         val color = psych.healthBarColor
         report.section(
-            "Not carried over",
+            "没有带过来",
             listOfNotNull(
-                "Health bar color ${hex(color)} (V-Slice uses fixed health bar colors)",
-                psych.vocalsFile.takeIf { it.isNotBlank() }?.let { "Vocals suffix \"$it\" (V-Slice names vocals after the character id)" },
-                if (slot != CharacterSlot.PLAYER && psych.editorIsPlayer == true) "Psych editor marked this as a player character" else null
+                "血条颜色 ${hex(color)} (V-Slice uses fixed health bar colors)",
+                psych.vocalsFile.takeIf { it.isNotBlank() }?.let { "人声后缀「$it\" (V-Slice names vocals after the character id)" },
+                if (slot != CharacterSlot.PLAYER && psych.editorIsPlayer == true) "Psych 编辑器把它标记成了玩家人物" else null
             )
         )
         report.section(
             "Notes",
             listOf(
-                "Offsets were rebased for the ${slot.label.lowercase()} slot of a converted stage. Using the character in another slot can shift it by a few pixels."
+                "偏移已重设基准：${slot.label.lowercase()} slot of a converted stage. Using the character in another slot can shift it by a few pixels."
             )
         )
 
@@ -247,7 +247,7 @@ object PsychToVSliceCharacter {
         if (gameOver != null && slot == CharacterSlot.PLAYER && psych.animations.none { it.anim in deathNames }) {
             val deadAtlas = source.gameOverAnimate
             if (deadAtlas == null) {
-                report.warn("The game over character \"${source.gameOverId}\" was not merged: add its Animation.json + spritemap.")
+                report.warn("死亡人物「${source.gameOverId}\" was not merged: add its Animation.json + spritemap.")
             } else {
                 val baseDX = slot.stageAnchorX - gameOver.positionX - scale * width / 2.0
                 val baseDY = slot.stageAnchorY - gameOver.positionY - scale * height
@@ -267,7 +267,7 @@ object PsychToVSliceCharacter {
                     animations.put(entry)
                     mergedImage = deadImage
                 }
-                if (mergedImage != null) report.section("Game over", listOf("firstDeath, deathLoop and deathConfirm come from \"${source.gameOverId}\" ($deadImage)."))
+                if (mergedImage != null) report.section("Game over", listOf("firstDeath、deathLoop 和 deathConfirm 来自「${source.gameOverId}\" ($deadImage)."))
             }
         }
 
@@ -289,21 +289,21 @@ object PsychToVSliceCharacter {
             .put("animations", animations)
 
         report.stat("Animations", psych.animations.size)
-        report.stat("Render", "Animate atlas")
+        report.stat("Render", "Animate 图集")
         report.stat("Slot", slot.label)
         report.stat("Accuracy", if (first != null && missing.isEmpty()) "Exact" else "Approximate")
-        if (missing.isNotEmpty()) report.warn("These animations have no matching symbol in Animation.json and will not play: ${missing.joinToString()}.")
-        if (first == null) report.warn("No spritemap JSON was found next to Animation.json, so positions are approximate.")
+        if (missing.isNotEmpty()) report.warn("这些动画在 Animation.json 里没有对应符号，不会播放：${missing.joinToString()}.")
+        if (first == null) report.warn("Animation.json 旁边没有 spritemap JSON，所以位置是近似的。")
         report.section(
-            "Animate atlas",
+            "Animate 图集",
             listOf(
-                "Psych symbol names (prefix match) were resolved to the exact symbol names V-Slice needs (animType \"symbol\").",
-                "Offsets account for each symbol's bounds, so the atlas lands where Psych draws it.",
-                "Keep the atlas folder (Animation.json + spritemap) at images/${psych.image.trim()}/."
+                "Psych 的符号名（前缀匹配）已解析成 V-Slice 需要的精确符号名（animType \"symbol\"）。",
+                "偏移已经算上每个符号的边界，所以图集会落在 Psych 画它的位置。",
+                "把图集文件夹（Animation.json + spritemap）放在 images/${psych.image.trim()}/."
             )
         )
         val color = psych.healthBarColor
-        report.section("Not carried over", listOf("Health bar color ${hex(color)} (V-Slice uses fixed health bar colors)"))
+        report.section("没有带过来", listOf("血条颜色 ${hex(color)} (V-Slice uses fixed health bar colors)"))
         return CharacterResult(source.id, root.toString(2), report.build())
     }
 

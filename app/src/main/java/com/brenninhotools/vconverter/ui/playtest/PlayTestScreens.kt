@@ -103,11 +103,11 @@ class PlayTestViewModel(application: Application) : BaseConverterViewModel(appli
         runTask {
             try {
                 val files = load(uris, { true }) { file -> file.path to file.open().use { it.readBytes() } }.items
-                val label = if (uris.size == 1) files.firstOrNull()?.first?.substringBefore('/')?.ifBlank { null } ?: "Picked files" else "${uris.size} files"
+                val label = if (uris.size == 1) files.firstOrNull()?.first?.substringBefore('/')?.ifBlank { null } ?: "已选文件" else "${uris.size} files"
                 state.open(files, label)
                 status = null
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not read the files.")
+                status = StatusMessage.Error(e.message ?: "读取文件失败。")
             }
         }
     }
@@ -143,8 +143,8 @@ fun PlayTestPlayScreen(viewModel: PlayTestViewModel) {
         FunkinCard {
             SectionTitle("Open", accent, 1)
             DropZone(
-                title = "Open a mod or a song",
-                hint = "Pick a mod .zip (V-Slice, Psych or Codename), several files from a mod, or chart files with their audio. Converters' results and the Chart Editor have a PlayTest button too.",
+                title = "打开模组或歌曲",
+                hint = "Pick a mod .zip (V-Slice, Psych or Codename), several files from a mod, or chart files with their audio. Converters' results and the 谱面编辑器 have a PlayTest button too.",
                 accent = accent,
                 icon = R.drawable.ic_tab_chart,
                 enabled = !viewModel.busy && !state.busy,

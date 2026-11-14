@@ -30,8 +30,8 @@ object CodenameEvents {
 
     val builtins: Map<String, EventDefinition> = listOf(
         EventDefinition("HScript Call", listOf(
-            EventParam("function", "Function Name", ParamType.STRING, "myFunc"),
-            EventParam("parameters", "Function Parameters (split with commas)", ParamType.STRING, "")
+            EventParam("function", "函数名", ParamType.STRING, "myFunc"),
+            EventParam("parameters", "函数参数（用逗号分隔）", ParamType.STRING, "")
         )),
         EventDefinition("Add Camera Zoom", listOf(
             EventParam("amount", "Amount", ParamType.FLOAT, 0.05),
@@ -44,7 +44,7 @@ object CodenameEvents {
             EventParam("tween", "Tween Zoom?", ParamType.BOOL, true),
             EventParam("zoom", "New Zoom", ParamType.FLOAT, 1.0),
             EventParam("camera", "Camera", ParamType.ENUM, "camGame", listOf("camGame", "camHUD")),
-            EventParam("duration", "Tween Time (Steps)", ParamType.FLOAT, 4.0),
+            EventParam("duration", "缓动时间（步数）", ParamType.FLOAT, 4.0),
             EventParam("ease", "Tween Ease", ParamType.ENUM, "linear", easeNames),
             EventParam("easeDir", "Tween Type", ParamType.ENUM, "In", listOf("In", "Out", "InOut")),
             EventParam("mode", "Mode", ParamType.ENUM, "direct", listOf("direct", "stage")),
@@ -53,17 +53,17 @@ object CodenameEvents {
         EventDefinition("Camera Flash", listOf(
             EventParam("reversed", "Reversed?", ParamType.BOOL, false),
             EventParam("color", "Color", ParamType.STRING, "#FFFFFF"),
-            EventParam("duration", "Time (Steps)", ParamType.FLOAT, 4.0),
+            EventParam("duration", "时间（步数）", ParamType.FLOAT, 4.0),
             EventParam("camera", "Camera", ParamType.ENUM, "camHUD", listOf("camGame", "camHUD"))
         )),
         EventDefinition("Alt Animation Toggle", listOf(
-            EventParam("singAlt", "Enable On Sing Poses", ParamType.BOOL, true),
-            EventParam("idleAlt", "Enable On Idle", ParamType.BOOL, true),
+            EventParam("singAlt", "唱歌姿势时启用", ParamType.BOOL, true),
+            EventParam("idleAlt", "待机时启用", ParamType.BOOL, true),
             EventParam("strumLine", "Strumline", ParamType.INTEGER, 0)
         )),
         EventDefinition("Continuous BPM Change", listOf(
             EventParam("bpm", "Target BPM", ParamType.FLOAT, 100.0),
-            EventParam("duration", "Time (steps)", ParamType.FLOAT, 4.0)
+            EventParam("duration", "时间（步数）", ParamType.FLOAT, 4.0)
         ))
     ).associateBy { it.name }
 

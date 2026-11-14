@@ -82,11 +82,11 @@ class IosEditor(private val scope: CoroutineScope) {
     fun createNew() {
         val bpm = newBpm.trim().replace(',', '.').toDoubleOrNull()
         if (bpm == null || bpm <= 0) {
-            status = Status.Error("BPM must be a number above 0.")
+            status = Status.Error("BPM 必须是大于 0 的数字。")
             return
         }
         if (newDifficulties.isEmpty()) {
-            status = Status.Error("Pick at least one difficulty.")
+            status = Status.Error("至少选一个难度。")
             return
         }
         val name = newName.trim().ifEmpty { "New Song" }
@@ -139,7 +139,7 @@ class IosEditor(private val scope: CoroutineScope) {
                         "${song.document.difficultyNames.size} difficulties, ${song.audio.size} audio file(s)."
                 )
             } catch (e: Exception) {
-                status = Status.Error(e.message ?: "Could not open the chart.")
+                status = Status.Error(e.message ?: "打开谱子失败。")
             } finally {
                 busy = false
             }
@@ -203,7 +203,7 @@ class IosEditor(private val scope: CoroutineScope) {
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = Status.Error(e.message ?: "Could not export the chart.")
+                status = Status.Error(e.message ?: "导出谱子失败。")
             } finally {
                 busy = false
             }
@@ -225,7 +225,7 @@ class IosEditor(private val scope: CoroutineScope) {
                     if (zip) Dialogs.export(target)
                     onSaved(target)
                 } catch (e: Exception) {
-                    status = Status.Error(e.message ?: "Could not save the files.")
+                    status = Status.Error(e.message ?: "保存文件失败。")
                 } finally {
                     busy = false
                 }
@@ -264,7 +264,7 @@ fun EditorScreen(state: AppState) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Primary("Open chart…", accent, !model.busy) { Dialogs.openFiles("Open the chart files, song folder or archive") { model.open(it) } }
             Secondary("Open folder…", !model.busy) { Dialogs.chooseFolder("Choose the song or mod folder") { model.open(listOf(it)) } }
-            Secondary(if (showNew) "Hide new song" else "New song", !model.busy) { showNew = !showNew }
+            Secondary(if (showNew) "隐藏新建歌曲" else "New song", !model.busy) { showNew = !showNew }
         }
         Text(
             "V-Slice <song>-metadata.json + <song>-chart.json, Psych chart .json files or a Codename song folder. Inst/Voices audio next to them is loaded too. You can also drop files on the window.",
@@ -293,12 +293,12 @@ fun EditorScreen(state: AppState) {
         val isSplit = split ?: (model.audioFor(AudioRole.PLAYER) != null || model.audioFor(AudioRole.OPPONENT) != null)
         AudioRow("Instrumental", model.audioFor(AudioRole.INST), { model.pickAudio(AudioRole.INST) }, { model.clearAudio(AudioRole.INST) })
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            EditorChip("One voices file", !isSplit) { split = false }
-            EditorChip("Split voices", isSplit) { split = true }
+            EditorChip("单个人声文件", !isSplit) { split = false }
+            EditorChip("分离人声", isSplit) { split = true }
         }
         if (isSplit) {
-            AudioRow("Player voices", model.audioFor(AudioRole.PLAYER), { model.pickAudio(AudioRole.PLAYER) }, { model.clearAudio(AudioRole.PLAYER) })
-            AudioRow("Opponent voices", model.audioFor(AudioRole.OPPONENT), { model.pickAudio(AudioRole.OPPONENT) }, { model.clearAudio(AudioRole.OPPONENT) })
+            AudioRow("玩家音轨", model.audioFor(AudioRole.PLAYER), { model.pickAudio(AudioRole.PLAYER) }, { model.clearAudio(AudioRole.PLAYER) })
+            AudioRow("对手音轨", model.audioFor(AudioRole.OPPONENT), { model.pickAudio(AudioRole.OPPONENT) }, { model.clearAudio(AudioRole.OPPONENT) })
         } else {
             AudioRow("Voices", model.audioFor(AudioRole.VOICES), { model.pickAudio(AudioRole.VOICES) }, { model.clearAudio(AudioRole.VOICES) })
         }

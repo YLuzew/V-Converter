@@ -77,7 +77,7 @@ fun StageLayersPanel(state: StageEditorState, modifier: Modifier = Modifier, onA
     val scheme = MaterialTheme.colorScheme
     var color by remember { mutableStateOf("#000000") }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        EditorSectionTitle("Layers (top first)")
+        EditorSectionTitle("图层（最上层在前）")
         state.drawOrder().asReversed().forEach { item ->
             val active = item == state.selection
             val (title, detail) = when (item) {
@@ -102,13 +102,13 @@ fun StageLayersPanel(state: StageEditorState, modifier: Modifier = Modifier, onA
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 4.dp)) {
             if (onAddImage != null) EditorChip("Add image", false, onAddImage)
-            EditorChip("Bring forward", false) { state.moveLayer(1) }
+            EditorChip("上移一层", false) { state.moveLayer(1) }
             EditorChip("Send back", false) { state.moveLayer(-1) }
             EditorChip("Duplicate", false) { state.duplicateSelected() }
             EditorChip("Delete", false) { state.deleteSelected() }
         }
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Solid color (#RRGGBB)", color, Modifier.weight(1f)) { color = it }
+            TextValueField("纯色（#RRGGBB）", color, Modifier.weight(1f)) { color = it }
             EditorChip("Add color", false) {
                 val hex = color.trim().removePrefix("#")
                 if (hex.matches(Regex("[0-9A-Fa-f]{6}"))) {
@@ -128,7 +128,7 @@ fun StageSelectionPanel(state: StageEditorState, modifier: Modifier = Modifier) 
             null -> {
                 EditorSectionTitle("Selection")
                 Text(
-                    "Tap a prop or a character to select it, then drag it to move it. Dragging anywhere else moves the view; the mouse wheel zooms. The dashed frame is the game camera at the stage's zoom.",
+                    "点中一个物件或人物就能选中它，然后拖动它移动。在别处拖动是移动视角，滚轮是缩放。虚线框是游戏摄像机在背景缩放下的范围。",
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -162,7 +162,7 @@ private fun PropEditor(state: StageEditorState, index: Int, prop: StageProp) {
         }
         NumberField("Layer (z)", prop.zIndex.toDouble(), Modifier.weight(0.6f)) { v -> update { it.copy(zIndex = v.toInt()) } }
     }
-    TextValueField(if (prop.isSolid) "Color (#RRGGBB)" else "Image (images/…)", prop.assetPath, Modifier.fillMaxWidth()) { v -> update { it.copy(assetPath = v.trim()) } }
+    TextValueField(if (prop.isSolid) "颜色（#RRGGBB）" else "图片（images/…）", prop.assetPath, Modifier.fillMaxWidth()) { v -> update { it.copy(assetPath = v.trim()) } }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         NumberField("X", prop.x, Modifier.weight(1f)) { v -> update { it.copy(x = v) } }
         NumberField("Y", prop.y, Modifier.weight(1f)) { v -> update { it.copy(y = v) } }
@@ -182,7 +182,7 @@ private fun PropEditor(state: StageEditorState, index: Int, prop: StageProp) {
     if (!prop.isSolid) {
         val prefixes = state.imageFor(prop)?.atlas?.prefixes() ?: emptyList()
         if (prefixes.isNotEmpty()) {
-            ChoiceField("Animation", prop.prefix, listOf("" to "Static image") + prefixes.map { it to it }, Modifier.fillMaxWidth()) { v -> update { it.copy(prefix = v) } }
+            ChoiceField("Animation", prop.prefix, listOf("" to "静态图片") + prefixes.map { it to it }, Modifier.fillMaxWidth()) { v -> update { it.copy(prefix = v) } }
         }
         Row {
             StageCheck("Flip X", prop.flipX) { v -> update { it.copy(flipX = v) } }

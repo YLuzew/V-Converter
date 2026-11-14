@@ -146,7 +146,7 @@ fun DifficultyPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 }
             }
         }
-        NumberField("Scroll speed", document.difficulties[state.difficulty]?.speed ?: 1.0, Modifier.fillMaxWidth()) { speed ->
+        NumberField("滚动速度", document.difficulties[state.difficulty]?.speed ?: 1.0, Modifier.fillMaxWidth()) { speed ->
             if (speed > 0) state.edit { it.withSpeed(state.difficulty, speed) }
         }
         OutlinedTextField(value = name, onValueChange = { name = it; error = null }, label = { Text("New difficulty") }, singleLine = true, modifier = Modifier.fillMaxWidth().typingField())
@@ -188,7 +188,7 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                     EditorChip("Delete", false) { state.deleteSelection() }
                     EditorChip("Deselect", false) { state.clearSelection() }
                 }
-                TextValueField("Note kind (alt, hurt...)", note.kind, Modifier.fillMaxWidth()) { state.setKind(it) }
+                TextValueField("音符类型（alt、hurt…）", note.kind, Modifier.fillMaxWidth()) { state.setKind(it) }
             }
             event != null -> {
                 EditorSectionTitle("Event · ${event.kind}")
@@ -200,7 +200,7 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 }
             }
             draft != null -> {
-                EditorSectionTitle("Add event at ${formatTime(draft)}")
+                EditorSectionTitle("添加事件于 ${formatTime(draft)}")
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     EventTemplates.all.forEach { template -> EditorChip(template.title, false) { state.addEvent(template.kind, template.defaults()) } }
                 }
@@ -283,7 +283,7 @@ private fun RawValueField(event: EditorEvent, onValue: (Any?) -> Unit) {
 fun TimingPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
     val timing = state.document.timing
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("BPM & time signature")
+        EditorSectionTitle("BPM 与拍号")
         timing.forEachIndexed { index, change ->
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(formatTime(change.time), fontSize = 12.sp, modifier = Modifier.width(70.dp).soundClickable { state.seek(change.time) })
@@ -298,11 +298,11 @@ fun TimingPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            EditorChip("Add change at playhead", false) { state.addTimingHere() }
+            EditorChip("在播放头处添加变化", false) { state.addTimingHere() }
         }
         val playhead = state.document.conductor.floorSnap(state.position, 4)
         if (timing.none { abs(it.time - playhead) < 0.5 }) {
-            Text("New changes snap to the beat at ${formatTime(playhead)}.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("新变化会吸附到拍点：${formatTime(playhead)}.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -318,7 +318,7 @@ fun SongInfoPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
             val clean = id.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
             if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
         }
-        TextValueField("Variation (empty = default)", state.document.variation, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(variation = v.trim().lowercase()) } }
+        TextValueField("变体（留空 = 默认）", state.document.variation, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(variation = v.trim().lowercase()) } }
         TextValueField("Song name", meta.songName, Modifier.fillMaxWidth()) { v -> update { it.copy(songName = v) } }
         TextValueField("Artist", meta.artist, Modifier.fillMaxWidth()) { v -> update { it.copy(artist = v) } }
         TextValueField("Charter", meta.charter, Modifier.fillMaxWidth()) { v -> update { it.copy(charter = v) } }

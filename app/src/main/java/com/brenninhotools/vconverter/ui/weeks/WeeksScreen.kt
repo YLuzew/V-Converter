@@ -28,8 +28,8 @@ fun WeeksScreen(viewModel: WeeksViewModel, modFolderName: String?, onSave: () ->
         FunkinCard {
             SectionTitle("Weeks", accent, 1)
             DropZone(
-                title = "Add weeks & menu characters",
-                hint = "Pick week .json files (weeks folder) and the menu character .json files from images/menucharacters, or a .zip/.rar/.7z with them.",
+                title = "添加周目与菜单人物",
+                hint = "选择 weeks 文件夹里的周目 .json，和 images/menucharacters 里的菜单人物 .json，或者包含它们的 .zip/.rar/.7z。",
                 accent = accent,
                 icon = R.drawable.ic_tab_week,
                 enabled = !busy,
@@ -37,7 +37,7 @@ fun WeeksScreen(viewModel: WeeksViewModel, modFolderName: String?, onSave: () ->
             )
             if (viewModel.menuCharacters.isNotEmpty()) {
                 Text(
-                    "Menu characters: " + viewModel.menuCharacters.keys.joinToString(),
+                    "菜单人物：" + viewModel.menuCharacters.keys.joinToString(),
                     style = MaterialTheme.typography.bodySmall,
                     color = Funkin.Muted
                 )

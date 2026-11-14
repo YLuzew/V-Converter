@@ -237,7 +237,7 @@ class LuaToCodename(
                 "psychDefaults." + name.removePrefix("default").replaceFirstChar { it.lowercaseChar() }
             }
             else -> {
-                issue(line, "Unknown variable '$name' (not defined in this script) became null.")
+                issue(line, "未知变量 '$name' (not defined in this script) became null.")
                 "null"
             }
         }
@@ -386,7 +386,7 @@ class LuaToCodename(
         val converter = PsychHxToCodename(scope, inline = true)
         val converted = converter.convert(code)
         cneHelpers += converter.usedHelpers()
-        converted.issues.forEach { issue(line, "runHaxeCode: ${it.message}") }
+        converted.issues.forEach { issue(line, "runHaxeCode：${it.message}") }
         val tokens = HxSource.tokenize(converted.source)
         val segs = HxSource.segments(tokens)
         val statements = StringBuilder()
@@ -482,7 +482,7 @@ class LuaToCodename(
             "updateHitboxFromGroup" -> "{ var g:Dynamic = getProperty(${arg(0)}); var list:Dynamic = g != null && g.members != null ? g.members : g; if (list != null && list[Std.int(${arg(1, "0")})] != null) list[Std.int(${arg(1, "0")})].updateHitbox(); }"
             "directoryFileList" -> "Paths.getFolderContent(${arg(0)})"
             "loadSong" -> {
-                issue(line, "loadSong() became PlayState.loadSong + a new PlayState; the difficulty number is mapped to easy/normal/hard.")
+                issue(line, "loadSong() 换成了 PlayState.loadSong + 新建一个 PlayState；难度数字映射成 easy/normal/hard。")
                 "{ var diffs:Array<String> = [\"easy\", \"normal\", \"hard\"]; var n:Int = Std.int(${arg(1, "-1")}); PlayState.loadSong(${arg(0, "PlayState.SONG.meta.name")}, n >= 0 && n < diffs.length ? diffs[n] : PlayState.difficulty); FlxG.switchState(new PlayState()); }"
             }
             "makeLuaText" -> {
@@ -723,7 +723,7 @@ class LuaToCodename(
             "noteTweenAlpha" -> noteTween(a, "alpha")
             "noteTweenAngle" -> noteTween(a, "angle")
             "noteTweenDirection" -> {
-                issue(line, "noteTweenDirection: Codename strums have no direction field; the tween changes angle instead.")
+                issue(line, "noteTweenDirection：Codename 的扫弦线没有方向字段；这个缓动改成改角度。")
                 noteTween(a, "angle")
             }
             "runTimer" -> {
@@ -789,7 +789,7 @@ class LuaToCodename(
             "setMisses" -> "misses = Std.int(${arg(0, "0")})"
             "addMisses" -> "misses += Std.int(${arg(0, "0")})"
             "setHits", "addHits" -> {
-                issue(line, "$name() has no Codename equivalent (hits are counted per rating).")
+                issue(line, "$name() 在 Codename 里没有对应物（命中是按各判定分开计数的）。")
                 "null"
             }
             "getSongPosition" -> "Conductor.songPosition"
@@ -799,7 +799,7 @@ class LuaToCodename(
             "startCountdown" -> "startCountdown()"
             "setHealthBarColors" -> "{ healthBar.createFilledBar(${color(a.getOrNull(0))}, ${color(a.getOrNull(1))}); healthBar.updateBar(); }"
             "setTimeBarColors", "setRatingPercent", "setRatingName", "setRatingFC", "updateScoreText" -> {
-                issue(line, "$name() has no Codename equivalent and was removed.")
+                issue(line, "$name() 在 Codename 里没有对应物，删掉了。")
                 "null"
             }
             "playSound" -> {
@@ -943,13 +943,13 @@ class LuaToCodename(
             "callScript" -> "PlayState.instance.scripts.call(${arg(1)}, ${arg(2, "[]")})"
             "isRunning" -> "true"
             "addCharacterToList" -> {
-                issue(line, "addCharacterToList() is not needed in Codename (characters load when created).")
+                issue(line, "addCharacterToList() 在 Codename 里不需要（人物一创建就会加载）。")
                 "null"
             }
             "checkFileExists" -> "Assets.exists(Paths.getPath(${arg(0)}))"
             "getTextFromFile" -> "Assets.getText(Paths.getPath(${arg(0)}))"
             "getModSetting" -> {
-                issue(line, "getModSetting(): Psych mod settings don't exist in Codename; the value is null.")
+                issue(line, "getModSetting()：Codename 里没有 Psych 那种模组设置，值是 null。")
                 "null"
             }
             "initLuaShader" -> "null"
@@ -976,7 +976,7 @@ class LuaToCodename(
             "runHaxeCode" -> {
                 val code = str(a, 0)
                 if (code != null) haxeCode(code, line) else {
-                    issue(line, "runHaxeCode() with code built at runtime cannot be converted.")
+                    issue(line, "runHaxeCode() 的代码是运行时拼出来的，没法转换。")
                     "null"
                 }
             }
@@ -990,7 +990,7 @@ class LuaToCodename(
             }
             "startVideo" -> {
                 imports += "funkin.game.cutscenes.VideoCutscene"
-                issue(line, "startVideo() became a VideoCutscene; check that the video plays (Codename looks in videos/).")
+                issue(line, "startVideo() 换成了 VideoCutscene；确认视频能播（Codename 会去 videos/ 里找）。")
                 "PlayState.instance.openSubState(new VideoCutscene(Paths.video(${arg(0)}), function() startCountdown()))"
             }
             "cameraZoomOnBeat" -> "Options.camZoomOnBeat"
@@ -1006,7 +1006,7 @@ class LuaToCodename(
         is Expr.Table -> "[" + value.fields.filterIsInstance<TableField.Positional>().joinToString(", ") { "Std.int(${expr(it.value)})" } + "]"
         is Expr.Str -> "[" + value.value.split(',').mapNotNull { it.trim().toIntOrNull() }.joinToString(", ") + "]"
         else -> {
-            issue(line, "Frame indices built at runtime were dropped; pass them as a table or a \"0,1,2\" string.")
+            issue(line, "运行时算出来的帧序号被丢掉了；请改成传一个表，或者 \"0,1,2\" 这样的字符串。")
             "[]"
         }
     }
@@ -1017,7 +1017,7 @@ class LuaToCodename(
         val value = if (set) lit(a, 2, "null") else ""
         fun out(target: String) = if (set) "$target = $value" else target
         if (cls == null || field == null) {
-            issue(line, "${if (set) "set" else "get"}PropertyFromClass with names built at runtime cannot be converted.")
+            issue(line, "${if (set) "set" else "get"}用运行时拼出来的名字调 PropertyFromClass 转不了。")
             return "null"
         }
         return when (cls) {
@@ -1039,7 +1039,7 @@ class LuaToCodename(
             "Conductor" -> out("Conductor.$field")
             "GameOverSubstate" -> when (field) {
                 "characterName" -> {
-                    issue(line, "GameOverSubstate.characterName: Codename takes the game over character from the player character's gameOverChar.")
+                    issue(line, "GameOverSubstate.characterName：Codename 从玩家人物自己的 gameOverChar 取死亡人物。")
                     "null"
                 }
                 "deathSoundName" -> out("PlayState.instance.lossSFX")

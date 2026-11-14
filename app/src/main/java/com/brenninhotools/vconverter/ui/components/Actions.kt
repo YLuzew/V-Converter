@@ -87,13 +87,13 @@ fun SaveActions(
     accent: Color,
     modFolderName: String?,
     onSave: () -> Unit,
-    saveLabel: String = if (modFolderName != null) "Save into $modFolderName" else "Save into a mod folder"
+    saveLabel: String = if (modFolderName != null) "Save into $modFolderName" else "保存到模组文件夹"
 ) {
     val download = rememberDownloader(viewModel)
     val busy = viewModel.busy
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         ChunkyButton(
-            text = "Download .zip",
+            text = "下载 .zip",
             accent = accent,
             icon = R.drawable.ic_download,
             enabled = viewModel.canDownload && !busy,

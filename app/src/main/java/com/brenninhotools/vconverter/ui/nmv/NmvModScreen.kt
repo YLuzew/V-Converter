@@ -56,16 +56,16 @@ fun NmvModScreen(
                 color = Funkin.Muted
             )
             DropZone(
-                title = "Import .zip / .rar / .7z",
-                hint = "The mod can sit inside subfolders of the archive; it is found automatically.",
+                title = "导入 .zip / .rar / .7z",
+                hint = "模组可以在压缩包的子文件夹里，会自动找到。",
                 accent = accent,
                 icon = R.drawable.ic_archive,
                 enabled = !busy,
                 onClick = { archivePicker.launch(arrayOf("*/*")) }
             )
             DropZone(
-                title = "Open mod folder",
-                hint = "Pick the mod's folder inside NightmareVision's content directory.",
+                title = "打开模组文件夹",
+                hint = "选 NightmareVision 的 content 目录里那个模组文件夹。",
                 accent = Funkin.Lavender,
                 icon = R.drawable.ic_folder,
                 enabled = !busy,
@@ -131,7 +131,7 @@ fun NmvModScreen(
                 accent = accent,
                 modFolderName = modFolderName,
                 onSave = onConvert,
-                saveLabel = if (modFolderName != null) "Convert into $modFolderName" else "Convert into a mod folder"
+                saveLabel = if (modFolderName != null) "Convert into $modFolderName" else "转换到模组文件夹"
             )
             progress?.let { current ->
                 ModScannerPanel(

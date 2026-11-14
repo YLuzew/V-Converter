@@ -158,7 +158,7 @@ object VSliceParser {
 
     fun metadata(raw: String): VMetadata {
         val root = json(raw, "metadata")
-        val play = root.value("playData") as? JSONObject ?: throw VSliceFormatException("This is not a V-Slice song metadata file (no \"playData\").")
+        val play = root.value("playData") as? JSONObject ?: throw VSliceFormatException("这不是 V-Slice 的歌曲元数据文件（没有 \"playData\"）。")
         val characters = play.value("characters") as? JSONObject ?: JSONObject()
         val changes = objects(root.value("timeChanges")).map {
             VTimeChange(it.value("t").asDouble(0.0), it.value("bpm").asDouble(100.0), it.value("n").asDouble(4.0).toInt().coerceAtLeast(1))
@@ -184,7 +184,7 @@ object VSliceParser {
 
     fun chart(raw: String): VChart {
         val root = json(raw, "chart")
-        val speeds = root.value("scrollSpeed") as? JSONObject ?: throw VSliceFormatException("This is not a V-Slice chart file (no \"scrollSpeed\").")
+        val speeds = root.value("scrollSpeed") as? JSONObject ?: throw VSliceFormatException("这不是 V-Slice 谱子文件（没有 \"scrollSpeed\"）。")
         val notesRoot = root.value("notes") as? JSONObject ?: JSONObject()
         val notes = notesRoot.keys().asSequence().associateWith { difficulty ->
             objects(notesRoot.value(difficulty)).map {
@@ -214,7 +214,7 @@ object VSliceParser {
     fun character(raw: String): VCharacter {
         val root = json(raw, "character")
         if (!root.has("animations") || !root.has("assetPath") && !root.has("renderType")) {
-            throw VSliceFormatException("This JSON does not look like a V-Slice character (no \"animations\"/\"assetPath\").")
+            throw VSliceFormatException("这个 JSON 不像 V-Slice 人物（没有 \"animations\"/\"assetPath\"）。")
         }
         val icon = root.value("healthIcon") as? JSONObject
         val (ox, oy) = pair(root.value("offsets"), 0.0, 0.0)
@@ -254,7 +254,7 @@ object VSliceParser {
 
     fun stage(raw: String): VStage {
         val root = json(raw, "stage")
-        val chars = root.value("characters") as? JSONObject ?: throw VSliceFormatException("This JSON does not look like a V-Slice stage (no \"characters\").")
+        val chars = root.value("characters") as? JSONObject ?: throw VSliceFormatException("这个 JSON 不像 V-Slice 背景（没有 \"characters\"）。")
         val props = objects(root.value("props")).mapIndexed { index, obj ->
             val (x, y) = pair(obj.value("position"), 0.0, 0.0)
             val (sx, sy) = pair(obj.value("scale"), 1.0, 1.0)
@@ -295,7 +295,7 @@ object VSliceParser {
 
     fun level(raw: String): VLevel {
         val root = json(raw, "level")
-        if (!root.has("songs")) throw VSliceFormatException("This JSON does not look like a V-Slice level (no \"songs\").")
+        if (!root.has("songs")) throw VSliceFormatException("这个 JSON 不像 V-Slice 关卡（没有 \"songs\"）。")
         return VLevel(
             name = root.value("name").asText(),
             titleAsset = root.value("titleAsset").asText(),

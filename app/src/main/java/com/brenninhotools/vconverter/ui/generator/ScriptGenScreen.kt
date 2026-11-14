@@ -75,16 +75,16 @@ fun ScriptGenScreen(viewModel: ScriptGenViewModel, modFolderName: String?, onSav
                 enabled = !busy
             )
             FunkinTextField(viewModel.targetId, { viewModel.targetId = it }, kind.targetLabel, accent, enabled = !busy)
-            FunkinTextField(viewModel.className, { viewModel.className = it }, "Class name (optional)", accent, enabled = !busy)
+            FunkinTextField(viewModel.className, { viewModel.className = it }, "类名（可选）", accent, enabled = !busy)
             when (kind) {
-                ScriptKind.MODULE -> NumberField(viewModel.priority, { viewModel.priority = it }, "Priority (lower runs first)", accent, enabled = !busy, decimal = false)
+                ScriptKind.MODULE -> NumberField(viewModel.priority, { viewModel.priority = it }, "优先级（数字小的先执行）", accent, enabled = !busy, decimal = false)
                 ScriptKind.CHARACTER -> {
                     FieldLabel("Render type")
                     ChoiceChips(CharacterRender.entries, { it.label }, { it == viewModel.render }, { viewModel.render = it }, accent, !busy)
                 }
                 ScriptKind.EVENT -> {
-                    FunkinTextField(viewModel.title, { viewModel.title = it }, "Title in the Chart Editor", accent, enabled = !busy)
-                    FunkinTextField(viewModel.fields, { viewModel.fields = it }, "Values, e.g. intensity:float, label, flash:bool", accent, enabled = !busy)
+                    FunkinTextField(viewModel.title, { viewModel.title = it }, "Title in the 谱面编辑器", accent, enabled = !busy)
+                    FunkinTextField(viewModel.fields, { viewModel.fields = it }, "参数值，例如 intensity:float、label、flash:bool", accent, enabled = !busy)
                 }
                 ScriptKind.NOTE_KIND -> FunkinTextField(viewModel.title, { viewModel.title = it }, "Description", accent, enabled = !busy)
                 else -> Unit
@@ -96,7 +96,7 @@ fun ScriptGenScreen(viewModel: ScriptGenViewModel, modFolderName: String?, onSav
                 SectionTitle("Callbacks", accent, 2)
                 ChoiceChips(available, { it.label }, { it in viewModel.callbacks }, viewModel::toggle, accent, !busy)
                 Text(
-                    "Each one becomes an override that already calls super.",
+                    "每个都会变成一个已自动调用 super 的覆写。",
                     style = MaterialTheme.typography.bodySmall,
                     color = Funkin.Muted
                 )
@@ -111,7 +111,7 @@ fun ScriptGenScreen(viewModel: ScriptGenViewModel, modFolderName: String?, onSav
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Generate",
-            buttonText = "Generate script",
+            buttonText = "生成脚本",
             buttonIcon = R.drawable.ic_magic
         )
     }

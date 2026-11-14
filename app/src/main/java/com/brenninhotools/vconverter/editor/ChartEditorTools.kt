@@ -73,18 +73,18 @@ object EventTemplates {
 
     val all = listOf(
         EventTemplate(
-            "FocusCamera", "Focus camera",
+            "FocusCamera", "对准摄像机",
             listOf(
                 EventField("char", "Focus on", FieldType.CHOICE, 0, listOf(0 to "Player", 1 to "Opponent", 2 to "Girlfriend", -1 to "Position")),
                 EventField("x", "X offset", FieldType.NUMBER, 0.0),
                 EventField("y", "Y offset", FieldType.NUMBER, 0.0),
-                EventField("duration", "Duration (steps)", FieldType.NUMBER, 4.0),
+                EventField("duration", "时长（步数）", FieldType.NUMBER, 4.0),
                 EventField("ease", "Ease", FieldType.CHOICE, "CLASSIC", eases),
-                EventField("easeDir", "Ease direction", FieldType.CHOICE, "In", easeDirs)
+                EventField("easeDir", "缓动方向", FieldType.CHOICE, "In", easeDirs)
             )
         ),
         EventTemplate(
-            "PlayAnimation", "Play animation",
+            "PlayAnimation", "播放动画",
             listOf(
                 EventField("target", "Target", FieldType.CHOICE, "bf", targets),
                 EventField("anim", "Animation", FieldType.TEXT, "hey"),
@@ -95,26 +95,26 @@ object EventTemplates {
             "ZoomCamera", "Zoom camera",
             listOf(
                 EventField("zoom", "Zoom", FieldType.NUMBER, 1.0),
-                EventField("duration", "Duration (steps)", FieldType.NUMBER, 4.0),
-                EventField("mode", "Mode", FieldType.CHOICE, "stage", listOf("stage" to "Stage zoom ×", "direct" to "Direct")),
+                EventField("duration", "时长（步数）", FieldType.NUMBER, 4.0),
+                EventField("mode", "Mode", FieldType.CHOICE, "stage", listOf("stage" to "背景缩放 ×", "direct" to "Direct")),
                 EventField("ease", "Ease", FieldType.CHOICE, "linear", eases),
-                EventField("easeDir", "Ease direction", FieldType.CHOICE, "In", easeDirs)
+                EventField("easeDir", "缓动方向", FieldType.CHOICE, "In", easeDirs)
             )
         ),
         EventTemplate(
-            "ScrollSpeed", "Scroll speed",
+            "ScrollSpeed", "滚动速度",
             listOf(
                 EventField("scroll", "Speed", FieldType.NUMBER, 1.0),
-                EventField("duration", "Duration (steps)", FieldType.NUMBER, 4.0),
+                EventField("duration", "时长（步数）", FieldType.NUMBER, 4.0),
                 EventField("absolute", "Absolute", FieldType.BOOL, false),
                 EventField("ease", "Ease", FieldType.CHOICE, "linear", eases),
-                EventField("easeDir", "Ease direction", FieldType.CHOICE, "In", easeDirs)
+                EventField("easeDir", "缓动方向", FieldType.CHOICE, "In", easeDirs)
             )
         ),
         EventTemplate(
             "SetCameraBop", "Camera bop",
             listOf(
-                EventField("rate", "Every (beats)", FieldType.NUMBER, 4.0),
+                EventField("rate", "每（拍）", FieldType.NUMBER, 4.0),
                 EventField("intensity", "Intensity", FieldType.NUMBER, 1.0)
             )
         )
@@ -240,7 +240,7 @@ object ChartBundle {
         report.stat("Audio files", files.count { it.bytes != null })
         base.report.sections.forEach { report.section(it.title, it.lines) }
         base.report.warnings.forEach { report.warn(it) }
-        if (!roles.containsKey(AudioRole.INST)) report.warn("No instrumental picked: add Inst.ogg to the song folder yourself.")
+        if (!roles.containsKey(AudioRole.INST)) report.warn("没选伴奏：自己把 Inst.ogg 加到歌曲文件夹里。")
         return ConvertedOutput(files, report.build())
     }
 

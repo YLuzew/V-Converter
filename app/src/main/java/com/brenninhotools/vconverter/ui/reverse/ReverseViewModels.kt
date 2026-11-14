@@ -70,14 +70,14 @@ open class ReverseViewModel(application: Application, private val converter: Fil
         runTask {
             try {
                 val snapshot = files
-                require(snapshot.isNotEmpty()) { "Add at least one $engine $noun." }
+                require(snapshot.isNotEmpty()) { "至少添加一个 $engine $noun." }
                 output = withContext(Dispatchers.Default) { produce(snapshot) }
                 onConverted()
                 download = null
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Conversion failed.")
+                status = StatusMessage.Error(e.message ?: "转换失败。")
             }
         }
     }

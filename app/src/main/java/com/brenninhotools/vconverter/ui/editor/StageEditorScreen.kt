@@ -101,7 +101,7 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
                         if (missing > 0) " $missing prop(s) have no image yet: open them together with the stage." else ""
                 )
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the stage.")
+                status = StatusMessage.Error(e.message ?: "打开背景失败。")
             }
         }
     }
@@ -138,7 +138,7 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
         editor.load(StageDocument("new-stage", "New Stage"), emptyMap(), emptyMap())
         source = "New stage"
         invalidate()
-        status = StatusMessage.Info("Started a new stage with the base game character positions. Add images to build it.")
+        status = StatusMessage.Info("已新建背景，人物位置用的是本体默认值。加上图片就能搭起来。")
     }
 
     fun export() {
@@ -153,7 +153,7 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Could not export the stage.")
+                status = StatusMessage.Error(e.message ?: "导出背景失败。")
             }
         }
     }
@@ -174,14 +174,14 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             SectionTitle("Stage", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
-                title = "Open a stage",
-                hint = "Pick a V-Slice or Psych stage .json (with its .lua if it builds sprites there) or a Codename stage .xml, together with the stage images (.png, and .xml for animated ones). Archives (.zip/.rar/.7z) and whole mod folders in an archive work too.",
+                title = "打开背景",
+                hint = "选择 V-Slice 或 Psych 背景 .json（如果在 .lua 里生成精灵就一起选）或 Codename 背景 .xml，连同背景图片（.png，带动画的还要 .xml）。压缩包（.zip/.rar/.7z）和压缩包里的整个模组文件夹也可以。",
                 accent = accent,
                 icon = R.drawable.ic_tab_stage,
                 enabled = !busy,
                 onClick = { opener.launch(arrayOf("*/*")) }
             )
-            OutlineButton("Start a new stage", accent, onClick = viewModel::createNew, enabled = !busy)
+            OutlineButton("新建背景", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
             SectionTitle("Preview", accent, 2)
@@ -208,7 +208,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             com.brenninhotools.vconverter.editorview.LiveSessionPanel(viewModel.live)
         }
         FunkinCard {
-            SectionTitle("Export format", accent, 5)
+            SectionTitle("导出格式", accent, 5)
             ChoiceChips(
                 options = ExportTarget.entries,
                 label = { it.label },
@@ -219,7 +219,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             )
             Text(
                 when (viewModel.target) {
-                    ExportTarget.VSLICE -> "data/stages/<id>.json and the images in images/…"
+                    ExportTarget.VSLICE -> "data/stages/<id>.json，以及 images/… 里的图片。"
                     ExportTarget.PSYCH -> "stages/<id>.json (plus a .lua for what Psych JSON can't hold) and the images."
                     ExportTarget.CODENAME -> "data/stages/<id>.xml and the images."
                 },
@@ -235,7 +235,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "Export ${viewModel.target.label}",
+            buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

@@ -18,8 +18,8 @@ data class ModSpec(
 
 object ModGenerator {
     fun generate(spec: ModSpec): Generated {
-        require(spec.title.isNotBlank()) { "Give the mod a title." }
-        require(spec.version.matches(Regex("\\d+\\.\\d+\\.\\d+"))) { "Version must look like 1.0.0." }
+        require(spec.title.isNotBlank()) { "给模组起个标题。" }
+        require(spec.version.matches(Regex("\\d+\\.\\d+\\.\\d+"))) { "版本号要写成 1.0.0 这样。" }
         val contributors = JSONArray()
         spec.author.split(',').map { it.trim() }.filter { it.isNotEmpty() }.forEach {
             contributors.put(JSONObject().put("name", it))
@@ -35,7 +35,7 @@ object ModGenerator {
         val files = mutableListOf(GenFile("_polymod_meta.json", meta.toString(2)))
         val report = ReportBuilder()
         spec.icon?.let {
-            require(it.extension == "png") { "The mod icon must be a .png file." }
+            require(it.extension == "png") { "模组图标必须是 .png 文件。" }
             files += GenFile("_polymod_icon.png", bytes = it.bytes)
         }
         if (spec.starterModule) {
@@ -51,8 +51,8 @@ object ModGenerator {
         report.section(
             "Next steps",
             listOf(
-                "Unzip or save this into V-Slice's mods folder.",
-                "Add songs with the Song generator, characters with Character, stages with Stage and weeks with Level.",
+                "解压或者保存到 V-Slice 的 mods 文件夹里。",
+                "歌曲用 Song 生成器加，人物用 Character，背景用 Stage，周目用 Level。",
                 "Images go in images/, audio in songs/<song>/, data in data/, scripts in scripts/."
             )
         )

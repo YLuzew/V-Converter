@@ -79,7 +79,7 @@ class ChartWorkbenchTest {
         assertEquals(beforeHard.notes.size, afterHard.notes.size)
         assertEquals(beforeHard.playerNotes, afterHard.playerNotes)
         assertEquals(listOf(4, 3, 4), afterHard.timing.map { it.numerator })
-        assertTrue(run.output.report.sections.any { it.title == "Your changes" })
+        assertTrue(run.output.report.sections.any { it.title == "你的改动" })
     }
 
     @Test

@@ -104,7 +104,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
     protected abstract fun printCall(args: List<Expr>, line: Int): String
 
     protected open fun returnStatement(stat: Stat.Return, code: Code) {
-        if (stat.values.size > 1) issue(stat.line, "Only the first returned value is kept.")
+        if (stat.values.size > 1) issue(stat.line, "只保留第一个返回值。")
         code.line(if (stat.values.isEmpty()) "return null;" else "return ${expr(stat.values[0])};")
     }
 
@@ -144,7 +144,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
         val chunk = try {
             LuaParser.parse(source)
         } catch (e: LuaSyntaxException) {
-            issues += ScriptIssue(e.line, "Lua syntax error: ${e.message?.substringAfter(": ")}")
+            issues += ScriptIssue(e.line, "Lua 语法错误：${e.message?.substringAfter(": ")}")
             return null
         }
 
@@ -391,7 +391,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
             is Stat.Local -> {
                 val values = stat.values.map { expr(it) }
                 if (stat.names.size > 1 && stat.values.size == 1 && isMultiValue(stat.values[0])) {
-                    issue(stat.line, "Only the first value of a multiple-value call is kept.")
+                    issue(stat.line, "多返回值调用只保留第一个值。")
                 }
                 stat.names.forEachIndexed { i, n ->
                     val value = values.getOrNull(i) ?: "null"
@@ -432,7 +432,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
                     stat.values.drop(1).forEach { code.line("${expr(it)};") }
                 } else {
                     if (stat.values.size == 1 && isMultiValue(stat.values[0])) {
-                        issue(stat.line, "Only the first value of a multiple-value call is kept.")
+                        issue(stat.line, "多返回值调用只保留第一个值。")
                     }
                     val temps = stat.targets.indices.map { i ->
                         val t = tmp("v")
@@ -574,7 +574,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
                 }
                 code.close()
             }
-            else -> issue(stat.line, "This kind of generic for loop is not supported and was removed (only pairs, ipairs and string.gmatch).")
+            else -> issue(stat.line, "这种泛型 for 循环不支持，已删掉（只支持 pairs、ipairs 和 string.gmatch）。")
         }
     }
 
@@ -614,7 +614,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
                 helpers += "luaSet"
                 code.line("luaSet(${expr(target.target)}, ${expr(target.key)}, $value);")
             }
-            else -> issue(target.line, "Unsupported assignment target.")
+            else -> issue(target.line, "不支持的赋值目标。")
         }
     }
 
@@ -796,7 +796,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
         return when (e.name) {
             "self" -> "self"
             "math", "string", "table", "os", "bit", "coroutine", "io" -> {
-                issue(e.line, "The Lua library '${e.name}' cannot be used as a value.")
+                issue(e.line, "Lua 库 \"${e.name}' cannot be used as a value.")
                 "null"
             }
             "_G" -> {
@@ -861,7 +861,7 @@ abstract class LuaTranspiler(protected val skipLines: Set<Int> = emptySet()) {
             if (plain) return hxString(escapeRegex(pattern.value))
             val regex = LuaPattern.toRegex(pattern.value)
             if (regex != null) return hxString(regex)
-            issue(line, "The Lua pattern ${hxString(pattern.value)} uses features that cannot be converted; it is matched as plain text.")
+            issue(line, "Lua 模式 ${hxString(pattern.value)} uses features that cannot be converted; it is matched as plain text.")
             return hxString(escapeRegex(pattern.value))
         }
         helpers += "luaPatternToRegex"
@@ -1157,7 +1157,7 @@ class LuaToHScript(
         knownHaxeFields = declared.flatMap { it.second }.toSet()
         val result = transpile(source) ?: return GeneratedScript(className, moduleId, "", issues, emptyList(), emptySet())
         result.chunk.filterIsInstance<Stat.FunctionDecl>().filter { it.path.size == 1 && it.method == null && it.path[0] in PsychApi.unsupportedCallbacks }.forEach {
-            issue(it.line, "Psych callback '${it.path[0]}' has no V-Slice event, so it never runs.")
+            issue(it.line, "Psych 回调 '${it.path[0]}' has no V-Slice event, so it never runs.")
         }
         val callbacks = globalMethods().filter { it in PsychApi.callbacks }
         val sourceCode = assemble(result.boot, result.methods, callbacks)
@@ -1178,7 +1178,7 @@ class LuaToHScript(
         if (args.getOrNull(1)?.let { it !is Expr.Nil && it !is Expr.Table } == true) issue(line, "runHaxeCode(): the variables passed as the second argument must be a table to be converted.")
         val converted = haxeWrapper().inline(code, knownHaxeFunctions, knownHaxeFields + vars.map { it.name })
         haxeFields += vars.map { "hx_${it.name}" }
-        converted.issues.forEach { issue(line, "runHaxeCode: ${it.message}") }
+        converted.issues.forEach { issue(line, "runHaxeCode：${it.message}") }
         haxeImports += converted.imports
         haxeFields += converted.fields
         val repeated = converted.functions.keys.filter { it in haxeFunctions }
@@ -1186,7 +1186,7 @@ class LuaToHScript(
             if (n !in haxeFunctions) {
                 haxeFunctions[n] = arity
             } else {
-                issue(line, "runHaxeCode: function $n is defined twice; the first definition is kept.")
+                issue(line, "runHaxeCode：function $n is defined twice; the first definition is kept.")
             }
         }
         if (repeated.isEmpty()) haxeMembers += converted.members

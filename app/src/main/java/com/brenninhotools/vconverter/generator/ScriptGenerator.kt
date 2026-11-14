@@ -6,9 +6,9 @@ enum class ScriptKind(val label: String, val folder: String, val targetLabel: St
     MODULE("Module", "modules", "Module id"),
     SONG("Song", "songs", "Song id"),
     STAGE("Stage", "stages", "Stage id"),
-    CHARACTER("Character", "characters", "Character id"),
+    CHARACTER("Character", "characters", "人物 ID"),
     EVENT("Song event", "events", "Event id"),
-    NOTE_KIND("Note kind", "notekinds", "Note kind id")
+    NOTE_KIND("Note kind", "notekinds", "音符类型 ID")
 }
 
 enum class Callback(val method: String, val eventType: String, val label: String) {
@@ -31,7 +31,7 @@ enum class Callback(val method: String, val eventType: String, val label: String
 enum class CharacterRender(val label: String, val className: String) {
     SPARROW("Sparrow", "SparrowCharacter"),
     MULTI_SPARROW("Multi-Sparrow", "MultiSparrowCharacter"),
-    ATLAS("Animate atlas", "AnimateAtlasCharacter"),
+    ATLAS("Animate 图集", "AnimateAtlasCharacter"),
     MULTI_ATLAS("Multi-atlas", "MultiAnimateAtlasCharacter"),
     PACKER("Packer", "PackerCharacter")
 }
@@ -80,7 +80,7 @@ object ScriptGenerator {
         val className = Ids.className(spec.className.ifBlank { spec.targetId + spec.kind.label })
         val target = spec.targetId.trim()
         require(target.isNotEmpty()) { "Enter the ${spec.kind.targetLabel.lowercase()}." }
-        require(target.none { it == '"' || it == '\\' }) { "The id can't contain quotes." }
+        require(target.none { it == '"' || it == '\\' }) { "ID 里不能带引号。" }
         val source = when (spec.kind) {
             ScriptKind.EVENT -> event(className, target, spec)
             else -> scripted(className, target, spec)
@@ -93,15 +93,15 @@ object ScriptGenerator {
         val report = ReportBuilder()
         report.stat("Callbacks", spec.callbacks.count { it in callbacksFor(spec.kind) })
         report.section(
-            "Where it runs",
+            "运行范围",
             listOf(
                 when (spec.kind) {
-                    ScriptKind.MODULE -> "Always active, in every state. Check PlayState.instance before touching gameplay."
-                    ScriptKind.SONG -> "Only while the song \"$target\" is playing."
-                    ScriptKind.STAGE -> "Only on the stage \"$target\"; it replaces the stage's default class."
-                    ScriptKind.CHARACTER -> "Every time the character \"$target\" is used; its JSON must exist in data/characters/."
-                    ScriptKind.EVENT -> "Adds the \"$target\" event to the Chart Editor and runs handleEvent when it fires; its other callbacks run in songs that use the event."
-                    ScriptKind.NOTE_KIND -> "Runs for notes whose kind is \"$target\"."
+                    ScriptKind.MODULE -> "始终生效，所有状态都算。动游戏逻辑前先检查 PlayState.instance。"
+                    ScriptKind.SONG -> "只在歌曲「$target\" is playing."
+                    ScriptKind.STAGE -> "只在背景「$target\"; it replaces the stage's default class."
+                    ScriptKind.CHARACTER -> "每次用到人物「$target\" is used; its JSON must exist in data/characters/."
+                    ScriptKind.EVENT -> "Adds the \"$target\" event to the 谱面编辑器 and runs handleEvent when it fires; its other callbacks run in songs that use the event."
+                    ScriptKind.NOTE_KIND -> "对类型为「$target\"."
                 }
             )
         )

@@ -44,14 +44,14 @@ class OnlineViewModel(application: Application) : AndroidViewModel(application) 
                     val name = app.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { c ->
                         if (c.moveToFirst()) c.getString(0) else null
                     } ?: "mod.zip"
-                    val bytes = app.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: throw IllegalStateException("Could not read the file.")
+                    val bytes = app.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: throw IllegalStateException("读不到这个文件。")
                     name to bytes
                 }
                 require(picked.first.endsWith(".zip", ignoreCase = true)) { "Pick a .zip file." }
                 state.file = picked
                 if (state.title.isBlank()) state.title = picked.first.substringBeforeLast('.')
             } catch (e: Exception) {
-                state.message = e.message ?: "Could not read the file."
+                state.message = e.message ?: "读不到这个文件。"
             }
         }
     }

@@ -71,7 +71,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
         private set
     var newName by mutableStateOf("")
     var newBpm by mutableStateOf("120")
-    var newDifficulties by mutableStateOf(setOf("easy", "normal", "hard"))
+    var new难度 by mutableStateOf(setOf("easy", "normal", "hard"))
     private var exportedRevision = -1
 
     init {
@@ -96,15 +96,15 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
     fun createNew() {
         val bpm = newBpm.trim().replace(',', '.').toDoubleOrNull()
         if (bpm == null || bpm <= 0) {
-            status = StatusMessage.Error("BPM must be a number above 0.")
+            status = StatusMessage.Error("BPM 必须是大于 0 的数字。")
             return
         }
-        if (newDifficulties.isEmpty()) {
-            status = StatusMessage.Error("Pick at least one difficulty.")
+        if (new难度.isEmpty()) {
+            status = StatusMessage.Error("至少选一个难度。")
             return
         }
         val name = newName.trim().ifEmpty { "New Song" }
-        editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in newDifficulties }))
+        editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in new难度 }))
         source = "New song"
         invalidate()
         status = StatusMessage.Info("Started $name at ${newBpm.trim()} BPM.")
@@ -125,7 +125,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
                         "${song.document.difficultyNames.size} difficulties, ${song.audio.size} audio file(s)."
                 )
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the chart.")
+                status = StatusMessage.Error(e.message ?: "打开谱子失败。")
             }
         }
     }
@@ -145,7 +145,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
                 invalidate()
                 status = null
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not read the audio.")
+                status = StatusMessage.Error(e.message ?: "读取音频失败。")
             }
         }
     }
@@ -195,7 +195,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Could not export the chart.")
+                status = StatusMessage.Error(e.message ?: "导出谱子失败。")
             }
         }
     }
@@ -245,23 +245,23 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             SectionTitle("Song", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
-                title = "Open a chart",
-                hint = "Pick V-Slice <song>-metadata.json + <song>-chart.json, Psych chart .json files or a Codename song (meta.json + charts/*.json). Add Inst/Voices audio to hear it. Archives (.zip/.rar/.7z) work too.",
+                title = "打开谱子",
+                hint = "选 V-Slice 的 <song>-metadata.json + <song>-chart.json，或者 Psych 的谱面 .json，或者一个 Codename 的歌曲（meta.json + charts/*.json）。加上 Inst/Voices 音频就能试听。压缩包（.zip/.rar/.7z）也行。",
                 accent = accent,
                 icon = R.drawable.ic_tab_chart,
                 enabled = !busy,
                 onClick = { opener.launch(arrayOf("*/*")) }
             )
-            OutlineButton(if (showNew) "Hide new song" else "Start a new song", accent, onClick = { showNew = !showNew })
+            OutlineButton(if (showNew) "隐藏新建歌曲" else "新建歌曲", accent, onClick = { showNew = !showNew })
             if (showNew) {
-                FunkinTextField(viewModel.newName, { viewModel.newName = it }, "Song name", accent, enabled = !busy)
+                FunkinTextField(viewModel.newName, { viewModel.newName = it }, "歌曲名", accent, enabled = !busy)
                 NumberField(viewModel.newBpm, { viewModel.newBpm = it }, "BPM", accent, enabled = !busy)
-                FieldLabel("Difficulties")
+                FieldLabel("难度")
                 ChoiceChips(
                     options = viewModel.difficultyOptions,
                     label = { it.replaceFirstChar { c -> c.uppercase() } },
-                    isSelected = { it in viewModel.newDifficulties },
-                    onClick = { d -> viewModel.newDifficulties = if (d in viewModel.newDifficulties) viewModel.newDifficulties - d else viewModel.newDifficulties + d },
+                    isSelected = { it in viewModel.new难度 },
+                    onClick = { d -> viewModel.new难度 = if (d in viewModel.new难度) viewModel.new难度 - d else viewModel.new难度 + d },
                     accent = accent,
                     enabled = !busy
                 )
@@ -274,19 +274,19 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             val split = if (splitVoices >= 0) splitVoices == 1 else viewModel.audioFor(AudioRole.PLAYER) != null || viewModel.audioFor(AudioRole.OPPONENT) != null
             ChoiceChips(
                 options = listOf(false, true),
-                label = { if (it) "Split voices" else "One voices file" },
+                label = { if (it) "分离人声" else "单个人声文件" },
                 isSelected = { it == split },
                 onClick = { splitVoices = if (it) 1 else 0 },
                 accent = accent,
                 enabled = !busy
             )
             if (split) {
-                AssetPicker("Player voices", viewModel.audioFor(AudioRole.PLAYER)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.PLAYER) }, { viewModel.clearAudio(AudioRole.PLAYER) }, enabled = !busy)
-                AssetPicker("Opponent voices", viewModel.audioFor(AudioRole.OPPONENT)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.OPPONENT) }, { viewModel.clearAudio(AudioRole.OPPONENT) }, enabled = !busy)
+                AssetPicker("玩家音轨", viewModel.audioFor(AudioRole.PLAYER)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.PLAYER) }, { viewModel.clearAudio(AudioRole.PLAYER) }, enabled = !busy)
+                AssetPicker("对手音轨", viewModel.audioFor(AudioRole.OPPONENT)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.OPPONENT) }, { viewModel.clearAudio(AudioRole.OPPONENT) }, enabled = !busy)
             } else {
                 AssetPicker("Voices", viewModel.audioFor(AudioRole.VOICES)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.VOICES) }, { viewModel.clearAudio(AudioRole.VOICES) }, enabled = !busy)
             }
-            if (editor.player == null && viewModel.audio.isNotEmpty()) Text("Loading audio…", color = Funkin.Muted)
+            if (editor.player == null && viewModel.audio.isNotEmpty()) Text("正在加载音频…", color = Funkin.Muted)
         }
         FunkinCard {
             SectionTitle("Chart", accent, 3)
@@ -299,7 +299,7 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             com.brenninhotools.vconverter.editorview.LiveSessionPanel(viewModel.live, cursor = editor.position to editor.difficulty)
         }
         FunkinCard {
-            SectionTitle("Export format", accent, 4)
+            SectionTitle("导出格式", accent, 4)
             ChoiceChips(
                 options = ExportTarget.entries,
                 label = { it.label },
@@ -328,7 +328,7 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "Export ${viewModel.target.label}",
+            buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

@@ -49,7 +49,7 @@ abstract class GeneratorViewModel(application: Application) : BaseConverterViewM
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Could not generate the files.")
+                status = StatusMessage.Error(e.message ?: "生成文件失败。")
             }
         }
     }
@@ -67,7 +67,7 @@ abstract class GeneratorViewModel(application: Application) : BaseConverterViewM
                 invalidate()
                 status = null
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not read the file.")
+                status = StatusMessage.Error(e.message ?: "读不到这个文件。")
             }
         }
     }

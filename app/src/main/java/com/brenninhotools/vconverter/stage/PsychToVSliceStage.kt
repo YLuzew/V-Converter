@@ -79,10 +79,10 @@ object PsychToVSliceStage {
             if (objects == null) {
                 val base = baseStages[source.id.lowercase()]
                 report.warn(
-                    "This stage has no \"objects\" list, so its sprites are built in code (a hardcoded Psych stage or stages/${source.id}.lua/.hx). Character positions, cameras and zoom were converted; the props must be recreated in V-Slice." +
+                    "这个背景没有 \"objects\" 列表，所以它的精灵是代码生成的（硬编码的 Psych 背景，或者 stages/${source.id}.lua/.hx). Character positions, cameras and zoom were converted; the props must be recreated in V-Slice." +
                         if (base != null) " V-Slice already has this stage as \"$base\"." else ""
                 )
-                if (psych.preload.isNotEmpty()) report.section("Images the stage preloads", psych.preload.map { it.removePrefix("images/") })
+                if (psych.preload.isNotEmpty()) report.section("背景预加载的图片", psych.preload.map { it.removePrefix("images/") })
             }
         } else {
             objects.forEachIndexed { index, obj ->
@@ -113,9 +113,9 @@ object PsychToVSliceStage {
         val missing = listOf(CharacterSlot.GIRLFRIEND, CharacterSlot.OPPONENT, CharacterSlot.PLAYER).filter { it !in markerZ }
         missing.forEachIndexed { i, slot -> markerZ[slot] = top + 10 * (i + 1) }
         if (objects != null && objects.isNotEmpty() && missing.size == 3) {
-            notes.lines += "The objects list has no character layers, so the characters were placed above every prop (Psych would not show them at all)."
+            notes.lines += "objects 列表里没有人物的层，所以人物放到了所有物件之上（在 Psych 里它们根本不会显示）。"
         } else if (objects != null && objects.isNotEmpty() && missing.isNotEmpty()) {
-            report.warn("The objects list has no layer for ${missing.joinToString { it.label.lowercase() }}; Psych would not show ${if (missing.size == 1) "that character" else "those characters"}, V-Slice puts ${if (missing.size == 1) "it" else "them"} on top.")
+            report.warn("objects 列表里没有对应的层：${missing.joinToString { it.label.lowercase() }}; Psych would not show ${if (missing.size == 1) "那个人物" else "那些人物"}, V-Slice puts ${if (missing.size == 1) "it" else "them"} on top.")
         }
 
         val characters = JSONObject()
@@ -136,18 +136,18 @@ object PsychToVSliceStage {
         report.stat("Zoom", psych.defaultZoom.toJsonNumber())
         report.stat("Pixel", if (psych.isPixelStage) "Yes" else "No")
 
-        if (skipped.isNotEmpty()) report.section("Skipped objects", skipped)
+        if (skipped.isNotEmpty()) report.section("跳过的物件", skipped)
         if (psych.directory.isNotBlank() && directory != psych.directory.trim().lowercase()) {
-            notes.lines += "The folder \"${psych.directory}\" is not a V-Slice asset library (V-Slice stops with \"Missing library\" on unknown ones), so the stage uses \"shared\". Images in the mod's images/ folder load from there."
+            notes.lines += "文件夹「${psych.directory}\" is not a V-Slice asset library (V-Slice stops with \"Missing library\" on unknown ones), so the stage uses \"shared\". Images in the mod's images/ folder load from there."
         }
-        if (psych.hideGirlfriend) notes.lines += "hide_girlfriend became an invisible girlfriend (alpha 0); you can also set the song's girlfriend to none in its metadata."
-        if (psych.cameraSpeed != 1.0) report.warn("Camera speed ${psych.cameraSpeed} has no V-Slice stage setting; use a FocusCamera event with a duration, or a stage script, to change it.")
-        if (psych.isPixelStage) notes.lines += "Pixel stage: give the songs that use it the \"pixel\" note style in their metadata."
+        if (psych.hideGirlfriend) notes.lines += "hide_girlfriend 变成了隐形的女友（透明度 0）；你也可以在歌曲元数据里把女友设成 none。"
+        if (psych.cameraSpeed != 1.0) report.warn("摄像机速度 ${psych.cameraSpeed} has no V-Slice stage setting; use a FocusCamera event with a duration, or a stage script, to change it.")
+        if (psych.isPixelStage) notes.lines += "像素背景：在用到它的歌曲元数据里把音符样式设成 \"pixel\"。"
         if (notes.exactOffsets > 0) notes.lines += "${notes.exactOffsets} animated prop(s) are scaled; their animation offsets were recalculated from the spritesheet frames so they draw exactly where Psych draws them."
         if (notes.approximateOffsets > 0) report.warn("${notes.approximateOffsets} scaled animated prop(s) have animation offsets but no spritesheet XML was given; offsets were divided by the scale and may be a few pixels off. Add the images' .xml files for an exact result.")
         if (notes.renamedBops > 0) notes.lines += "${notes.renamedBops} beat-bopping prop(s) had their bop animation renamed to \"idle\", the name V-Slice props dance with."
-        notes.lines += "Character positions use V-Slice feet anchors. Characters converted with V-Converter land on the exact Psych spot; native V-Slice characters land close to it."
-        notes.lines += "Layers keep Psych's order through zIndex (props and characters every 10)."
+        notes.lines += "人物位置用的是 V-Slice 的脚底锚点。经过 V-Converter 转换的人物正好落在 Psych 原来的位置；原生 V-Slice 人物会落在它附近。"
+        notes.lines += "图层靠 zIndex 保持 Psych 的顺序（物件和人物每层间隔 10）。"
         report.section("Notes", notes.lines)
 
         return StageResult(source.id, root.toString(2), report.build())

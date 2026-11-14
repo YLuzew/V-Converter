@@ -45,7 +45,7 @@ class StagesViewModel(application: Application) : BaseConverterViewModel(applica
                     "lua" -> PickedStage(file.path, file.name, stem, LuaStageExtractor.defaultStage(), file.readText(), fromJson = false)
                     "xml" -> {
                         val atlas = SparrowAtlas.parse(file.readText())
-                        require(atlas.frames.isNotEmpty()) { "not a Sparrow spritesheet" }
+                        require(atlas.frames.isNotEmpty()) { "不是 Sparrow 图集" }
                         val parts = file.path.replace('\\', '/').split('/')
                         val start = parts.indexOfLast { it.equals("images", ignoreCase = true) }
                         val image = (if (start >= 0) parts.drop(start + 1) else listOf(parts.last())).joinToString("/").substringBeforeLast('.')
@@ -91,9 +91,9 @@ class StagesViewModel(application: Application) : BaseConverterViewModel(applica
     fun convert() {
         runTask {
             try {
-                require(stages.isNotEmpty()) { "Add at least one Psych Engine stage." }
+                require(stages.isNotEmpty()) { "至少添加一个 Psych Engine 背景。" }
                 val ids = stages.map { it.id.trim() }
-                require(ids.none { it.isEmpty() || it.contains('/') }) { "Every stage needs a valid id." }
+                require(ids.none { it.isEmpty() || it.contains('/') }) { "每个背景都需要一个有效的 ID。" }
                 val duplicate = ids.groupBy { it }.entries.firstOrNull { it.value.size > 1 }?.key
                 require(duplicate == null) { "The id \"$duplicate\" is used more than once." }
 
@@ -122,7 +122,7 @@ class StagesViewModel(application: Application) : BaseConverterViewModel(applica
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Conversion failed.")
+                status = StatusMessage.Error(e.message ?: "转换失败。")
             }
         }
     }

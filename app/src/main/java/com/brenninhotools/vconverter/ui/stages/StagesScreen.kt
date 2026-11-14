@@ -26,8 +26,8 @@ fun StagesScreen(viewModel: StagesViewModel, modFolderName: String?, onSave: () 
         FunkinCard {
             SectionTitle("Stages", accent, 1)
             DropZone(
-                title = "Add Psych stages",
-                hint = "Pick stage .json files from the stages folder, plus the stage's .lua if it builds sprites in a script: they become V-Slice props. Add the animated sprites' .xml (images/…) so scaled animations keep their exact offsets. Archives (.zip/.rar/.7z) work too.",
+                title = "添加 Psych 背景",
+                hint = "从 stages 文件夹选背景 .json；如果背景是在脚本里生成精灵的，再选它的 .lua：那些精灵会变成 V-Slice 物件。把带动画精灵的 .xml（images/…）也加上，缩放动画的偏移才准确。压缩包（.zip/.rar/.7z）也可以。",
                 accent = accent,
                 icon = R.drawable.ic_tab_stage,
                 enabled = !busy,
@@ -46,7 +46,7 @@ fun StagesScreen(viewModel: StagesViewModel, modFolderName: String?, onSave: () 
                         if (objects != null) {
                             Tag("${objects.count { it.type in setOf("square", "sprite", "animatedSprite") }} sprites", accent)
                         } else if (item.lua == null) {
-                            Tag("Script stage", Funkin.Warning)
+                            Tag("脚本背景", Funkin.Warning)
                         }
                         Tag("Zoom ${item.stage.defaultZoom}", Funkin.Muted)
                         if (item.stage.isPixelStage) Tag("Pixel", Funkin.Left)

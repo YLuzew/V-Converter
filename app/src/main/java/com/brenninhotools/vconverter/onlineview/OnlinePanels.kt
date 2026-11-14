@@ -42,7 +42,7 @@ private fun size(bytes: Long): String = when {
 @Composable
 fun NotConfigured(modifier: Modifier = Modifier) {
     Text(
-        "No server is set. Open the options (the gear) and type the address of a V-Converter server, for example https://my-server.example.com. The server's code is in the server/ folder of the repository.",
+        "还没设置服务器。打开选项（齿轮）填一个 V-Converter 服务器的地址，例如 https://my-server.example.com。服务器的代码在仓库的 server/ 文件夹里。",
         fontSize = 13.sp,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = modifier
@@ -71,10 +71,10 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
                 if (version.notes.isNotBlank()) Text(version.notes.take(600), color = scheme.onPrimary, fontSize = 12.sp, maxLines = 12, overflow = TextOverflow.Ellipsis)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     if (version.url.isNotBlank()) EditorChip("Download", false) { onOpenLink(version.url) }
-                    if (version.page.isNotBlank()) EditorChip("Release page", false) { onOpenLink(version.page) }
+                    if (version.page.isNotBlank()) EditorChip("发布页", false) { onOpenLink(version.page) }
                 }
             }
-            version.latest != null -> Text("You have the latest version (${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            version.latest != null -> Text("已是最新版本（${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         }
         state.announcements.forEach { a ->
             Column(
@@ -86,7 +86,7 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
                 if (a.url.isNotBlank()) EditorChip("Open link", false) { onOpenLink(a.url) }
             }
         }
-        if (state.announcements.isEmpty() && version != null) Text("No announcements right now.", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+        if (state.announcements.isEmpty() && version != null) Text("目前没有公告。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         state.newsError?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
         EditorChip(if (state.newsLoading) "Checking…" else "Check again", false) { state.refreshNews() }
     }
@@ -147,7 +147,7 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
                     }
                 }
             }
-            if (page.mods.isEmpty()) Text("No mods found.", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            if (page.mods.isEmpty()) Text("没有找到模组。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
             if (page.pages > 1) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (state.pageNumber > 1) EditorChip("← Previous", false) { state.search(state.pageNumber - 1) }
@@ -170,14 +170,14 @@ fun ModSharePanel(state: OnlineState, onPickFile: () -> Unit, modifier: Modifier
             return@Column
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(state.file?.let { "${it.first} · ${size(it.second.size.toLong())}" } ?: "No file picked", fontSize = 13.sp, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(state.file?.let { "${it.first} · ${size(it.second.size.toLong())}" } ?: "没有选择文件", fontSize = 13.sp, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
             EditorChip("Pick .zip", false, onPickFile)
         }
         TextValueField("Title", state.title, Modifier.fillMaxWidth()) { state.title = it }
         TextValueField("Description", state.description, Modifier.fillMaxWidth()) { state.description = it }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextValueField("Author", state.author, Modifier.weight(1f)) { state.author = it }
-            TextValueField("Tags (comma separated)", state.tags, Modifier.weight(1f)) { state.tags = it }
+            TextValueField("标签（逗号分隔）", state.tags, Modifier.weight(1f)) { state.tags = it }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             ModEngine.entries.forEach { e -> EditorChip(e.label, state.uploadEngine == e) { state.uploadEngine = e } }
@@ -193,15 +193,15 @@ fun ModSharePanel(state: OnlineState, onPickFile: () -> Unit, modifier: Modifier
                 SelectionContainer {
                     Text("Mod id: ${done.mod.id}\nDelete key: ${done.deleteToken}\nLink: ${done.mod.downloadUrl}", fontSize = 12.sp)
                 }
-                Text("Keep the delete key: it is the only way to remove the mod later.", fontSize = 12.sp, color = scheme.onSurfaceVariant)
+                Text("保管好删除密钥：以后只能靠它才能删掉这个模组。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
                 EditorChip("Remove it", false) { state.deleteUploaded() }
             }
         }
-        Text("Only .zip files are accepted. Share mods you made or have permission to share.", fontSize = 12.sp, color = scheme.onSurfaceVariant)
+        Text("只接受 .zip 文件。请分享你自己做的、或获得授权分享的模组。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
     }
 }
 
-private val roomKinds = listOf("chart" to "Chart Editor", "character" to "Character Editor", "stage" to "Stage Editor", "week" to "Week Editor")
+private val roomKinds = listOf("chart" to "谱面编辑器", "character" to "人物编辑器", "stage" to "背景编辑器", "week" to "Week Editor")
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -209,12 +209,12 @@ fun PublicRoomsPanel(state: OnlineState, onJoin: (RoomInfo) -> Unit, modifier: M
     LaunchedEffect(state.configured) { if (state.configured && state.rooms == null) state.refreshRooms() }
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        EditorSectionTitle("Public rooms")
+        EditorSectionTitle("公开房间")
         if (!state.configured) {
             NotConfigured()
             return@Column
         }
-        Text("Rooms people opened from an editor's Multieditor card with \"List my room publicly\". Joining opens that editor and loads the room's work and files.", fontSize = 12.sp, color = scheme.onSurfaceVariant)
+        Text("这里是别人在编辑器的多人编辑卡里勾了「公开列出我的房间」后开的房间。加入会打开对应的编辑器，并加载房间的工作内容和文件。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             EditorChip("All editors", state.roomKind == null) { state.roomKind = null; state.refreshRooms() }
             roomKinds.forEach { (key, label) -> EditorChip(label, state.roomKind == key) { state.roomKind = key; state.refreshRooms() } }
@@ -222,7 +222,7 @@ fun PublicRoomsPanel(state: OnlineState, onJoin: (RoomInfo) -> Unit, modifier: M
         }
         state.roomsError?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
         val rooms = state.rooms
-        if (rooms != null && rooms.isEmpty()) Text("No public rooms right now. Start one from any editor's Multieditor card.", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+        if (rooms != null && rooms.isEmpty()) Text("目前没有公开房间。在任意编辑器的多人编辑卡里开一个。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         rooms?.forEach { room ->
             Row(
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(scheme.surfaceVariant).padding(12.dp),

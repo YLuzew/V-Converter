@@ -129,7 +129,7 @@ object LuaStageExtractor {
         val chunk = try {
             LuaParser.parse(source)
         } catch (e: Exception) {
-            return LuaStageProps(emptyList(), emptyList(), emptySet(), listOf("The stage script could not be read: ${e.message}"))
+            return LuaStageProps(emptyList(), emptyList(), emptySet(), listOf("背景脚本读不出来：${e.message}"))
         }
         val bodies = chunk.filterIsInstance<Stat.FunctionDecl>()
             .filter { it.method == null && it.path.size == 1 && it.path[0] in setOf("onCreate", "onCreatePost") }

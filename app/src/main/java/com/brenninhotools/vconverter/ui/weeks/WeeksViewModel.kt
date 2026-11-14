@@ -86,9 +86,9 @@ class WeeksViewModel(application: Application) : BaseConverterViewModel(applicat
     fun convert() {
         runTask {
             try {
-                require(weeks.isNotEmpty()) { "Add at least one Psych Engine week." }
+                require(weeks.isNotEmpty()) { "至少添加一个 Psych Engine 周目。" }
                 val ids = weeks.map { it.id.trim() }
-                require(ids.none { it.isEmpty() || it.contains('/') }) { "Every week needs a valid id." }
+                require(ids.none { it.isEmpty() || it.contains('/') }) { "每个周目都需要一个有效的 ID。" }
                 val duplicate = ids.groupBy { it }.entries.firstOrNull { it.value.size > 1 }?.key
                 require(duplicate == null) { "The id \"$duplicate\" is used more than once." }
 
@@ -106,8 +106,8 @@ class WeeksViewModel(application: Application) : BaseConverterViewModel(applicat
                     combined.section(
                         "Notes",
                         listOf(
-                            "Song ids use Psych's song path format (\"Dad Battle\" → \"dad-battle\"), matching the Charts converter.",
-                            "Copy the week's images (storymenu, menubackgrounds, menucharacters) into your mod's images folder."
+                            "歌曲 ID 用 Psych 的歌曲路径格式（\"Dad Battle\" → \"dad-battle\"），和谱子转换器保持一致。",
+                            "把周目的图片（storymenu、menubackgrounds、menucharacters）复制到模组的 images 文件夹里。"
                         )
                     )
                     ConvertedOutput(files, combined.build())
@@ -116,7 +116,7 @@ class WeeksViewModel(application: Application) : BaseConverterViewModel(applicat
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Conversion failed.")
+                status = StatusMessage.Error(e.message ?: "转换失败。")
             }
         }
     }

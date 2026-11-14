@@ -52,7 +52,7 @@ class PsychChartsConverter : PsychToVSliceConverter() {
             val owner = folder ?: throw IllegalArgumentException("events.json must sit in its song folder (data/<song>/events.json)")
             return PickedText(file.path, file.name, file.path, text, "events", "${psychId(owner)} · ${song.events.size} events")
         }
-        require(song.sections.isNotEmpty()) { "not a Psych chart" }
+        require(song.sections.isNotEmpty()) { "不是 Psych 谱子" }
         val (id, difficulty) = PsychChartNames.split(stem, folder)
         return PickedText(file.path, file.name, file.path, text, "chart", "${psychId(id)} · $difficulty")
     }
@@ -71,7 +71,7 @@ class PsychChartsConverter : PsychToVSliceConverter() {
             val style = main.arrowSkin.takeIf { PsychNoteStyles.isCustom(it) }?.let { PsychNoteStyles.build(it, null) }
             if (style != null) {
                 outputs += out("data/notestyles/${style.id}.json", style.json)
-                report.section(if (songs.size > 1) "$id · Note style ${style.id}" else "Note style ${style.id}", listOf("Made from the chart's arrowSkin \"${main.arrowSkin}\".") + style.notes)
+                report.section(if (songs.size > 1) "$id · Note style ${style.id}" else "Note style ${style.id}", listOf("由谱子的 arrowSkin「${main.arrowSkin}\".") + style.notes)
             }
             val conversion = PsychToVSliceChart.convert(sources, ConversionOptions(songName = main.name.ifBlank { id }, extraEvents = events, keepPsychEvents = keepEvents, noteStyle = style?.id))
             conversion.files(id).forEach { (name, text) -> outputs += out("data/songs/$id/$name", text) }
@@ -111,11 +111,11 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
         val stem = file.name.substringBeforeLast('.')
         if (file.extension == "xml") {
             val atlas = SparrowAtlas.parse(text)
-            require(atlas.frames.isNotEmpty()) { "not a Sparrow spritesheet" }
+            require(atlas.frames.isNotEmpty()) { "不是 Sparrow 图集" }
             return PickedText(file.path, file.name, file.path, text, "atlas", "${atlas.frames.size} frames")
         }
         if (AnimateAtlases.isAtlasFile(file.name)) {
-            return PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
+            return PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
         }
         val character = PsychCharacterParser.parse(text)
         val id = psychId(stem)
@@ -132,7 +132,7 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
         fun deadFor(id: String, slot: CharacterSlot): String? =
             listOf("$id-dead", "bf-dead").firstOrNull { it != id && it in parsed && slot == CharacterSlot.PLAYER && !id.endsWith("-dead") }
         val merged = items.filter { it.kind == "character" }.mapNotNull { deadFor(psychId(stem(it)), it.slot ?: CharacterSlot.OPPONENT) }.toSet()
-        if (merged.isNotEmpty()) report.section("Game over characters", listOf("Merged into the players that use them (V-Slice keeps game over animations in the player character): ${merged.joinToString()}."))
+        if (merged.isNotEmpty()) report.section("死亡动画人物", listOf("合进了用到它的玩家人物（V-Slice 把死亡动画放在玩家人物身上）：${merged.joinToString()}."))
         val outputs = items.filter { it.kind == "character" && psychId(stem(it)) !in merged }.map { item ->
             val id = psychId(stem(item))
             val character = parsed.getValue(id)
@@ -144,7 +144,7 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
             converted.report.sections.forEach { report.section("$id · ${it.title}", it.lines) }
             converted.report.warnings.forEach { report.warn("$id: $it") }
             val missing = character.atlasImages.ifEmpty { listOf(character.image) }.filter { PsychToVSliceCharacter.atlasKey(it) !in atlases && PsychToVSliceCharacter.atlasKey(it) !in animates }
-            if (missing.isNotEmpty()) report.warn("$id: add the spritesheet XML (${missing.joinToString()}), or Animation.json + spritemap for Animate atlases, for exact offsets.")
+            if (missing.isNotEmpty()) report.warn("$id: add the spritesheet XML (${missing.joinToString()}), or Animation.json + spritemap for Animate 图集es, for exact offsets.")
             out("data/characters/$id.json", converted.json)
         }
         return ConvertedOutput(outputs, report.build())
@@ -162,7 +162,7 @@ class PsychStagesConverter : PsychToVSliceConverter() {
         if (file.extension == "lua") return PickedText(file.path, file.name, file.path, text, "lua", "Stage Lua")
         if (file.extension == "xml") {
             val atlas = SparrowAtlas.parse(text)
-            require(atlas.frames.isNotEmpty()) { "not a Sparrow spritesheet" }
+            require(atlas.frames.isNotEmpty()) { "不是 Sparrow 图集" }
             val image = psychParts(file.path).let { parts -> parts.indexOfLast { it.equals("images", true) }.let { i -> if (i >= 0) parts.drop(i + 1) else listOf(parts.last()) } }.joinToString("/").substringBeforeLast('.')
             return PickedText(file.path, file.name, file.path, text, "atlas", image)
         }
@@ -209,7 +209,7 @@ class PsychWeeksConverter : PsychToVSliceConverter() {
     override fun classify(file: ImportedFile, text: String): PickedText =
         if (PsychWeekParser.isMenuCharacter(text)) {
             PsychWeekParser.parseMenuCharacter(text)
-            PickedText(file.path, file.name, file.path, text, "menu", "Menu character")
+            PickedText(file.path, file.name, file.path, text, "menu", "菜单人物")
         } else {
             val week = PsychWeekParser.parse(text)
             PickedText(file.path, file.name, file.path, text, "week", "${week.songs.size} songs")
@@ -249,7 +249,7 @@ class PsychScriptsConverter : PsychToVSliceConverter() {
         val sources = items.map { ScriptSource(it.path, it.text, ScriptConverter.detectTarget(it.path)) }
         val noteTypes = sources.mapNotNull { it.target }.filter { it.scope == com.brenninhotools.vconverter.script.ScriptScope.NOTE_TYPE }.map { it.key }
         val bundle = ScriptConverter.convert("VConverter", sources, ScriptConverter.noteTypeMap(noteTypes))
-        require(bundle.converted > 0) { bundle.report.warnings.firstOrNull() ?: "No script could be converted." }
+        require(bundle.converted > 0) { bundle.report.warnings.firstOrNull() ?: "没有脚本能转换。" }
         val outputs = bundle.files.map { out(it.path, it.content) }
         return ConvertedOutput(outputs, bundle.report, outputs.singleOrNull()?.content)
     }

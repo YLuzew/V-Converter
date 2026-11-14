@@ -31,7 +31,7 @@ fun ReverseScreen(
     modFolderName: String?,
     onSave: () -> Unit,
     footnote: String? = null,
-    buttonText: String = "Convert to Psych"
+    buttonText: String = "转换为 Psych"
 ) {
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { viewModel.add(it) }
     val busy = viewModel.busy
@@ -89,7 +89,7 @@ private fun kindLabel(kind: String): String = when (kind) {
     "metadata" -> "Metadata"
     "chart" -> "Chart"
     "atlas" -> "Spritesheet"
-    "animate" -> "Animate atlas"
+    "animate" -> "Animate 图集"
     "character" -> "Character"
     "stage" -> "Stage"
     "level" -> "Level"
@@ -97,7 +97,7 @@ private fun kindLabel(kind: String): String = when (kind) {
     "events" -> "Events"
     "event" -> "Event"
     "image" -> "Image"
-    "menu" -> "Menu character"
+    "menu" -> "菜单人物"
     else -> kind
 }
 

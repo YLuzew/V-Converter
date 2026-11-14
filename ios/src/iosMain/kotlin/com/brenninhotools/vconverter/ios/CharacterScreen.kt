@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class IosCharacterEditor(private val scope: CoroutineScope) {
-    val editor = CharacterEditorState(CharacterDocument("new-character", "New Character"))
+    val editor = CharacterEditorState(CharacterDocument("new-character", "新建人物"))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(
         com.brenninhotools.vconverter.editorview.CharacterLiveAdapter(editor, { image to xml }, { png, text -> receiveSheet(png, text) })
     ) { block -> runOnMain(block) }
@@ -62,7 +62,7 @@ class IosCharacterEditor(private val scope: CoroutineScope) {
         if (i != null && x != null) runCatching { editor.sprite = decode(i, x) }
     }
     var target by mutableStateOf(ExportTarget.VSLICE)
-    var source by mutableStateOf("New character")
+    var source by mutableStateOf("新人物")
         private set
     var sheetName by mutableStateOf<String?>(null)
         private set
@@ -144,7 +144,7 @@ class IosCharacterEditor(private val scope: CoroutineScope) {
                         if (sprite == null) ". Add the spritesheet (.png + .xml) to see it." else "."
                 )
             } catch (e: Exception) {
-                status = Status.Error(e.message ?: "Could not open the character.")
+                status = Status.Error(e.message ?: "打开人物失败。")
             }
         }
     }
@@ -154,10 +154,10 @@ class IosCharacterEditor(private val scope: CoroutineScope) {
         task {
             try {
                 val files = withContext(Dispatchers.IO) { readAll(sources) }
-                val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("Pick the spritesheet .png and its .xml.")
-                val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("Pick the spritesheet .xml too.")
+                val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("选图集的 .png 和它的 .xml。")
+                val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("把图集的 .xml 也选上。")
                 val text = sheet.second.decodeToString()
-                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is not a Sparrow spritesheet." }
+                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is 不是 Sparrow 图集." }
                 val sprite = withContext(Dispatchers.Default) { decode(png.second, text) }
                 editor.sprite = sprite
                 image = png.second
@@ -171,20 +171,20 @@ class IosCharacterEditor(private val scope: CoroutineScope) {
                 output = null
                 status = Status.Info("Loaded ${sprite.atlas.frames.size} frames from $sheetName.")
             } catch (e: Exception) {
-                status = Status.Error(e.message ?: "Could not read the spritesheet.")
+                status = Status.Error(e.message ?: "读不到图集。")
             }
         }
     }
 
     fun createNew() {
-        editor.load(CharacterDocument("new-character", "New Character"))
+        editor.load(CharacterDocument("new-character", "新建人物"))
         editor.sprite = null
         image = null
         xml = null
         sheetName = null
-        source = "New character"
+        source = "新人物"
         output = null
-        status = Status.Info("Started a new character. Add its spritesheet to pick the animations.")
+        status = Status.Info("已新建人物。加上它的图集就能挑动画了。")
     }
 
     fun export() {
@@ -197,7 +197,7 @@ class IosCharacterEditor(private val scope: CoroutineScope) {
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = Status.Error(e.message ?: "Could not export the character.")
+                status = Status.Error(e.message ?: "导出人物失败。")
             }
         }
     }
@@ -215,7 +215,7 @@ class IosCharacterEditor(private val scope: CoroutineScope) {
                     if (zip) Dialogs.export(target)
                     onSaved(target)
                 } catch (e: Exception) {
-                    status = Status.Error(e.message ?: "Could not save the files.")
+                    status = Status.Error(e.message ?: "保存文件失败。")
                 }
             }
         }
@@ -238,8 +238,8 @@ fun CharacterEditorScreen(state: AppState) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Primary("Open character…", accent, !model.busy) { Dialogs.openFiles("Open the character files, spritesheet or archive") { model.open(it) } }
             Secondary("Open folder…", !model.busy) { Dialogs.chooseFolder("Choose the character or mod folder") { model.open(listOf(it)) } }
-            Secondary(model.sheetName?.let { "Spritesheet: $it" } ?: "Add spritesheet…", !model.busy) { Dialogs.openFiles("Pick the spritesheet .png and .xml") { model.replaceSheet(it) } }
-            Secondary("New character", !model.busy) { model.createNew() }
+            Secondary(model.sheetName?.let { "图集：$it" } ?: "Add spritesheet…", !model.busy) { Dialogs.openFiles("Pick the spritesheet .png and .xml") { model.replaceSheet(it) } }
+            Secondary("新人物", !model.busy) { model.createNew() }
         }
         Text(
             "A V-Slice or Psych character .json or a Codename character .xml with its spritesheet .png + .xml. A spritesheet alone starts a new character with guessed animations. You can also drop files on the window.",

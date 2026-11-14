@@ -119,23 +119,23 @@ class WebSocketClient(private val url: String, private val listener: WebSocketLi
         val header = StringBuilder()
         while (!header.endsWith("\r\n\r\n")) {
             header.append(readByte(input).toChar())
-            if (header.length > 16 * 1024) throw IllegalStateException("Bad handshake")
+            if (header.length > 16 * 1024) throw IllegalStateException("握手失败")
         }
         val lines = header.split("\r\n")
         val status = lines.first().split(' ').getOrNull(1)?.toIntOrNull() ?: 0
         if (status != 101) {
             throw OnlineException(
                 when (status) {
-                    404 -> "That room does not exist (or it expired)."
-                    409 -> "That room is full."
-                    else -> "The server refused the live session ($status)."
+                    404 -> "这个房间不存在（或者已经过期）。"
+                    409 -> "房间满了。"
+                    else -> "服务器拒绝了这次连接（$status)."
                 },
                 status
             )
         }
         val accept = lines.firstOrNull { it.startsWith("Sec-WebSocket-Accept:", true) }?.substringAfter(':')?.trim()
         val expected = Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-1").digest((key + GUID).toByteArray(Charsets.US_ASCII)))
-        if (accept != expected) throw IllegalStateException("Bad handshake")
+        if (accept != expected) throw IllegalStateException("握手失败")
     }
 
     private fun readByte(input: InputStream): Int {

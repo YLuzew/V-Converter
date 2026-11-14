@@ -188,18 +188,18 @@ private fun Dot(color: Color, text: String) {
 private fun Stats(preview: ChartPreview, accent: Color) {
     val (low, high) = preview.bpmRange
     val stats = listOf(
-        "Player notes" to preview.playerNotes.toString(),
-        "Opponent notes" to preview.opponentNotes.toString(),
+        "玩家音符" to preview.playerNotes.toString(),
+        "对手音符" to preview.opponentNotes.toString(),
         "Holds" to preview.holdNotes.toString(),
         "Peak NPS" to formatBpm(preview.peakNps),
         "Length" to formatDuration(preview.length),
         "BPM" to if (low == high) formatBpm(low) else "${formatBpm(low)}–${formatBpm(high)}",
         "Time signature" to preview.signatures.joinToString(" · ") { "$it/4" },
         "Events" to preview.events.size.toString(),
-        "Scroll speed" to formatBpm(preview.speed)
+        "滚动速度" to formatBpm(preview.speed)
     ) + listOfNotNull(
-        if (preview.otherNotes > 0) "Girlfriend notes" to preview.otherNotes.toString() else null,
-        if (preview.duplicates > 0) "Stacked duplicates" to preview.duplicates.toString() else null,
+        if (preview.otherNotes > 0) "女友音符" to preview.otherNotes.toString() else null,
+        if (preview.duplicates > 0) "叠在一起的重复音符" to preview.duplicates.toString() else null,
         if (preview.offset != 0.0) "Offset" to "${formatBpm(preview.offset)} ms" else null,
         if (preview.stage.isNotBlank()) "Stage" to preview.stage else null
     )
@@ -216,8 +216,8 @@ private fun Stats(preview: ChartPreview, accent: Color) {
 @Composable
 private fun Compare(before: ChartPreview, after: ChartPreview) {
     val checks = listOf(
-        "Player notes" to (before.playerNotes to after.playerNotes),
-        "Opponent notes" to (before.opponentNotes to after.opponentNotes),
+        "玩家音符" to (before.playerNotes to after.playerNotes),
+        "对手音符" to (before.opponentNotes to after.opponentNotes),
         "Holds" to (before.holdNotes to after.holdNotes),
         "BPM changes" to (before.timing.size to after.timing.size)
     ).filter { it.second.first != it.second.second }
@@ -227,7 +227,7 @@ private fun Compare(before: ChartPreview, after: ChartPreview) {
         verticalArrangement = Arrangement.spacedBy(3.dp)
     ) {
         Text(
-            if (checks.isEmpty()) "✓ Every note, hold and BPM change made it across." else "Some counts changed in the conversion:",
+            if (checks.isEmpty()) "✓ 所有音符、长条和 BPM 变化都完整过来了。" else "转换后有些数量变了：",
             style = MaterialTheme.typography.bodySmall,
             color = Palette.Text
         )
@@ -275,7 +275,7 @@ private fun OptionsCard(files: FileTabState, accent: Color) {
             }
         }
         if (ChartField.SPEED in fields && files.difficulties.isNotEmpty()) {
-            Text("Scroll speed", style = MaterialTheme.typography.labelMedium, color = Palette.Muted)
+            Text("滚动速度", style = MaterialTheme.typography.labelMedium, color = Palette.Muted)
             files.difficulties.chunked(4).forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     row.forEach { difficulty ->
@@ -299,14 +299,14 @@ private fun OptionsCard(files: FileTabState, accent: Color) {
                     colors = CheckboxDefaults.colors(checkedColor = accent, checkmarkColor = Palette.Ink)
                 )
                 Column {
-                    Text("Keep Psych-only events", style = MaterialTheme.typography.bodyMedium, color = Palette.Text)
+                    Text("保留仅 Psych 的事件", style = MaterialTheme.typography.bodyMedium, color = Palette.Text)
                     Text("Events without a V-Slice twin stay in the chart, with SongEvent scripts for the built-in ones.", style = MaterialTheme.typography.bodySmall, color = Palette.Muted)
                 }
             }
         }
         if (!tweaks.isEmpty) {
             TextButton(onClick = { files.updateTweaks { com.brenninhotools.vconverter.chart.preview.ChartTweaks(keepUnknownEvents = it.keepUnknownEvents) } }, enabled = enabled) {
-                Text("Reset options", color = Palette.Muted)
+                Text("重置选项", color = Palette.Muted)
             }
         }
     }

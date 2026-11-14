@@ -91,7 +91,7 @@ class ModRun(
     private var failuresInRow = 0
     private var done = 0
     private var total = 0
-    private var label = "Starting…"
+    private var label = "开始…"
     private var lastEmit = 0L
 
     val progress: (ModProgress) -> Unit = { update ->

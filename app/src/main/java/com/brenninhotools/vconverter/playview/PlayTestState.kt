@@ -94,7 +94,7 @@ class Popup(val text: String, val time: Double, val lane: Int = -1)
 class PlayTestState(private val scope: CoroutineScope, private val platform: PlayTestPlatform) {
     var mod by mutableStateOf<PlayTestMod?>(null)
         private set
-    var source by mutableStateOf("Nothing loaded")
+    var source by mutableStateOf("没有加载内容")
         private set
     var selected by mutableStateOf<PlayTestSongRef?>(null)
         private set
@@ -153,7 +153,7 @@ class PlayTestState(private val scope: CoroutineScope, private val platform: Pla
                 selected = null
                 if (opened.songs.isEmpty()) error = "No songs found in $label." else load(opened, opened.songs.first())
             } catch (e: Exception) {
-                error = e.message ?: "Could not open the files."
+                error = e.message ?: "打开失败：the files."
             } finally {
                 busy = false
             }
@@ -360,7 +360,7 @@ class PlayTestState(private val scope: CoroutineScope, private val platform: Pla
                 }
                 is PlayEvent.HoldDropped -> added += Popup("DROP", t, event.note.lane)
                 is PlayEvent.HoldFinished -> Unit
-                is PlayEvent.Died -> runIssues = runIssues + PlayIssue(IssueLevel.INFO, "Gameplay", "Health ran out at ${formatMs(event.time)} (PlayTest keeps going).")
+                is PlayEvent.Died -> runIssues = runIssues + PlayIssue(IssueLevel.INFO, "Gameplay", "血量耗尽于 ${formatMs(event.time)} (PlayTest keeps going).")
             }
         }
         if (added.isNotEmpty()) popups = (popups + added).takeLast(6)

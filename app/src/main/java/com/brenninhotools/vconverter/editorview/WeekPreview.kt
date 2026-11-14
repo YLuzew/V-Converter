@@ -180,7 +180,7 @@ private fun DrawScope.drawTexts(state: WeekEditorState, doc: WeekDocument, m: Me
     fun style(size: Float, color: Color = Color.White, align: TextAlign = TextAlign.Start) =
         TextStyle(color = color, fontSize = (size * m.k).toSp(), fontFamily = FontFamily.Monospace, textAlign = align, lineHeight = (size * 1.15f * m.k).toSp())
 
-    drawText(measurer.measure("LEVEL SCORE: 0", style(32f)), topLeft = Offset(m.x(10.0), m.y(10.0)))
+    drawText(measurer.measure("关卡得分: 0", style(32f)), topLeft = Offset(m.x(10.0), m.y(10.0)))
     val name = measurer.measure(doc.storyName, style(32f, Color.White.copy(alpha = 0.7f)))
     drawText(name, topLeft = Offset(m.x(1270.0) - name.size.width, m.y(10.0)))
 
@@ -220,7 +220,7 @@ private fun DrawScope.drawTexts(state: WeekEditorState, doc: WeekDocument, m: Me
     val notes = listOfNotNull(
         if (!doc.visible) "Hidden from story mode" else null,
         if (doc.hideFreeplay) "Songs hidden from freeplay" else null,
-        if (doc.isLocked && doc.hiddenUntilUnlocked) "Hidden until unlocked" else null
+        if (doc.isLocked && doc.hiddenUntilUnlocked) "解锁前隐藏" else null
     )
     if (notes.isNotEmpty()) {
         val text = measurer.measure(notes.joinToString("  ·  "), style(18f, Color(0xFFFFC94A)))

@@ -135,7 +135,7 @@ class CodenameCharactersConverter : CodenameEngineConverter() {
             return PickedText(file.path, file.name, file.path, text, "character", "${character.animations.size} anims", CodenameToVSliceCharacter.defaultSlot(character))
         }
         val atlas = SparrowAtlas.parse(text)
-        require(atlas.frames.isNotEmpty()) { "not a Codename character XML or a Sparrow spritesheet" }
+        require(atlas.frames.isNotEmpty()) { "不是 Codename 人物 XML，也不是 Sparrow 图集" }
         return PickedText(file.path, file.name, file.path, text, "atlas", "${atlas.frames.size} frames")
     }
 
@@ -183,7 +183,7 @@ class CodenameStagesConverter : CodenameEngineConverter() {
 
     override fun classify(file: ImportedFile, text: String): PickedText = when (file.extension) {
         "png" -> {
-            require(text.contains('x')) { "not a PNG image" }
+            require(text.contains('x')) { "不是 PNG 图片" }
             PickedText(file.path, file.name, file.path, text, "image", text)
         }
         else -> if (CodenameStageParser.isStageXml(text)) {
@@ -191,7 +191,7 @@ class CodenameStagesConverter : CodenameEngineConverter() {
             PickedText(file.path, file.name, file.path, text, "stage", "${stage.spriteNames.size} sprites")
         } else {
             val atlas = SparrowAtlas.parse(text)
-            require(atlas.frames.isNotEmpty()) { "not a Codename stage XML or a Sparrow spritesheet" }
+            require(atlas.frames.isNotEmpty()) { "不是 Codename 背景 XML，也不是 Sparrow 图集" }
             PickedText(file.path, file.name, file.path, text, "atlas", "${atlas.frames.size} frames")
         }
     }
@@ -235,8 +235,8 @@ class CodenameWeeksConverter : CodenameEngineConverter() {
         val id = file.name.substringBeforeLast('.')
         return when {
             CodenameWeekParser.isWeekXml(text) -> PickedText(file.path, file.name, file.path, text, "level", "${CodenameWeekParser.parseWeek(id, text).songs.size} songs")
-            CodenameWeekParser.isMenuCharacterXml(text) -> PickedText(file.path, file.name, file.path, text, "menu", "Menu character")
-            else -> throw IllegalArgumentException("not a Codename week or week character XML")
+            CodenameWeekParser.isMenuCharacterXml(text) -> PickedText(file.path, file.name, file.path, text, "menu", "菜单人物")
+            else -> throw IllegalArgumentException("不是 Codename 的周目或周目人物 XML")
         }
     }
 
@@ -280,8 +280,8 @@ class CodenameScriptsConverter : CodenameEngineConverter() {
         val stem = file.name.substringBeforeLast('.')
         return when (file.extension) {
             "xml" -> {
-                require(CodenameStageParser.isStageXml(text)) { "only stage XMLs are used here (for the sprite names)" }
-                PickedText(file.path, file.name, file.path, text, "stage", "Stage sprites")
+                require(CodenameStageParser.isStageXml(text)) { "这里只用到背景 XML（为了取精灵名）" }
+                PickedText(file.path, file.name, file.path, text, "stage", "背景精灵")
             }
             "json" -> {
                 val def = CodenameEvents.parseDefinition(stem, text)

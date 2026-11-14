@@ -16,9 +16,9 @@ sealed interface LiveChange {
 }
 
 enum class LiveKind(val key: String, val label: String) {
-    CHART("chart", "Chart Editor"),
-    CHARACTER("character", "Character Editor"),
-    STAGE("stage", "Stage Editor"),
+    CHART("chart", "谱面编辑器"),
+    CHARACTER("character", "人物编辑器"),
+    STAGE("stage", "背景编辑器"),
     WEEK("week", "Week Editor");
 
     companion object {

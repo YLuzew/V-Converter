@@ -92,7 +92,7 @@ class AnimateAtlas private constructor(
                 }
             }
             val animation = (root.value("AN") ?: root.value("ANIMATION")) as? JSONObject
-                ?: throw IllegalArgumentException("Animation.json has no \"AN\"/\"ANIMATION\" block")
+                ?: throw IllegalArgumentException("Animation.json 里没有 \"AN\"/\"ANIMATION\" 块")
             val mainName = (animation.value("SN") ?: animation.value("SYMBOL_name")).asText().ifBlank { animation.value("N").asText() }
             val dictionary = ((root.value("SD") as? JSONObject)?.value("S") ?: (root.value("SYMBOL_DICTIONARY") as? JSONObject)?.value("Symbols")) as? JSONArray
             val timelines = HashMap<String, Timeline>()

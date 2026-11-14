@@ -234,7 +234,7 @@ class NmvAsPsychFiles(private val files: ModFiles, private val scan: NmvScan) : 
                 else -> text
             }
         }.getOrElse {
-            warnings += "$path: could not be converted (${it.message}); the original was kept."
+            warnings += "$path: 没有转换 (${it.message}); the original was kept."
             text
         }
         return out.encodeToByteArray().also { cache[path] = it }
@@ -325,7 +325,7 @@ class PsychToNmvWriter(private val target: ModWriter, private val info: ModInfo?
                 if (result.source.isBlank()) {
                     val keep = free(slot.substringBeforeLast('.') + ".lua")
                     put(keep, text)
-                    report.warn("$clean could not be converted (${result.issues.firstOrNull()?.message ?: "syntax error"}); the Lua file was kept as $keep, which NightmareVision does not run.")
+                    report.warn("$clean 没有转换 (${result.issues.firstOrNull()?.message ?: "syntax error"}); the Lua file was kept as $keep, which NightmareVision does not run.")
                     return
                 }
                 put(slot, result.source)

@@ -109,7 +109,7 @@ object CodenameChartParser {
     fun parseChart(raw: String): CodenameChartData {
         val root = json(raw)
         val strums = root.value("strumLines") as? JSONArray
-            ?: throw CodenameChartException("This JSON is not a Codename Engine chart (no \"strumLines\").")
+            ?: throw CodenameChartException("这个 JSON 不是 Codename Engine 谱子（没有 \"strumLines\"）。")
         val strumLines = (0 until strums.length()).mapNotNull { index ->
             val line = strums.value(index) as? JSONObject ?: return@mapNotNull null
             val notesArray = line.value("notes") as? JSONArray
@@ -201,6 +201,6 @@ object CodenameChartParser {
     private fun json(raw: String): JSONObject = try {
         JSONObject(raw.trim().removePrefix("﻿"))
     } catch (e: JSONException) {
-        throw CodenameChartException("The file is not valid JSON: ${e.message}", e)
+        throw CodenameChartException("该文件不是有效的 JSON：${e.message}", e)
     }
 }

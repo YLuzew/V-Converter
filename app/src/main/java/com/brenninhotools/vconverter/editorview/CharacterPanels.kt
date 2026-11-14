@@ -91,7 +91,7 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 4.dp)) {
-            EditorChip(if (adding) "Close" else "Add animation", adding) { adding = !adding }
+            EditorChip(if (adding) "Close" else "加动画", adding) { adding = !adding }
             EditorChip("Move up", false) { state.moveSelected(-1) }
             EditorChip("Move down", false) { state.moveSelected(1) }
             EditorChip("Delete", false) { state.removeSelected() }
@@ -101,11 +101,11 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
             if (prefixes.isEmpty()) {
                 var prefix by remember { mutableStateOf("") }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    TextValueField("Prefix in the spritesheet", prefix, Modifier.weight(1f)) { prefix = it }
+                    TextValueField("图集里的前缀", prefix, Modifier.weight(1f)) { prefix = it }
                     EditorChip("Add", false) { if (prefix.isNotBlank()) { state.addAnimation(prefix.trim()); adding = false } }
                 }
             } else {
-                Text("Pick a prefix from the spritesheet:", fontSize = 12.sp, color = scheme.onSurfaceVariant)
+                Text("从图集里选一个前缀：", fontSize = 12.sp, color = scheme.onSurfaceVariant)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     prefixes.forEach { prefix ->
                         val used = document.animations.any { it.prefix == prefix }
@@ -125,17 +125,17 @@ fun AnimationPanel(state: CharacterEditorState, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         EditorSectionTitle("Animation")
         if (anim == null) {
-            Text("Add an animation to edit it.", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("添加一个动画才能编辑。", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             return@Column
         }
         fun update(change: (com.brenninhotools.vconverter.editor.CharacterAnim) -> com.brenninhotools.vconverter.editor.CharacterAnim) =
             state.edit { it.replaceAnim(index, change(it.animations[index])) }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Name (idle, singLEFT…)", anim.name, Modifier.weight(1f)) { v -> update { it.copy(name = v.trim()) } }
+            TextValueField("名称（idle、singLEFT…）", anim.name, Modifier.weight(1f)) { v -> update { it.copy(name = v.trim()) } }
             NumberField("FPS", anim.frameRate.toDouble(), Modifier.weight(0.5f)) { v -> if (v >= 1) update { it.copy(frameRate = v.toInt()) } }
         }
         TextValueField("Prefix", anim.prefix, Modifier.fillMaxWidth()) { v -> update { it.copy(prefix = v) } }
-        TextValueField("Indices (empty = all frames)", anim.indices.joinToString(","), Modifier.fillMaxWidth()) { v ->
+        TextValueField("帧序号（留空 = 全部帧）", anim.indices.joinToString(","), Modifier.fillMaxWidth()) { v ->
             val list = v.split(',', ' ').mapNotNull { it.trim().toIntOrNull() }
             update { it.copy(indices = list) }
         }
@@ -171,13 +171,13 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         EditorSectionTitle("Character")
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Character id", doc.id, Modifier.weight(1f)) { v ->
+            TextValueField("人物 ID", doc.id, Modifier.weight(1f)) { v ->
                 val clean = v.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
                 if (clean.isNotEmpty()) update { it.copy(id = clean) }
             }
             TextValueField("Name", doc.name, Modifier.weight(1f)) { v -> update { it.copy(name = v) } }
         }
-        TextValueField("Spritesheet path (images/…)", doc.assetPath, Modifier.fillMaxWidth()) { v -> update { it.copy(assetPath = v.trim()) } }
+        TextValueField("图集路径（images/…）", doc.assetPath, Modifier.fillMaxWidth()) { v -> update { it.copy(assetPath = v.trim()) } }
         ChoiceField("Side", doc.slot, CharacterSlot.entries.map { it to it.label }, Modifier.fillMaxWidth()) { v -> update { it.copy(slot = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NumberField("Scale", doc.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
@@ -191,10 +191,10 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NumberField("Camera X", doc.cameraX, Modifier.weight(1f)) { v -> update { it.copy(cameraX = v) } }
             NumberField("Camera Y", doc.cameraY, Modifier.weight(1f)) { v -> update { it.copy(cameraY = v) } }
-            NumberField("Preview zoom", state.stageZoom.toDouble(), Modifier.weight(1f)) { v -> if (v > 0) state.stageZoom = v.toFloat() }
+            NumberField("预览缩放", state.stageZoom.toDouble(), Modifier.weight(1f)) { v -> if (v > 0) state.stageZoom = v.toFloat() }
         }
         Text(
-            "The camera point is the character's center plus Camera X/Y, plus the stage's default offset for the ${doc.slot.label.lowercase()} side (${trim(doc.slot.cameraBaseX)}, ${trim(doc.slot.cameraBaseY)}), like V-Slice. The dashed frame is what a 1280×720 game camera sees at the preview zoom.",
+            "摄像机对焦点 = 人物中心 + 摄像机 X/Y + 背景给 ${doc.slot.label.lowercase()} side (${trim(doc.slot.cameraBaseX)}, ${trim(doc.slot.cameraBaseY)}), like V-Slice. The dashed frame is what a 1280×720 game camera sees at the preview zoom.",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -204,7 +204,7 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
         }
         val names = doc.animations.map { it.name }.filter { it.isNotEmpty() }
         if (names.isNotEmpty()) {
-            ChoiceField("Starting animation", doc.startingAnimation.takeIf { it in names } ?: names.first(), names.map { it to it }, Modifier.fillMaxWidth()) { v -> update { it.copy(startingAnimation = v) } }
+            ChoiceField("起始动画", doc.startingAnimation.takeIf { it in names } ?: names.first(), names.map { it to it }, Modifier.fillMaxWidth()) { v -> update { it.copy(startingAnimation = v) } }
         }
         Row {
             CheckRow("Flip X", doc.flipX) { v -> update { it.copy(flipX = v) } }

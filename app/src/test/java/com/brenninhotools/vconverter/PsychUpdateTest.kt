@@ -99,7 +99,7 @@ class PsychUpdateTest {
         val result = PsychToVSliceCharacter.convert(CharacterSource("dad", PsychCharacterParser.parse(psych), CharacterSlot.OPPONENT, emptyMap()))
         val anims = JSONObject(result.json).getJSONArray("animations")
         assertEquals("idle-hold", anims.getJSONObject(1).getString("name"))
-        assertNotNull(result.report.sections.firstOrNull { it.title == "Loop animations" })
+        assertNotNull(result.report.sections.firstOrNull { it.title == "循环动画" })
         assertTrue(result.report.warnings.none { it.contains("-loop") })
     }
 }

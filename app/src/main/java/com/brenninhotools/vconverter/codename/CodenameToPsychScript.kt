@@ -56,33 +56,33 @@ class CodenameToPsychScript(
         )
 
         private val unsupportedCallbacks = mapOf(
-            "onFocus" to "Psych scripts are not told when the window gains focus.",
-            "onFocusLost" to "Psych scripts are not told when the window loses focus.",
-            "draw" to "Psych scripts cannot hook drawing.",
-            "postDraw" to "Psych scripts cannot hook drawing.",
-            "onStrumCreation" to "Psych creates the strums before scripts can change them; edit game.strumLineNotes in onCreatePost instead.",
-            "onPostStrumCreation" to "Psych creates the strums before scripts can change them; edit game.strumLineNotes in onCreatePost instead.",
-            "onRatingUpdate" to "Psych has no rating update hook (onRecalculateRating is the closest).",
-            "onPostGenerateStrums" to "Psych has no strum generation hook.",
-            "onPreGenerateStrums" to "Psych has no strum generation hook.",
-            "onInputUpdate" to "Psych has no input update hook (use onKeyPress).",
-            "onPostInputUpdate" to "Psych has no input update hook (use onKeyPress).",
-            "onBopZoom" to "Psych has no camera bop hook.",
-            "onPostBopZoom" to "Psych has no camera bop hook.",
-            "onVocalsResync" to "Psych has no vocals resync hook.",
-            "onSplashShown" to "Psych has no splash hook.",
-            "onRatingsShown" to "Psych has no rating popup hook.",
-            "onPostRatingsShown" to "Psych has no rating popup hook.",
-            "onStageXMLParsed" to "Psych stages are JSON files.",
-            "onStageNodeParsed" to "Psych stages are JSON files.",
-            "onPlayAnim" to "Psych characters have no animation hook.",
-            "onGetCamPos" to "Psych characters have no camera position hook.",
-            "onTryDance" to "Psych characters have no dance hook.",
-            "onCharacterXMLParsed" to "Psych characters are JSON files.",
-            "onCharacterNodeParsed" to "Psych characters are JSON files.",
-            "onStageDestroy" to "Psych has no stage destroy hook (onDestroy runs for every script).",
-            "onSubstateOpen" to "Psych scripts are only told about pausing (onPause).",
-            "onSubstateClose" to "Psych scripts are only told about resuming (onResume)."
+            "onFocus" to "Psych 脚本收不到窗口获得焦点的通知。",
+            "onFocusLost" to "Psych 脚本收不到窗口失去焦点的通知。",
+            "draw" to "Psych 脚本没法挂钩绘制。",
+            "postDraw" to "Psych 脚本没法挂钩绘制。",
+            "onStrumCreation" to "Psych 在脚本能改动之前就把扫弦线建好了；改成在 onCreatePost 里改 game.strumLineNotes。",
+            "onPostStrumCreation" to "Psych 在脚本能改动之前就把扫弦线建好了；改成在 onCreatePost 里改 game.strumLineNotes。",
+            "onRatingUpdate" to "Psych 没有判定更新钩子（最接近的是 onRecalculateRating）。",
+            "onPostGenerateStrums" to "Psych 没有扫弦线生成钩子。",
+            "onPreGenerateStrums" to "Psych 没有扫弦线生成钩子。",
+            "onInputUpdate" to "Psych 没有输入更新钩子（用 onKeyPress）。",
+            "onPostInputUpdate" to "Psych 没有输入更新钩子（用 onKeyPress）。",
+            "onBopZoom" to "Psych 没有摄像机跟拍钩子。",
+            "onPostBopZoom" to "Psych 没有摄像机跟拍钩子。",
+            "onVocalsResync" to "Psych 没有音轨重新同步钩子。",
+            "onSplashShown" to "Psych 没有音符溅射钩子。",
+            "onRatingsShown" to "Psych 没有判定弹窗钩子。",
+            "onPostRatingsShown" to "Psych 没有判定弹窗钩子。",
+            "onStageXMLParsed" to "Psych 的背景是 JSON 文件。",
+            "onStageNodeParsed" to "Psych 的背景是 JSON 文件。",
+            "onPlayAnim" to "Psych 人物没有动画钩子。",
+            "onGetCamPos" to "Psych 人物没有摄像机位置钩子。",
+            "onTryDance" to "Psych 人物没有待机钩子。",
+            "onCharacterXMLParsed" to "Psych 的人物是 JSON 文件。",
+            "onCharacterNodeParsed" to "Psych 的人物是 JSON 文件。",
+            "onStageDestroy" to "Psych 没有背景销毁钩子（onDestroy 对每个脚本都会跑）。",
+            "onSubstateOpen" to "Psych 脚本只在暂停时收到通知（onPause）。",
+            "onSubstateClose" to "Psych 脚本只在恢复时收到通知（onResume）。"
         )
 
         private val reservedNames = setOf(
@@ -159,17 +159,17 @@ class CodenameToPsychScript(
         )
 
         private val unsupportedMembers = mapOf(
-            "introLength" to "Psych's countdown length is fixed.",
-            "introSprites" to "Psych picks countdown sprites from the stage UI (stageUI).",
-            "introSounds" to "Psych picks countdown sounds from the stage UI (introSoundsSuffix).",
-            "ratingManager" to "Psych ratings live in game.ratingsData.",
-            "splashHandler" to "Psych splashes live in game.grpNoteSplashes.",
-            "cameraFocusOffset" to "Psych has no camera focus offset.",
-            "muteVocalsOnMiss" to "Psych always mutes vocals on a miss.",
-            "missesTxt" to "Psych shows misses inside scoreTxt.",
-            "accuracyTxt" to "Psych shows accuracy inside scoreTxt.",
-            "comboRatings" to "Psych rating names live in PlayState.ratingStuff.",
-            "useCamZoomMult" to "Psych has no zoom multiplier mode."
+            "introLength" to "Psych 的倒计时长度是固定的。",
+            "introSprites" to "Psych 从背景 UI 里取倒计时贴图（stageUI）。",
+            "introSounds" to "Psych 从背景 UI 里取倒计时音效（introSoundsSuffix）。",
+            "ratingManager" to "Psych 的判定数据在 game.ratingsData 里。",
+            "splashHandler" to "Psych 的音符溅射在 game.grpNoteSplashes 里。",
+            "cameraFocusOffset" to "Psych 没有摄像机对焦偏移。",
+            "muteVocalsOnMiss" to "Psych 失误时一律静音人声音轨。",
+            "missesTxt" to "Psych 把失误数显示在 scoreTxt 里。",
+            "accuracyTxt" to "Psych 把准确率显示在 scoreTxt 里。",
+            "comboRatings" to "Psych 的判定名称在 PlayState.ratingStuff 里。",
+            "useCamZoomMult" to "Psych 没有缩放倍数模式。"
         )
 
         private val conductorMembers = mapOf(
@@ -298,7 +298,7 @@ class CodenameToPsychScript(
             }
         }
 
-        declaredFunctions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename callback $it() never runs in Psych: ${unsupportedCallbacks.getValue(it)}") }
+        declaredFunctions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename 回调 $it() 在 Psych 里不会跑：${unsupportedCallbacks.getValue(it)}") }
 
         segs.filter { it.kind == "import" }.forEach { seg ->
             val path = seg.head.filter { it.kind != HxKind.SPACE }.drop(1).takeWhile { !it.isPunct(";") }.joinToString("") { it.text }
@@ -307,7 +307,7 @@ class CodenameToPsychScript(
                 importMap.containsKey(path) -> imports += importMap.getValue(path)
                 path.startsWith("funkin.backend.scripting") -> Unit
                 path.startsWith("funkin.") -> issue(seg.line, "Import '$path' is Codename-only and was dropped.")
-                path.endsWith(".*") -> issue(seg.line, "Wildcard import '$path' is not supported by Psych's HScript and was dropped.")
+                path.endsWith(".*") -> issue(seg.line, "通配符导入 '$path' is not supported by Psych's HScript and was dropped.")
                 path.isNotEmpty() -> imports += path
             }
         }
@@ -529,7 +529,7 @@ class CodenameToPsychScript(
             press += "cneApplyMiss(e);"
             if (has("onPostPlayerMiss")) press += call("onPostPlayerMiss", "e")
             plan["noteMissPress"] = Adapter("noteMissPress", "direction", press, false)
-            if (Regex("\\.cancel\\s*\\(").containsMatchIn(currentSourceHint)) issue(0, "Misses cannot be cancelled in Psych (noteMiss runs after the miss); event.cancel() only skips the converted extras.")
+            if (Regex("\\.cancel\\s*\\(").containsMatchIn(currentSourceHint)) issue(0, "Psych 里取消不了 Miss（noteMiss 是在 miss 之后才跑的）；event.cancel() 只能跳过转换出来的那部分附加逻辑。")
         }
         if (has("onEvent") || has("onPostEvent") || target.scope == CodenameScope.EVENT) {
             helpers += "songEvent"
@@ -828,11 +828,11 @@ class CodenameToPsychScript(
                 when {
                     renamed != null && callNext -> sb.append(renamed)
                     t.text == "frameOffset" -> {
-                        issue(t.line, "frameOffset is Codename-only; it became offset (Psych offsets are not scaled with the sprite).")
+                        issue(t.line, "frameOffset 只在 Codename 里有；它变成了 offset（Psych 的偏移不跟随精灵缩放）。")
                         sb.append("offset")
                     }
                     t.text == "zoomFactor" -> {
-                        issue(t.line, "zoomFactor is Codename-only and does nothing in Psych.")
+                        issue(t.line, "zoomFactor 只在 Codename 里有，在 Psych 里不起作用。")
                         sb.append("zoomFactor")
                     }
                     else -> sb.append(t.text)
@@ -1013,7 +1013,7 @@ class CodenameToPsychScript(
                 }
                 t.text == "GameOverSubstate" -> {
                     imports += "substates.GameOverSubstate"
-                    if (member == "script") issue(t.line, "GameOverSubstate.script is Codename-only; move that code into onGameOverStart.")
+                    if (member == "script") issue(t.line, "GameOverSubstate.script 只在 Codename 里有；把那段代码挪进 onGameOverStart。")
                     sb.append(t.text)
                     i++
                 }
@@ -1029,7 +1029,7 @@ class CodenameToPsychScript(
                     i++
                 }
                 t.text == "importScript" && callNext -> {
-                    issue(t.line, "importScript() has no Psych equivalent; the imported script was not loaded (copy its code here, or load it with game.startHScriptsNamed).")
+                    issue(t.line, "importScript() 在 Psych 里没有对应物；被导入的脚本没有加载（把它的代码拷过来，或者用 game.startHScriptsNamed 加载）。")
                     sb.append("null")
                     i = HxSource.matching(tokens, n1) + 1
                 }
@@ -1044,7 +1044,7 @@ class CodenameToPsychScript(
                 }
                 target.scope == CodenameScope.CHARACTER && t.text in characterMembers && !(t.text in setOf("x", "y", "color", "alpha", "width", "height", "visible", "angle") && p?.isIdent("var") == true) -> {
                     sb.append("self.").append(if (callNext && methodRenames.containsKey(t.text)) methodRenames.getValue(t.text) else characterRenames[t.text] ?: t.text)
-                    if (t.text == "playSingAnim") issue(t.line, "playSingAnim() was replaced by a helper that plays sing<DIR><suffix>.")
+                    if (t.text == "playSingAnim") issue(t.line, "playSingAnim() 换成了一个播放 sing<DIR><suffix> 的辅助函数。")
                     if (t.text == "lastHit" || t.text == "globalOffset" || t.text == "cameraOffset") issue(t.line, "Character.${t.text} is Codename-only.")
                     i++
                 }
@@ -1061,12 +1061,12 @@ class CodenameToPsychScript(
                 }
                 t.text == "strumLines" -> {
                     helpers += "strumLines"
-                    issue(t.line, "strumLines became a read-only list built from playerStrums/opponentStrums; Psych has exactly two strumlines.")
+                    issue(t.line, "strumLines 变成了由 playerStrums/opponentStrums 拼出的只读列表；Psych 正好只有两条扫弦线。")
                     sb.append("cneStrumLines()")
                     i++
                 }
                 t.text == "camZoomingMult" -> {
-                    issue(t.line, "camZoomingMult works differently in Psych (it scales the section bop).")
+                    issue(t.line, "camZoomingMult 在 Psych 里行为不一样（它缩放段落跟拍幅度）。")
                     sb.append(t.text)
                     i++
                 }
@@ -1087,7 +1087,7 @@ class CodenameToPsychScript(
                     i = HxSource.matching(tokens, n1) + 1
                 }
                 t.text == "startCutscene" && callNext -> {
-                    issue(t.line, "startCutscene() is Codename-only; play videos with game.startVideo.")
+                    issue(t.line, "startCutscene() 只有 Codename 有；播视频用 game.startVideo。")
                     sb.append("null")
                     i = HxSource.matching(tokens, n1) + 1
                 }
@@ -1120,7 +1120,7 @@ class CodenameToPsychScript(
                 "cneStrumLines()"
             }
             member == "stage" -> {
-                issue(line, "PlayState.instance.stage is Codename-only (Psych stages are JSON); stage sprites are in game.variables.")
+                issue(line, "PlayState.instance.stage 只在 Codename 里有（Psych 的背景是 JSON）；背景精灵在 game.variables 里。")
                 "game.variables"
             }
             bareMembers.containsKey(member) -> bareMembers.getValue(member).let { if (it.startsWith("PlayState.") || it.startsWith("(") || it.startsWith("Flx") || it.startsWith("ClientPrefs") || it.startsWith("Difficulty") || it.startsWith("GameOver") || it.first().isDigit() || it == "false" || it == "this") it else "game.$it" }

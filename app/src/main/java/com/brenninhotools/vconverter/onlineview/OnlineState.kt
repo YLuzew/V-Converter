@@ -98,7 +98,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 version = v
                 announcements = list
             } catch (e: Exception) {
-                newsError = e.message ?: "Could not reach the server."
+                newsError = e.message ?: "连不上服务器."
             } finally {
                 newsLoading = false
             }
@@ -143,7 +143,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 message = e.message ?: "The download failed."
                 false
             }
-            if (ok) message = "Downloaded ${mod.fileName}."
+            if (ok) message = "已下载 ${mod.fileName}。"
             downloading = null
             onDone(ok)
         }
@@ -152,9 +152,9 @@ class OnlineState(private val scope: CoroutineScope) {
     fun upload() {
         val chosen = file
         when {
-            !configured -> uploadError = "Set the server address in the options first."
+            !configured -> uploadError = "先在选项里填服务器地址。"
             chosen == null -> uploadError = "Pick the mod .zip first."
-            title.isBlank() -> uploadError = "Give the mod a title."
+            title.isBlank() -> uploadError = "给模组起个标题。"
             uploading -> return
             else -> {
                 uploading = true

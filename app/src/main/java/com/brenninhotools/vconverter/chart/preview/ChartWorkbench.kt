@@ -46,7 +46,7 @@ object ChartWorkbench {
         val changes = tweaks.summary()
         val report = if (changes.isEmpty()) output.report else ReportBuilder().apply {
             output.report.stats.forEach { stat(it.label, it.value) }
-            section("Your changes", changes)
+            section("你的改动", changes)
             output.report.sections.forEach { section(it.title, it.lines) }
             output.report.warnings.forEach { warn(it) }
         }.build()

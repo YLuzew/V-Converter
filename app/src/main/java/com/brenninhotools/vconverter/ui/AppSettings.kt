@@ -130,7 +130,7 @@ fun OptionsButton(onClick: () -> Unit) {
             .soundClickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
-        Icon(OverlayIcons.Gear, contentDescription = "Options", tint = Funkin.Text, modifier = Modifier.size(22.dp))
+        Icon(OverlayIcons.Gear, contentDescription = "选项", tint = Funkin.Text, modifier = Modifier.size(22.dp))
     }
 }
 
@@ -147,37 +147,37 @@ fun OptionsDialog(settings: AppSettings, onDismiss: () -> Unit) {
                 .padding(18.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            SectionTitle("Options", Funkin.Down)
+            SectionTitle("选项", Funkin.Down)
             ToggleRow(
-                label = "FPS Counter",
+                label = "FPS 计数",
                 checked = settings.fpsCounter,
                 onChange = settings::updateFpsCounter,
                 accent = Funkin.Down,
-                hint = "Shows \"FPS:\" in the top-right corner."
+                hint = "在右上角显示「FPS:」。"
             )
             ToggleRow(
-                label = "Touch Cursor",
+                label = "触摸光标",
                 checked = settings.touchCursor,
                 onChange = settings::updateTouchCursor,
                 accent = Funkin.Down,
-                hint = "Shows the cursor where you touch the screen."
+                hint = "在你点屏幕的地方显示光标。"
             )
             ToggleRow(
-                label = "UI Sounds",
+                label = "界面音效",
                 checked = settings.uiSounds,
                 onChange = settings::updateUiSounds,
                 accent = Funkin.Down,
-                hint = "Plays scrollMenu when you tap tabs and buttons."
+                hint = "点标签和按钮时播放 scrollMenu。"
             )
             ToggleRow(
-                label = "Menu Music",
+                label = "菜单音乐",
                 checked = settings.menuMusic,
                 onChange = settings::updateMenuMusic,
                 accent = Funkin.Down,
-                hint = "Plays freakyMenu while you work. It pauses while the Chart Editor plays a song."
+                hint = "干活时播 freakyMenu。谱面编辑器放歌时会暂停。"
             )
             if (settings.menuMusic) {
-                Text("Music volume: ${(settings.musicVolume * 100).roundToInt()}%", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
+                Text("音乐音量：${(settings.musicVolume * 100).roundToInt()}%", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
                 Slider(
                     value = settings.musicVolume,
                     onValueChange = settings::updateMusicVolume,
@@ -187,19 +187,19 @@ fun OptionsDialog(settings: AppSettings, onDismiss: () -> Unit) {
             com.brenninhotools.vconverter.ui.components.FunkinTextField(
                 value = settings.serverUrl,
                 onValueChange = settings::updateServerUrl,
-                label = "Online server address",
+                label = "在线服务器地址",
                 accent = Funkin.Down,
                 placeholder = "https://my-server.example.com"
             )
             ToggleRow(
-                label = "Send Error Reports",
+                label = "发送错误报告",
                 checked = settings.errorReports,
                 onChange = settings::updateErrorReports,
                 accent = Funkin.Down,
-                hint = "Sends conversion errors and crashes (message, app version and platform) to the online server."
+                hint = "把转换错误和崩溃（消息、应用版本、平台）发到在线服务器。"
             )
-            Text("Options are saved on this device.", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
-            ChunkyButton(text = "Done", accent = Funkin.Down, onClick = onDismiss, icon = R.drawable.ic_check)
+            Text("选项保存在这台设备上。", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
+            ChunkyButton(text = "完成", accent = Funkin.Down, onClick = onDismiss, icon = R.drawable.ic_check)
         }
     }
 }

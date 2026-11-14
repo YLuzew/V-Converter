@@ -166,7 +166,7 @@ class CodenameScriptConverter(
 
     fun convert(original: String): CodenameScriptResult {
         val reflect = ReflectCalls.toVSlice(original)
-        reflect.unsupported.forEach { issue(0, if (it.endsWith(".typeof")) "Type.typeof is blocked in V-Slice scripts." else "$it doesn't exist in V-Slice's Reflect (funkin.util.ReflectUtil); rewrite that part.") }
+        reflect.unsupported.forEach { issue(0, if (it.endsWith(".typeof")) "V-Slice 脚本里禁用了 Type.typeof。" else "$it doesn't exist in V-Slice's Reflect (funkin.util.ReflectUtil); rewrite that part.") }
         val segs = segments(tokenize(reflect.text))
         val functions = segs.filter { it.kind == "function" }.map { it.name }.toSet()
         val fields = segs.filter { it.kind == "var" && it.name.isNotEmpty() }.map { it.name }.toSet()
@@ -180,7 +180,7 @@ class CodenameScriptConverter(
                 path.isNotEmpty() -> imports += path
             }
         }
-        functions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename callback $it() has no V-Slice equivalent and never runs.") }
+        functions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename 回调 $it() 在 V-Slice 里没有对应物，永远不会跑。") }
 
         val boot = mutableListOf<String>()
         val fieldInit = mutableListOf<String>()
@@ -774,7 +774,7 @@ $cases      default:
                 when {
                     renamed != null && callNext -> sb.append(renamed)
                     t.text == "frameOffset" -> {
-                        issue(t.line, "frameOffset is Codename-only; it became offset, which V-Slice applies in screen pixels (not scaled).")
+                        issue(t.line, "frameOffset 只有 Codename 有；换成了 offset，V-Slice 里它按屏幕像素算（不缩放）。")
                         sb.append("offset")
                     }
                     else -> sb.append(t.text)
@@ -822,7 +822,7 @@ $cases      default:
                     i = close + 1
                 }
                 t.text == "importScript" && callNext -> {
-                    issue(t.line, "importScript() has no V-Slice equivalent; merge that script into this one.")
+                    issue(t.line, "importScript() 在 V-Slice 里没有对应物；把那个脚本合并进这个。")
                     sb.append("null")
                     i = skipCall(tokens, n1) + 1
                 }
@@ -864,7 +864,7 @@ $cases      default:
                     i++
                 }
                 t.text in codenameClasses && !callNext -> {
-                    issue(t.line, "Codename class '${t.text}' does not exist in V-Slice.")
+                    issue(t.line, "Codename 类 '${t.text}' does not exist in V-Slice.")
                     sb.append(t.text)
                     i++
                 }

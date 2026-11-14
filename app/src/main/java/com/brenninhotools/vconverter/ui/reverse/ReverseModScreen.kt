@@ -34,7 +34,7 @@ fun ReverseModScreen(
     modFolderName: String?,
     onConvert: () -> Unit,
     intro: String = "Convert a whole V-Slice mod back to Psych Engine: songs (variations become their own songs), characters, stages, levels, .hxc scripts, images and audio.",
-    convertNote: String = "Download the converted mod as a .zip (unzip it into Psych Engine's mods folder), or write it straight into an empty mod folder."
+    convertNote: String = "把转换好的模组下载成 .zip（解压到 Psych Engine 的 mods 文件夹里），或者直接写进一个空的模组文件夹。"
 ) {
     val accent = Funkin.Pink
     val busy = viewModel.busy
@@ -55,16 +55,16 @@ fun ReverseModScreen(
                 color = Funkin.Muted
             )
             DropZone(
-                title = "Import .zip / .rar / .7z",
-                hint = "The mod can sit inside subfolders of the archive; it is found automatically.",
+                title = "导入 .zip / .rar / .7z",
+                hint = "模组可以在压缩包的子文件夹里，会自动找到。",
                 accent = accent,
                 icon = R.drawable.ic_archive,
                 enabled = !busy,
                 onClick = { archivePicker.launch(arrayOf("*/*")) }
             )
             DropZone(
-                title = "Open mod folder",
-                hint = "Pick the mod's folder inside V-Slice's mods directory.",
+                title = "打开模组文件夹",
+                hint = "选 V-Slice 的 mods 目录里那个模组文件夹。",
                 accent = Funkin.Purple,
                 icon = R.drawable.ic_folder,
                 enabled = !busy,
@@ -118,7 +118,7 @@ fun ReverseModScreen(
                 FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
                 FunkinTextField(viewModel.author, { viewModel.author = it }, "Author", accent, enabled = !busy)
                 Text(
-                    "Written to pack.json. _polymod_icon.png becomes pack.png.",
+                    "已写入 pack.json。_polymod_icon.png 会成为 pack.png。",
                     style = MaterialTheme.typography.bodySmall,
                     color = Funkin.Muted
                 )
@@ -137,7 +137,7 @@ fun ReverseModScreen(
                 accent = accent,
                 modFolderName = modFolderName,
                 onSave = onConvert,
-                saveLabel = if (modFolderName != null) "Convert into $modFolderName" else "Convert into a mod folder"
+                saveLabel = if (modFolderName != null) "Convert into $modFolderName" else "转换到模组文件夹"
             )
             progress?.let { current ->
                 ModScannerPanel(

@@ -184,7 +184,7 @@ class PsychPassConverter(private val tab: NmvTab) : FileConverter() {
                     kind = "events"
                     path = if (hasFolder && top == "data") rel else "data/${NmvFormats.sanitize(song.optString("song").ifBlank { "song" })}/events.json"
                 } else {
-                    require(song.opt("notes") is JSONArray) { "not a Psych chart (no notes)" }
+                    require(song.opt("notes") is JSONArray) { "不是 Psych 谱子 (no notes)" }
                     kind = "chart"
                     val id = NmvFormats.sanitize(song.optString("song").ifBlank { stem })
                     path = if (hasFolder && top == "data") rel else "data/$id/" + if (stem.equals(id, true) || stem.startsWith("$id-", true)) name else "$id-$stem.json"

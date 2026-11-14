@@ -41,7 +41,7 @@ object PsychWeekParser {
     fun parse(raw: String): PsychWeek {
         val root = json(raw)
         val songs = root.value("songs") as? JSONArray
-            ?: throw PsychWeekException("This JSON does not look like a Psych Engine week (no \"songs\" list).")
+            ?: throw PsychWeekException("这个 JSON 不像 Psych Engine 周目（没有 \"songs\" 列表）。")
 
         val parsedSongs = (0 until songs.length()).mapNotNull { i ->
             val entry = songs.value(i) as? JSONArray ?: return@mapNotNull null
@@ -80,7 +80,7 @@ object PsychWeekParser {
     fun parseMenuCharacter(raw: String): PsychMenuCharacter {
         val root = json(raw)
         if (root.value("idle_anim") == null || root.value("image") == null) {
-            throw PsychWeekException("This JSON does not look like a Psych Engine menu character (missing \"image\" or \"idle_anim\").")
+            throw PsychWeekException("这个 JSON 不像 Psych Engine 菜单人物（缺 \"image\" 或 \"idle_anim\"）。")
         }
         val position = root.value("position") as? JSONArray
         return PsychMenuCharacter(
@@ -100,6 +100,6 @@ object PsychWeekParser {
     private fun json(raw: String): JSONObject = try {
         JSONObject(raw.trim().removePrefix("﻿"))
     } catch (e: JSONException) {
-        throw PsychWeekException("The file is not valid JSON: ${e.message}", e)
+        throw PsychWeekException("该文件不是有效的 JSON：${e.message}", e)
     }
 }

@@ -101,7 +101,7 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
                 invalidate()
                 status = StatusMessage.Info("Opened ${loaded.document.id} from ${loaded.source}: ${weekSummary(loaded.document)}, ${decoded.size} image(s).")
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the week.")
+                status = StatusMessage.Error(e.message ?: "打开周目失败。")
             }
         }
     }
@@ -149,7 +149,7 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
         editor.load(WeekDocument("new-week", "New Week"), emptyMap(), emptyMap())
         source = "New week"
         invalidate()
-        status = StatusMessage.Info("Started a new week with the base game menu characters. Add its songs and title image.")
+        status = StatusMessage.Info("已新建周目，菜单人物用的是本体默认值。加上歌曲和标题图片就能用。")
     }
 
     fun export() {
@@ -164,7 +164,7 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Could not export the week.")
+                status = StatusMessage.Error(e.message ?: "导出周目失败。")
             }
         }
     }
@@ -190,14 +190,14 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             SectionTitle("Week", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
-                title = "Open a week",
-                hint = "Pick a V-Slice level .json, a Psych week .json (with images/menucharacters/*.json) or a Codename week .xml (with data/weeks/characters/*.xml), plus the title and menu character images. Song metadata files fill in the song names. Archives (.zip/.rar/.7z) work too.",
+                title = "打开周目",
+                hint = "选择 V-Slice 关卡 .json、Psych 周目 .json（连同 images/menucharacters/*.json）或 Codename 周目 .xml（连同 data/weeks/characters/*.xml），再加上标题图和菜单人物图。歌曲元数据文件会补上歌名。压缩包（.zip/.rar/.7z）也可以。",
                 accent = accent,
                 icon = R.drawable.ic_tab_week,
                 enabled = !busy,
                 onClick = { opener.launch(arrayOf("*/*")) }
             )
-            OutlineButton("Start a new week", accent, onClick = viewModel::createNew, enabled = !busy)
+            OutlineButton("新建周目", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
             SectionTitle("Story menu", accent, 2)
@@ -219,14 +219,14 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
         FunkinCard {
             SectionTitle("Week info", accent, 4)
             WeekInfoPanel(editor)
-            OutlineButton("Title image (.png)", accent, onClick = { pick(WeekImageRole.TITLE) }, enabled = !busy)
-            OutlineButton("Background image (.png)", accent, onClick = { pick(WeekImageRole.BACKGROUND) }, enabled = !busy)
+            OutlineButton("标题图片（.png）", accent, onClick = { pick(WeekImageRole.TITLE) }, enabled = !busy)
+            OutlineButton("背景图片（.png）", accent, onClick = { pick(WeekImageRole.BACKGROUND) }, enabled = !busy)
         }
         FunkinCard {
             com.brenninhotools.vconverter.editorview.LiveSessionPanel(viewModel.live)
         }
         FunkinCard {
-            SectionTitle("Export format", accent, 5)
+            SectionTitle("导出格式", accent, 5)
             ChoiceChips(
                 options = ExportTarget.entries,
                 label = { it.label },
@@ -237,7 +237,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             )
             Text(
                 when (viewModel.target) {
-                    ExportTarget.VSLICE -> "data/levels/<id>.json (plus scripts/levels/ when locked or hidden from freeplay) and the images."
+                    ExportTarget.VSLICE -> "data/levels/<id>.json（锁住或从自由游玩隐藏时还有 scripts/levels/），以及对应的图片。"
                     ExportTarget.PSYCH -> "weeks/<id>.json, images/menucharacters/*.json and the images."
                     ExportTarget.CODENAME -> "data/weeks/weeks/<id>.xml, data/weeks/characters/*.xml and the images."
                 },
@@ -253,7 +253,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "Export ${viewModel.target.label}",
+            buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

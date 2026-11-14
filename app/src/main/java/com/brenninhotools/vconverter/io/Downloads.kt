@@ -39,7 +39,7 @@ object Downloads {
             put(MediaStore.MediaColumns.IS_PENDING, 1)
         }
         val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-            ?: throw IOException("Could not create $fileName in Downloads.")
+            ?: throw IOException("创建不了 $fileName in Downloads.")
         try {
             val entries = open(context, uri).use(block)
             resolver.update(uri, ContentValues().apply { put(MediaStore.MediaColumns.IS_PENDING, 0) }, null, null)
@@ -52,7 +52,7 @@ object Downloads {
     }
 
     private fun open(context: Context, uri: Uri): OutputStream =
-        context.contentResolver.openOutputStream(uri, "wt") ?: throw IOException("Could not open the file for writing.")
+        context.contentResolver.openOutputStream(uri, "wt") ?: throw IOException("打开失败：the file for writing.")
 
     fun share(context: Context, file: DownloadedFile) {
         val send = Intent(Intent.ACTION_SEND).apply {

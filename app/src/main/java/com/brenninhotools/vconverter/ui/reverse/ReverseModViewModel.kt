@@ -79,7 +79,7 @@ open class ReverseModViewModel(application: Application) : BaseConverterViewMode
                 }
                 accept("${extracted.name} (${extracted.kind.label})", extracted.files, extracted)
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the archive.")
+                status = StatusMessage.Error(e.message ?: "打开失败：the archive.")
             } finally {
                 _progress.value = null
             }
@@ -92,7 +92,7 @@ open class ReverseModViewModel(application: Application) : BaseConverterViewMode
         if (scan.isEmpty) {
             extracted?.delete()
             mod = null
-            status = StatusMessage.Error("No V-Slice mod content was found in $name. Expected _polymod_meta.json or folders like data/songs, data/characters, data/stages, data/levels or scripts.")
+            status = StatusMessage.Error("在 $name. Expected _polymod_meta.json or folders like data/songs, data/characters, data/stages, data/levels or scripts.")
             return
         }
         archive = extracted
@@ -103,7 +103,7 @@ open class ReverseModViewModel(application: Application) : BaseConverterViewMode
         title = pack?.title?.takeIf { it.isNotBlank() } ?: scan.root.trimEnd('/').substringAfterLast('/').ifBlank { name.substringBeforeLast('.') }
         description = pack?.description ?: ""
         author = pack?.author ?: ""
-        status = StatusMessage.Info("Found a mod in $name.")
+        status = StatusMessage.Info("找到模组：$name.")
     }
 
     override val canDownload: Boolean get() = mod != null
@@ -113,7 +113,7 @@ open class ReverseModViewModel(application: Application) : BaseConverterViewMode
     override fun zipPrefix(): String = ZipModWriter.folderName(title)
 
     override fun writeDownload(writer: ModWriter) {
-        val loaded = mod ?: throw IllegalStateException("Open a mod first.")
+        val loaded = mod ?: throw IllegalStateException("先打开一个模组。")
         result = null
         try {
             val conversion = runMod(writer, false, { _progress.value = it }) { w, p -> runConversion(loaded.files, loaded.scan, w, info(), p) }
@@ -137,9 +137,9 @@ open class ReverseModViewModel(application: Application) : BaseConverterViewMode
                     runMod(writer, true, { _progress.value = it }) { w, p -> runConversion(loaded.files, loaded.scan, w, info, p) }
                 }
                 result = conversion.report
-                status = StatusMessage.Success("Done! Wrote ${conversion.filesWritten} files into ${DocumentIO.folderName(context, modFolder)}.")
+                status = StatusMessage.Success("完成！已写入 ${conversion.filesWritten} files into ${DocumentIO.folderName(context, modFolder)}.")
             } catch (e: Exception) {
-                status = failureMessage(e, "The conversion stopped.")
+                status = failureMessage(e, "转换中断了。")
             } finally {
                 _progress.value = null
             }

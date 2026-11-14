@@ -120,7 +120,7 @@ class File(path: String) {
 }
 
 class FileInputStream(file: File) : InputStream() {
-    private val handle: CPointer<FILE> = fopen(file.path, "rb") ?: throw IOException("Could not open ${file.name}.")
+    private val handle: CPointer<FILE> = fopen(file.path, "rb") ?: throw IOException("打开失败：${file.name}.")
     private var closed = false
 
     override fun read(): Int {
@@ -150,7 +150,7 @@ class FileOutputStream(file: File) : OutputStream() {
 
     init {
         file.parentFile?.mkdirs()
-        handle = fopen(file.path, "wb") ?: throw IOException("Could not write ${file.name}.")
+        handle = fopen(file.path, "wb") ?: throw IOException("写入失败：${file.name}.")
     }
 
     override fun write(b: Int) {

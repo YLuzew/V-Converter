@@ -182,7 +182,7 @@ class OnlineTest {
             override fun onClosed(reason: String) { closed.put(reason) }
         })
         session.connect()
-        assertEquals("That room does not exist (or it expired).", closed.poll(5, TimeUnit.SECONDS))
+        assertEquals("这个房间不存在（或者已经过期）。", closed.poll(5, TimeUnit.SECONDS))
     }
 
     @Test

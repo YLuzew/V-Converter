@@ -109,7 +109,7 @@ data class ChartDocument(
 
     fun addDifficulty(name: String, copyFrom: String? = null): ChartDocument {
         val clean = name.trim().lowercase().replace(Regex("\\s+"), "-")
-        require(clean.isNotEmpty()) { "Enter a difficulty name." }
+        require(clean.isNotEmpty()) { "输入难度名称。" }
         require(clean !in difficulties) { "\"$clean\" already exists." }
         val source = copyFrom?.let { difficulties[it] }
         val updated = LinkedHashMap(difficulties)
@@ -218,7 +218,7 @@ data class ChartDocument(
     }
 
     companion object {
-        const val GENERATED_BY = "V-Converter Chart Editor"
+        const val GENERATED_BY = "V-Converter 谱面编辑器"
 
         fun blank(id: String, name: String, bpm: Double, difficulties: List<String>): ChartDocument = ChartDocument(
             id = id,

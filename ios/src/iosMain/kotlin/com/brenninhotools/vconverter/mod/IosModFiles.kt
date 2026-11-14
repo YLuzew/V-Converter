@@ -87,7 +87,7 @@ object ZipExtractor {
                 }
             }
         } catch (e: ZipFormatException) {
-            throw IOException("The ZIP file is damaged or not supported: ${e.message}", e)
+            throw IOException("ZIP 文件损坏或不受支持：${e.message}", e)
         }
         return written
     }

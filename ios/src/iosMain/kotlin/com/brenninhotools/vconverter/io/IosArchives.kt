@@ -33,7 +33,7 @@ object Archives {
             }
         } catch (e: Exception) {
             session.deleteRecursively()
-            throw if (e is IOException) e else IOException(e.message ?: "Could not extract $name.", e)
+            throw if (e is IOException) e else IOException(e.message ?: "解压失败：$name.", e)
         }
         return ExtractedArchive(name, kind, target)
     }

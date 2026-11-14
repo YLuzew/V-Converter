@@ -92,16 +92,16 @@ object PsychToCodenameCharacter {
         report.stat("Animations", character.animations.size)
         report.stat("Side", if (player) "player" else if (slot == CharacterSlot.GIRLFRIEND) "girlfriend" else "opponent")
         val notes = mutableListOf<String>()
-        notes += "Offsets were divided by the scale ($scale): Codename scales animation offsets with the sprite, Psych does not."
-        if (player) notes += "isPlayer=\"true\": Codename mirrors the character (and swaps singLEFT/singRIGHT) when it is used as the opponent."
-        if (character.vocalsFile.isNotBlank()) notes += "Vocals file \"${character.vocalsFile}\" becomes the strumline vocals suffix in the converted charts."
+        notes += "偏移已经除以缩放（$scale): Codename scales animation offsets with the sprite, Psych does not."
+        if (player) notes += "isPlayer=\"true\"：Codename 把它当对手用时会把人物镜像（并交换 singLEFT/singRIGHT）。"
+        if (character.vocalsFile.isNotBlank()) notes += "人声音轨「${character.vocalsFile}\" becomes the strumline vocals suffix in the converted charts."
         if (animate) {
-            notes += "Animate atlas: centercam=\"true\" keeps Psych's centered camera."
-            notes += "Psych symbol names (prefix match) were resolved to the exact symbol names Codename's flixel-animate needs, and offsets account for each symbol's bounds."
+            notes += "Animate 图集：centercam=\"true\" 保留 Psych 的居中摄像机。"
+            notes += "Psych 的符号名（前缀匹配）已解析成 Codename 的 flixel-animate 需要的精确符号名，偏移里也算上了每个符号的边界。"
         }
-        if (missingSymbols.isNotEmpty()) report.warn("These animations have no matching symbol in Animation.json and will not play: ${missingSymbols.joinToString()}.")
+        if (missingSymbols.isNotEmpty()) report.warn("这些动画在 Animation.json 里没有对应符号，不会播放：${missingSymbols.joinToString()}.")
         report.section("Notes", notes)
-        if (slot == CharacterSlot.GIRLFRIEND && id.lowercase().startsWith("gf").not()) report.warn("Camera offsets were converted for the girlfriend slot.")
+        if (slot == CharacterSlot.GIRLFRIEND && id.lowercase().startsWith("gf").not()) report.warn("女友位的摄像机偏移已转换。")
         return CodenamePsychResult(id, listOf(PsychFile("data/characters/$id.xml", xml.toString())), report.build(), copies)
     }
 
@@ -167,12 +167,12 @@ object PsychToCodenameStage {
         if (stage.hideGirlfriend) hooks += "if (gf != null) gf.visible = false;"
         if (stage.cameraSpeed != 1.0) hooks += "FlxG.camera.followLerp = 0.04 * ${CodenameToPsychEvents.number(stage.cameraSpeed)};"
         val notes = mutableListOf<String>()
-        if (pixel) notes += "Pixel stage: the base game's pixel extension (data/scripts/pixel.hx) gives it pixel notes and UI."
-        if (stage.hideGirlfriend) notes += "hide_girlfriend became gf.visible = false in the stage script."
-        if (stage.cameraSpeed != 1.0) notes += "camera_speed became FlxG.camera.followLerp in the stage script."
+        if (pixel) notes += "像素背景：本体的像素扩展（data/scripts/pixel.hx）会给它像素音符和像素 UI。"
+        if (stage.hideGirlfriend) notes += "hide_girlfriend 在背景脚本里变成了 gf.visible = false。"
+        if (stage.cameraSpeed != 1.0) notes += "camera_speed 在背景脚本里变成了 FlxG.camera.followLerp。"
         if (lowOnly > 0 || highOnly > 0) notes += "Quality filters became <low-memory> ($lowOnly) and <high-memory> ($highOnly) groups."
         if (otherFilters > 0) report.warn("$otherFilters object(s) only show in story mode or freeplay; Codename stages cannot filter by mode, so they always show.")
-        if (stage.preload.isNotEmpty()) notes += "The preload list was dropped (Codename caches stage sprites on its own)."
+        if (stage.preload.isNotEmpty()) notes += "预加载列表去掉了（Codename 自己会缓存背景精灵）。"
         notes += luaNotes
         report.stat("Objects", objects.count { it.type in setOf("sprite", "animatedSprite", "square") })
         report.section("Notes", notes)
@@ -280,13 +280,13 @@ object PsychToCodenameWeek {
         xml.close("week")
         val copies = listOf(PsychCopy("images/storymenu/$id.png", "images/menus/storymenu/weeks/$id.png"))
         report.stat("Songs", week.songs.size)
-        val notes = mutableListOf("Week image: images/storymenu/$id.png → images/menus/storymenu/weeks/$id.png")
-        if (week.weekBackground.isNotBlank()) notes += "The story menu background \"${week.weekBackground}\" has no Codename equivalent."
-        if (!week.startUnlocked || week.hiddenUntilUnlocked || week.weekBefore.isNotBlank()) report.warn("Week locking (weekBefore/startUnlocked) has no Codename equivalent; the week is always unlocked.")
-        if (week.hideFreeplay) notes += "Hidden from freeplay: its songs are left out of data/config/freeplaySonglist.txt."
+        val notes = mutableListOf("周目图片：images/storymenu/$id.png → images/menus/storymenu/weeks/$id.png")
+        if (week.weekBackground.isNotBlank()) notes += "故事菜单背景「${week.weekBackground}\" has no Codename equivalent."
+        if (!week.startUnlocked || week.hiddenUntilUnlocked || week.weekBefore.isNotBlank()) report.warn("周目锁定（weekBefore/startUnlocked）在 Codename 里没有对应物；这个周目始终解锁。")
+        if (week.hideFreeplay) notes += "从自由游玩隐藏：它的歌曲没有写进 data/config/freeplaySonglist.txt。"
         report.section("Notes", notes)
         val files = if (week.hideStoryMode) emptyList() else listOf(PsychFile("data/weeks/weeks/$id.xml", xml.toString()))
-        if (week.hideStoryMode) report.section("Story mode", listOf("Hidden from story mode, so no week XML was written; its songs stay in freeplay."))
+        if (week.hideStoryMode) report.section("Story mode", listOf("从故事模式隐藏了，所以没写周目 XML；它的歌曲留在自由游玩里。"))
         return CodenamePsychResult(id, files, report.build(), copies)
     }
 
@@ -305,7 +305,7 @@ object PsychToCodenameWeek {
         if (menu.confirmAnim.isNotBlank() && menu.confirmAnim != menu.idleAnim) xml.leaf("anim", "name" to "confirm", "anim" to menu.confirmAnim, "fps" to 24, "loop" to "false", "type" to "none")
         xml.close("char")
         val report = ReportBuilder()
-        report.section("Notes", listOf("The idle animation loops like in Psych (type=\"loop\")."))
+        report.section("Notes", listOf("待机动画像 Psych 一样循环（type=\"loop\"）。"))
         return CodenamePsychResult(id, listOf(PsychFile("data/weeks/characters/$id.xml", xml.toString())), report.build())
     }
 }

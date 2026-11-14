@@ -28,19 +28,19 @@ class PsychCodenameAdapters(
             "onKeyPressPre" to "Codename has no key press hook; check controls in update().",
             "onKeyRelease" to "Codename has no key release hook; check controls in update().",
             "onKeyReleasePre" to "Codename has no key release hook; check controls in update().",
-            "onGhostTap" to "Codename reports ghost taps through onPlayerMiss (event.ghostMiss), which noteMissPress already uses.",
-            "onUpdateScore" to "Codename has no score text hook.",
-            "preUpdateScore" to "Codename has no score text hook.",
-            "onGameOverStart" to "Codename game over scripts are set with GameOverSubstate.script.",
-            "onGameOverConfirm" to "Codename game over scripts are set with GameOverSubstate.script.",
-            "onNextDialogue" to "Codename dialogue is scripted with dialogue XML files.",
-            "onSkipDialogue" to "Codename dialogue is scripted with dialogue XML files.",
-            "eventEarlyTrigger" to "Codename events always run on their own time.",
-            "onCustomSubstateCreate" to "Psych custom substates have no Codename equivalent (use ModSubState).",
-            "onCustomSubstateCreatePost" to "Psych custom substates have no Codename equivalent (use ModSubState).",
-            "onCustomSubstateUpdate" to "Psych custom substates have no Codename equivalent (use ModSubState).",
-            "onCustomSubstateUpdatePost" to "Psych custom substates have no Codename equivalent (use ModSubState).",
-            "onCustomSubstateDestroy" to "Psych custom substates have no Codename equivalent (use ModSubState)."
+            "onGhostTap" to "Codename 通过 onPlayerMiss（event.ghostMiss）报告空按，noteMissPress 已经在用这个了。",
+            "onUpdateScore" to "Codename 没有分数文本钩子。",
+            "preUpdateScore" to "Codename 没有分数文本钩子。",
+            "onGameOverStart" to "Codename 的死亡脚本是用 GameOverSubstate.script 设的。",
+            "onGameOverConfirm" to "Codename 的死亡脚本是用 GameOverSubstate.script 设的。",
+            "onNextDialogue" to "Codename 的对话是用 dialogue XML 文件写脚本的。",
+            "onSkipDialogue" to "Codename 的对话是用 dialogue XML 文件写脚本的。",
+            "eventEarlyTrigger" to "Codename 的事件总是按自己的时间跑。",
+            "onCustomSubstateCreate" to "Psych 的自定义子状态在 Codename 里没有对应物（用 ModSubState）。",
+            "onCustomSubstateCreatePost" to "Psych 的自定义子状态在 Codename 里没有对应物（用 ModSubState）。",
+            "onCustomSubstateUpdate" to "Psych 的自定义子状态在 Codename 里没有对应物（用 ModSubState）。",
+            "onCustomSubstateUpdatePost" to "Psych 的自定义子状态在 Codename 里没有对应物（用 ModSubState）。",
+            "onCustomSubstateDestroy" to "Psych 的自定义子状态在 Codename 里没有对应物（用 ModSubState）。"
         )
     }
 

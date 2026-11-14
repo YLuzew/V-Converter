@@ -72,7 +72,7 @@ object PsychToCodenameChart {
     private class Out(val time: Double, val id: Int, val length: Double, val type: String)
 
     fun convert(sources: List<ChartSource>, extraEvents: List<PsychEvent> = emptyList(), options: PsychCodenameChartOptions = PsychCodenameChartOptions()): PsychCodenameChartResult {
-        require(sources.isNotEmpty()) { "Add at least one Psych chart." }
+        require(sources.isNotEmpty()) { "至少加一个 Psych 谱子。" }
         val report = ReportBuilder()
         val ordered = sources.sortedWith(compareBy<ChartSource> { difficultyOrder.indexOf(it.difficulty.lowercase()).let { i -> if (i < 0) 99 else i } }.thenBy { it.difficulty })
         val main = ordered.firstOrNull { it.difficulty.equals("normal", true) }?.song ?: ordered.first().song
@@ -264,8 +264,8 @@ object PsychToCodenameChart {
             name in options.customEventNames -> " (converted from custom_events/)"
             else -> ""
         } })
-        if (kept.any { it in stageEvents }) report.warn("Base game stage events (${kept.filter { it in stageEvents }.joinToString()}) only work in Psych's hardcoded stages.")
-        if (main.arrowSkin.isNotBlank()) report.warn("The arrow skin \"${main.arrowSkin}\" is not carried over; Codename note skins are set with scripts (onNoteCreation).")
+        if (kept.any { it in stageEvents }) report.warn("本体自带的背景事件（${kept.filter { it in stageEvents }.joinToString()}) only work in Psych's hardcoded stages.")
+        if (main.arrowSkin.isNotBlank()) report.warn("箭头皮肤「${main.arrowSkin}\" is not carried over; Codename note skins are set with scripts (onNoteCreation).")
         return PsychCodenameChartResult(folder, charts, meta, usedEvents, usedTypes, characters, report.build())
     }
 

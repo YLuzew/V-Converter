@@ -77,15 +77,15 @@ val FunkinStripColors = ChartStripColors(
 )
 
 private fun dropTitle(engine: ChartEngine): String = when (engine) {
-    ChartEngine.PSYCH -> "Add Psych charts"
-    ChartEngine.VSLICE -> "Add V-Slice songs"
-    ChartEngine.CODENAME -> "Add Codename charts"
+    ChartEngine.PSYCH -> "添加 Psych 谱子"
+    ChartEngine.VSLICE -> "添加 V-Slice 歌曲"
+    ChartEngine.CODENAME -> "添加 Codename 谱子"
 }
 
 private fun dropHint(source: ChartEngine, target: ChartEngine): String = when (source) {
-    ChartEngine.PSYCH -> "Pick every difficulty of a song (data/<song>/<song>-<difficulty>.json) and its events.json. Several songs, folders and .zip/.rar/.7z work too."
-    ChartEngine.VSLICE -> "Pick <song>-metadata.json and <song>-chart.json, with their -erect variation files. Variations become their own Psych songs."
-    ChartEngine.CODENAME -> "Pick songs/<song>/charts/*.json with meta.json and events.json (variants live in charts/<variant>/)." +
+    ChartEngine.PSYCH -> "选一首歌的全部难度（data/<歌曲>/<歌曲>-<难度>.json）和它的 events.json。多首歌、文件夹和 .zip/.rar/.7z 也都可以。"
+    ChartEngine.VSLICE -> "选择 <歌曲>-metadata.json 和 <歌曲>-chart.json，以及它们的 -erect 变体文件。变体会变成独立的 Psych 歌曲。"
+    ChartEngine.CODENAME -> "选择 songs/<歌曲>/charts/*.json，连同 meta.json 和 events.json（变体在 charts/<变体>/ 里）。" +
         if (target == ChartEngine.PSYCH) " Add data/events/*.json for custom event params." else ""
 }
 
@@ -166,7 +166,7 @@ fun ChartsScreen(viewModel: ChartsViewModel, modFolderName: String?, onSave: () 
             onConvert = viewModel::convert,
             onSave = onSave,
             modFolderName = modFolderName,
-            buttonText = "Convert to ${viewModel.target.title}"
+            buttonText = "转换为 ${viewModel.target.title}"
         )
     }
 }
@@ -271,8 +271,8 @@ private fun LegendDot(color: Color, text: String) {
 private fun StatsGrid(preview: ChartPreview, accent: Color) {
     val (low, high) = preview.bpmRange
     val stats = listOf(
-        "Player notes" to preview.playerNotes.toString(),
-        "Opponent notes" to preview.opponentNotes.toString(),
+        "玩家音符" to preview.playerNotes.toString(),
+        "对手音符" to preview.opponentNotes.toString(),
         "Holds" to preview.holdNotes.toString(),
         "Peak NPS" to formatBpm(preview.peakNps),
         "Length" to formatDuration(preview.length),
@@ -281,8 +281,8 @@ private fun StatsGrid(preview: ChartPreview, accent: Color) {
         "Events" to preview.events.size.toString(),
         "Speed" to formatBpm(preview.speed)
     ) + listOfNotNull(
-        if (preview.otherNotes > 0) "Girlfriend notes" to preview.otherNotes.toString() else null,
-        if (preview.duplicates > 0) "Stacked duplicates" to preview.duplicates.toString() else null,
+        if (preview.otherNotes > 0) "女友音符" to preview.otherNotes.toString() else null,
+        if (preview.duplicates > 0) "叠在一起的重复音符" to preview.duplicates.toString() else null,
         if (preview.offset != 0.0) "Offset" to "${formatBpm(preview.offset)} ms" else null,
         if (preview.stage.isNotBlank()) "Stage" to preview.stage else null
     )
@@ -301,8 +301,8 @@ private fun StatsGrid(preview: ChartPreview, accent: Color) {
 @Composable
 private fun CompareRow(before: ChartPreview, after: ChartPreview) {
     val checks = listOf(
-        "Player notes" to (before.playerNotes to after.playerNotes),
-        "Opponent notes" to (before.opponentNotes to after.opponentNotes),
+        "玩家音符" to (before.playerNotes to after.playerNotes),
+        "对手音符" to (before.opponentNotes to after.opponentNotes),
         "Holds" to (before.holdNotes to after.holdNotes),
         "BPM changes" to (before.timing.size to after.timing.size)
     )
@@ -317,7 +317,7 @@ private fun CompareRow(before: ChartPreview, after: ChartPreview) {
             Icon(painterResource(if (differences.isEmpty()) R.drawable.ic_check else R.drawable.ic_warning), contentDescription = null, tint = color, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text(
-                if (differences.isEmpty()) "Every note, hold and BPM change made it across." else "Some counts changed in the conversion:",
+                if (differences.isEmpty()) "所有音符、长条和 BPM 变化都完整过来了。" else "转换后有些数量变了：",
                 style = MaterialTheme.typography.bodySmall,
                 color = Funkin.Text
             )
@@ -335,7 +335,7 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
     val sample = viewModel.before.firstOrNull()
     FunkinCard {
         SectionTitle("Options", accent, 3)
-        Text("Leave a field empty to keep what the chart already uses.", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
+        Text("留空就保持谱子原来的设置。", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
         if (ChartField.SONG_NAME in fields) {
             FunkinTextField(tweaks.songName, { v -> viewModel.updateTweaks { it.copy(songName = v) } }, "Song name", accent, enabled = !busy)
         }
@@ -367,7 +367,7 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
             }
         }
         if (ChartField.SPEED in fields && viewModel.difficulties.isNotEmpty()) {
-            FieldLabel("Scroll speed")
+            FieldLabel("滚动速度")
             viewModel.difficulties.chunked(3).forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     row.forEach { difficulty ->
@@ -391,16 +391,16 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
         }
         if (ChartField.KEEP_EVENTS in fields) {
             ToggleRow(
-                label = "Keep Psych-only events",
+                label = "保留仅 Psych 的事件",
                 checked = tweaks.keepUnknownEvents,
                 onChange = { value -> viewModel.updateTweaks { it.copy(keepUnknownEvents = value) } },
                 accent = accent,
-                hint = "Events without a V-Slice twin stay in the chart under their Psych names, with SongEvent scripts for the built-in ones.",
+                hint = "没有 V-Slice 对应物的事件会以自己的 Psych 名字留在谱子里，内置的那些会配 SongEvent 脚本。",
                 enabled = !busy
             )
         }
         if (!tweaks.isEmpty) {
-            OutlineButton("Reset options", Funkin.Muted, viewModel::resetTweaks, enabled = !busy)
+            OutlineButton("重置选项", Funkin.Muted, viewModel::resetTweaks, enabled = !busy)
         }
     }
 }
@@ -409,7 +409,7 @@ private fun kindLabel(kind: String): String = when (kind) {
     "metadata" -> "Metadata"
     "chart" -> "Chart"
     "events" -> "Events"
-    "definition" -> "Event params"
+    "definition" -> "事件参数"
     else -> kind
 }
 

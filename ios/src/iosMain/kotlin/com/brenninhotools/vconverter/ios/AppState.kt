@@ -15,20 +15,20 @@ import com.brenninhotools.vconverter.platform.File
 
 enum class EditorTool(val title: String, val accent: androidx.compose.ui.graphics.Color, val hint: String) {
     CHART(
-        "Chart Editor", Palette.Down,
+        "谱面编辑器", Palette.Down,
         "Start a song or open any chart, then click the lanes to place notes. Space plays, the mouse wheel scrolls by the snap, Ctrl+Z / Ctrl+Y undo and redo, Q / E change a hold, Delete removes the selection. The lane on the right holds events and the mini-map jumps around the song."
     ),
     STAGE(
-        "Stage Editor", Palette.Up,
-        "Open a stage or start from your images. Click a prop or a character to select it and drag it to move it; dragging elsewhere moves the view and the wheel zooms. The arrow keys nudge the selection (Shift for 10), Delete removes a prop, Ctrl+D duplicates, Ctrl+Z / Ctrl+Y undo and redo."
+        "背景编辑器", Palette.Up,
+        "打开背景 or start from your images. Click a prop or a character to select it and drag it to move it; dragging elsewhere moves the view and the wheel zooms. The arrow keys nudge the selection (Shift for 10), Delete removes a prop, Ctrl+D duplicates, Ctrl+Z / Ctrl+Y undo and redo."
     ),
     CHARACTER(
-        "Character Editor", Palette.Left,
-        "Open a character or a spritesheet, then drag the sprite to fix the offsets of each animation. Space plays, the arrow keys move the offset (Shift for 10), W / S pick the animation, Ctrl+Z / Ctrl+Y undo and redo, the mouse wheel zooms."
+        "人物编辑器", Palette.Left,
+        "打开人物 or a spritesheet, then drag the sprite to fix the offsets of each animation. Space plays, the arrow keys move the offset (Shift for 10), W / S pick the animation, Ctrl+Z / Ctrl+Y undo and redo, the mouse wheel zooms."
     ),
     PLAYTEST(
         "PlayTest", Palette.Up,
-        "Play any song of a mod, a converter's result or the Chart Editor's chart with its stage and characters, with botplay, and get a report of what is broken."
+        "Play any song of a mod, a converter's result or the 谱面编辑器's chart with its stage and characters, with botplay, and get a report of what is broken."
     ),
     ONLINE(
         "Online", Palette.Pink,
@@ -59,7 +59,7 @@ class AppState(private val scope: CoroutineScope) {
 
     fun playTestChart(document: com.brenninhotools.vconverter.editor.ChartDocument, audio: List<com.brenninhotools.vconverter.editor.EditorAudio>) {
         if (editor.editor.playing) editor.editor.togglePlay()
-        playtest.state.useChart(document, audio, "Chart Editor · ${document.meta.songName.ifBlank { document.id }}")
+        playtest.state.useChart(document, audio, "谱面编辑器 · ${document.meta.songName.ifBlank { document.id }}")
         tool = EditorTool.PLAYTEST
     }
 
@@ -105,7 +105,7 @@ class AppState(private val scope: CoroutineScope) {
                 val loaded = withContext(Dispatchers.IO) { LoadedMod.open(source, state.direction) { state.progress = it } }
                 state.accept(loaded, source)
             } catch (e: Exception) {
-                state.status = Status.Error(e.message ?: "Could not open ${source.name}.")
+                state.status = Status.Error(e.message ?: "打开失败：${source.name}.")
             } finally {
                 state.progress = null
                 state.busy = false
@@ -140,12 +140,12 @@ class AppState(private val scope: CoroutineScope) {
                     converted ?: throw IllegalStateException("The conversion did not run.")
                 }
                 state.report = result.report
-                state.status = Status.Success("Done! Wrote ${result.filesWritten} files to ${if (zip) target.name else target.absolutePath}")
+                state.status = Status.Success("完成！已写入 ${result.filesWritten} files to ${if (zip) target.name else target.absolutePath}")
                 lastOutput = target
                 if (zip) Dialogs.export(target)
             } catch (e: Exception) {
                 if (zip) target.delete()
-                state.status = if (e is ModCancelledException) Status.Info(if (zip) "Conversion cancelled. The zip was removed." else "Conversion cancelled. Files written before cancelling were kept in ${target.absolutePath}.") else Status.Error(e.message ?: "The conversion stopped.")
+                state.status = if (e is ModCancelledException) Status.Info(if (zip) "Conversion cancelled. The zip was removed." else "Conversion cancelled. Files written before cancelling were kept in ${target.absolutePath}.") else Status.Error(e.message ?: "转换中断了。")
             } finally {
                 state.progress = null
                 state.cancel = null
@@ -163,7 +163,7 @@ class AppState(private val scope: CoroutineScope) {
             try {
                 withContext(Dispatchers.IO) { state.add(list) }
             } catch (e: Exception) {
-                state.status = Status.Error(e.message ?: "Could not read the files.")
+                state.status = Status.Error(e.message ?: "读取文件失败。")
             } finally {
                 state.busy = false
             }
@@ -179,7 +179,7 @@ class AppState(private val scope: CoroutineScope) {
                 withContext(Dispatchers.Default) { state.convert() }
             } catch (e: Exception) {
                 state.output = null
-                state.status = Status.Error(e.message ?: "Conversion failed.")
+                state.status = Status.Error(e.message ?: "转换失败。")
             } finally {
                 state.busy = false
             }
@@ -202,7 +202,7 @@ class AppState(private val scope: CoroutineScope) {
 if (zip) Dialogs.export(target)
                     lastOutput = target
                 } catch (e: Exception) {
-                    state.status = Status.Error(e.message ?: "Could not save the files.")
+                    state.status = Status.Error(e.message ?: "保存文件失败。")
                 } finally {
                     state.busy = false
                 }

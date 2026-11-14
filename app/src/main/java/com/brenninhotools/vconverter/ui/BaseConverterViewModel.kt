@@ -92,7 +92,7 @@ abstract class BaseConverterViewModel(application: Application) : AndroidViewMod
                 download = file
                 status = null
             } catch (e: Exception) {
-                status = failureMessage(e, "Could not create the zip.")
+                status = failureMessage(e, "创建压缩包失败。")
             }
         }
     }
@@ -100,7 +100,7 @@ abstract class BaseConverterViewModel(application: Application) : AndroidViewMod
     fun shareDownload() {
         val file = download ?: return
         runCatching { Downloads.share(context, file) }
-            .onFailure { status = StatusMessage.Error("No app can share this file.") }
+            .onFailure { status = StatusMessage.Error("没有应用能分享这个文件。") }
     }
 
     fun openDownloads() {
@@ -114,7 +114,7 @@ abstract class BaseConverterViewModel(application: Application) : AndroidViewMod
                 val written = withContext(Dispatchers.IO) { DocumentIO.writeFiles(context, modFolder, result.files) }
                 status = StatusMessage.Success("Saved ${written.size} file(s):\n" + written.joinToString("\n") { "• $it" })
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not save the files.")
+                status = StatusMessage.Error(e.message ?: "保存文件失败。")
             }
         }
     }

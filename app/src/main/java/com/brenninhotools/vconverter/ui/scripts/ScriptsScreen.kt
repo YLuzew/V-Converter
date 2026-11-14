@@ -40,15 +40,15 @@ fun ScriptsScreen(viewModel: ScriptsViewModel, modFolderName: String?, onSave: (
         FunkinCard {
             SectionTitle("Scripts", accent, 1)
             DropZone(
-                title = "Add Psych scripts",
-                hint = "Pick .lua or .hx files, or an archive with the mod's data, stages, scripts, custom_events and custom_notetypes folders. Each script becomes a V-Slice module.",
+                title = "添加 Psych 脚本",
+                hint = "选择 .lua 或 .hx 文件，或者包含模组 data、stages、scripts、custom_events 和 custom_notetypes 文件夹的压缩包。每个脚本会变成一个 V-Slice 模块。",
                 accent = accent,
                 icon = R.drawable.ic_tab_script,
                 enabled = !busy,
                 onClick = { picker.launch(arrayOf("*/*")) }
             )
             if (viewModel.scripts.isNotEmpty()) {
-                FunkinTextField(viewModel.modName, { viewModel.modName = it }, "Mod name (used in class names)", accent, enabled = !busy)
+                FunkinTextField(viewModel.modName, { viewModel.modName = it }, "模组名（会用在类名里）", accent, enabled = !busy)
             }
             viewModel.scripts.forEachIndexed { index, item ->
                 FileItem(

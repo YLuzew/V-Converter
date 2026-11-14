@@ -187,7 +187,7 @@ fun CodeView(code: String, title: String = "Preview", accent: Color = Funkin.Dow
             ) {
                 Icon(
                     painterResource(if (copied) R.drawable.ic_check else R.drawable.ic_copy),
-                    contentDescription = "Copy code",
+                    contentDescription = "复制代码",
                     tint = if (copied) Funkin.Up else accent,
                     modifier = Modifier.size(14.dp)
                 )

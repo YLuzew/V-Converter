@@ -70,18 +70,18 @@ class PsychHxToCodename(
         )
 
         private val unsupportedFields = mapOf(
-            "timeBar" to "Codename has no time bar.",
-            "timeTxt" to "Codename has no time text.",
-            "botplayTxt" to "Codename has no botplay text.",
-            "luaDebugGroup" to "Codename prints script logs to the console.",
-            "boyfriendMap" to "Codename swaps characters without character maps.",
-            "dadMap" to "Codename swaps characters without character maps.",
-            "gfMap" to "Codename swaps characters without character maps.",
-            "skipCountdown" to "Cancel onStartCountdown instead.",
-            "skipArrowStartTween" to "Codename has no strum intro flag.",
-            "camZoomingDecay" to "Codename zoom lerp is camGameZoomLerp.",
-            "grpNoteSplashes" to "Codename splashes live in splashHandler.",
-            "stageUI" to "Codename pixel stages use the pixel extension."
+            "timeBar" to "Codename 没有时间条。",
+            "timeTxt" to "Codename 没有时间文本。",
+            "botplayTxt" to "Codename 没有自动游玩文本。",
+            "luaDebugGroup" to "Codename 把脚本日志打到控制台。",
+            "boyfriendMap" to "Codename 换人物不走人物映射表。",
+            "dadMap" to "Codename 换人物不走人物映射表。",
+            "gfMap" to "Codename 换人物不走人物映射表。",
+            "skipCountdown" to "改成在 onStartCountdown 里取消。",
+            "skipArrowStartTween" to "Codename 没有扫弦线入场标志。",
+            "camZoomingDecay" to "Codename 的缩放插值是 camGameZoomLerp。",
+            "grpNoteSplashes" to "Codename 的音符溅射在 splashHandler 里。",
+            "stageUI" to "Codename 的像素背景用 pixel 扩展。"
         )
 
         val methodMap = mapOf(
@@ -176,7 +176,7 @@ class PsychHxToCodename(
             val path = seg.head.filter { it.kind != HxKind.SPACE }.drop(1).takeWhile { !it.isPunct(";") }.joinToString("") { it.text }
             when {
                 path in droppedImports -> Unit
-                path.startsWith("shaders.") -> issue(seg.line, "Psych shader class import '$path' was dropped; Codename shaders use CustomShader('name').")
+                path.startsWith("shaders.") -> issue(seg.line, "Psych 的着色器类导入 '$path' was dropped; Codename shaders use CustomShader('name').")
                 path.startsWith("psychlua.") || path.startsWith("backend.") || path.startsWith("states.") || path.startsWith("substates.") || path.startsWith("objects.") ->
                     issue(seg.line, "Import '$path' is Psych-only and was dropped.")
                 path.isNotEmpty() -> imports += path
@@ -341,7 +341,7 @@ class PsychHxToCodename(
                 when {
                     callNext && methodMap.containsKey(t.text) -> sb.append(methodMap.getValue(t.text))
                     t.text == "specialAnim" -> {
-                        issue(t.line, "Character.specialAnim is Psych-only; in Codename play the animation without a context so the character waits for it to finish.")
+                        issue(t.line, "Character.specialAnim 只在 Psych 里有；在 Codename 里不带 context 播放这个动画，人物就会等它播完。")
                         sb.append("stunned")
                     }
                     t.text == "danceEveryNumBeats" -> sb.append("beatInterval")
@@ -407,7 +407,7 @@ class PsychHxToCodename(
                     } else {
                         val mapped = songFields[field]
                         if (mapped == null) issue(t.line, "PlayState.SONG.$field is part of Psych's chart format.")
-                        if (field == "gfVersion") issue(t.line, "PlayState.SONG.gfVersion became the third strumline's character (null when the song has no girlfriend).")
+                        if (field == "gfVersion") issue(t.line, "PlayState.SONG.gfVersion 改成了第三条扫弦线的人物（歌曲没有女友时是 null）。")
                         sb.append("PlayState.SONG.").append(mapped ?: field)
                         i = next(next(songIndex)) + 1
                     }
@@ -433,7 +433,7 @@ class PsychHxToCodename(
                 t.text == "ClientPrefs" && m1 == "getGameplaySetting" -> {
                     val open = next(next(next(i)) - 1).let { next(next(i)) }
                     val callOpen = next(open)
-                    issue(t.line, "Gameplay modifiers (ClientPrefs.getGameplaySetting) don't exist in Codename; the default value is used.")
+                    issue(t.line, "游戏性修饰项（ClientPrefs.getGameplaySetting）在 Codename 里不存在；用的是默认值。")
                     sb.append("1")
                     i = if (tokens.getOrNull(callOpen)?.isPunct("(") == true) HxSource.matching(tokens, callOpen) + 1 else open + 1
                 }
@@ -483,7 +483,7 @@ class PsychHxToCodename(
                 }
                 (t.text == "FlxRuntimeShader" || t.text == "ErrorHandledRuntimeShader") && callNext && p?.isIdent("new") == true -> {
                     val close = HxSource.matching(tokens, n1)
-                    issue(t.line, "new ${t.text}(source) became an empty CustomShader; Codename loads shaders by name (shaders/<name>.frag) with new CustomShader(\"name\").")
+                    issue(t.line, "new ${t.text}(source) 换成了空的 CustomShader；Codename 是按名字加载着色器的（shaders/<name>.frag），写法是 new CustomShader(\"name\")。")
                     sb.append("CustomShader(\"\")")
                     i = close + 1
                 }
@@ -514,12 +514,12 @@ class PsychHxToCodename(
                     i = close + 1
                 }
                 t.text in setOf("createGlobalCallback", "createCallback") && callNext -> {
-                    issue(t.line, "${t.text}() registers Lua callbacks; Codename has no Lua, so it was removed.")
+                    issue(t.line, "${t.text}() 是注册 Lua 回调的；Codename 没有 Lua，所以删掉了。")
                     sb.append("null")
                     i = HxSource.matching(tokens, n1) + 1
                 }
                 t.text == "parentLua" -> {
-                    issue(t.line, "parentLua only exists for HScript inside Lua scripts.")
+                    issue(t.line, "parentLua 只在 Lua 脚本里嵌的 HScript 中存在。")
                     sb.append("null")
                     i++
                 }
@@ -587,21 +587,21 @@ class PsychHxToCodename(
                 "createRuntimeShader" -> "new CustomShader(${a(0)})"
                 "moveCamera" -> "PlayState.instance.curCameraTarget = (${a(0)}) ? 0 : 1"
                 "moveCameraSection", "moveCameraToGirlfriend" -> {
-                    issue(line, "game.$name() follows Psych sections; set curCameraTarget instead.")
+                    issue(line, "game.$name() 是跟着 Psych 的 section 走的；改成设置 curCameraTarget。")
                     "null"
                 }
                 "addTextToDebug" -> "trace(${a(0)})"
                 "startVideo" -> {
-                    issue(line, "startVideo() became a VideoCutscene; check that the video plays (Codename looks in videos/).")
+                    issue(line, "startVideo() 换成了 VideoCutscene；确认视频能播（Codename 会去 videos/ 里找）。")
                     imports += "funkin.game.cutscenes.VideoCutscene"
                     "PlayState.instance.openSubState(new VideoCutscene(Paths.video(${a(0)}), function() {}))"
                 }
                 "reloadHealthBarColors", "updateScore", "doScoreBop", "clearNotesBefore", "setSongTime", "KillNotes", "popUpScore", "cachePopUpScore" -> {
-                    issue(line, "game.$name() is Psych-only and was removed.")
+                    issue(line, "game.$name() 只有 Psych 才有，删掉了。")
                     "null"
                 }
                 "addCharacterToList", "startCharacterScripts", "startLuasNamed", "startHScriptsNamed", "initHScript", "startDialogue", "openChartEditor" -> {
-                    issue(line, "game.$name() is Psych-only and was removed.")
+                    issue(line, "game.$name() 只有 Psych 才有，删掉了。")
                     "null"
                 }
                 else -> "PlayState.instance.${fieldMap[name] ?: name}(${args.joinToString(", ")})"

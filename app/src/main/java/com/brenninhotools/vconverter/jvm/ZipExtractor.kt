@@ -16,7 +16,7 @@ object ZipExtractor {
             if (e.message?.contains("MALFORMED", ignoreCase = true) == true) {
                 extractWith(archive, destination, Charset.forName("IBM437"), onProgress)
             } else {
-                throw IOException("The ZIP file is damaged or not supported: ${e.message}", e)
+                throw IOException("ZIP 文件损坏或不受支持：${e.message}", e)
             }
         }
     }

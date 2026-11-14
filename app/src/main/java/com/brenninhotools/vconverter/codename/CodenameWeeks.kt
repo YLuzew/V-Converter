@@ -41,7 +41,7 @@ object CodenameWeekParser {
 
     fun parseWeek(id: String, raw: String): CodenameWeek {
         val root = XmlNode.parse(raw)
-        if (!root.name.equals("week", ignoreCase = true)) throw IllegalArgumentException("This XML is not a Codename Engine week (root is <${root.name}>).")
+        if (!root.name.equals("week", ignoreCase = true)) throw IllegalArgumentException("这个 XML 不是 Codename Engine 的周目（根节点是 <${root.name}>).")
         val songs = root.elements("song").mapNotNull { node ->
             val name = node.text.trim()
             if (name.isEmpty()) null else CodenameWeekSong(name, node.bool("hide") == true, node.attr("displayName"), node.attr("variation"))
@@ -127,13 +127,13 @@ object CodenameToVSliceLevel {
             .put("songs", JSONArray(ids))
         report.stat("Songs", ids.size)
         report.stat("Props", props.length())
-        if (missing.isNotEmpty()) report.warn("No week character XML for ${missing.joinToString { "\"$it\"" }} (data/weeks/characters/<name>.xml); they were left out.")
+        if (missing.isNotEmpty()) report.warn("没有对应的周目人物 XML：${missing.joinToString { "\"$it\"" }} (data/weeks/characters/<name>.xml); they were left out.")
         val hidden = week.songs.filter { it.hidden }.map { songId(it.name) }
         report.section(
-            "Not carried over",
+            "没有带过来",
             listOfNotNull(
-                if (hidden.isNotEmpty()) "Hidden from freeplay: ${hidden.joinToString()} (V-Slice lists every level song in freeplay)" else null,
-                week.difficulties.takeIf { it != listOf("easy", "normal", "hard") }?.let { "Week difficulties ${it.joinToString()} (each V-Slice song lists its own)" },
+                if (hidden.isNotEmpty()) "从自由游玩隐藏：${hidden.joinToString()} (V-Slice lists every level song in freeplay)" else null,
+                week.difficulties.takeIf { it != listOf("easy", "normal", "hard") }?.let { "周目难度 ${it.joinToString()} (each V-Slice song lists its own)" },
                 week.songs.mapNotNull { s -> s.variation?.let { "${songId(s.name)} plays its \"$it\" variation in Codename" } }.takeIf { it.isNotEmpty() }?.joinToString("; ")
             )
         )

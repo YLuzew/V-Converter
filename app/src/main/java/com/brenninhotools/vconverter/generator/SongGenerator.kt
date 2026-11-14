@@ -44,11 +44,11 @@ object SongGenerator {
         val id = Ids.of(spec.id)
         require(id.isNotEmpty()) { "Enter a song id." }
         require(spec.bpm > 0 && spec.bpm < 1000) { "BPM must be between 1 and 999." }
-        require(spec.scrollSpeed > 0) { "Scroll speed must be above 0." }
+        require(spec.scrollSpeed > 0) { "滚动速度 must be above 0." }
         require(spec.numerator in 1..32 && spec.denominator in listOf(1, 2, 4, 8, 16)) { "Invalid time signature." }
         val main = spec.difficulties.filter { it in defaultDifficulties }
         val variation = spec.difficulties.filter { it in variationDifficulties }
-        require(main.isNotEmpty() || variation.isNotEmpty()) { "Pick at least one difficulty." }
+        require(main.isNotEmpty() || variation.isNotEmpty()) { "至少选一个难度。" }
 
         val split = spec.playerVoices != null || spec.opponentVoices != null
         val characters = VSliceCharacters(
@@ -120,7 +120,7 @@ object SongGenerator {
         report.section(
             "Next steps",
             listOf(
-                "The charts are empty: open the song in V-Slice's Chart Editor to place notes.",
+                "The charts are empty: open the song in V-Slice's 谱面编辑器 to place notes.",
                 "Add the song to a week with the Level generator."
             )
         )

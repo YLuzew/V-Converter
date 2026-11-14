@@ -90,16 +90,16 @@ class ModConverter(
 
 
         if (scan.placeholders.isNotEmpty()) {
-            report.section("Empty placeholder folders removed", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
+            report.section("已移除空的占位文件夹", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
         }
         if (scan.ignored.isNotEmpty()) {
-            report.section("Other files skipped", limited(scan.ignored.map(scan::relative)))
+            report.section("其他文件已跳过", limited(scan.ignored.map(scan::relative)))
         }
         if (scan.otherRoots.isNotEmpty()) {
-            report.warn("The archive has more than one mod. Only \"${scan.root.ifEmpty { "/" }}\" was converted; also found: ${scan.otherRoots.joinToString()}.")
+            report.warn("压缩包里不止一个模组。只转换了「${scan.root.ifEmpty { "/" }}\" was converted; also found: ${scan.otherRoots.joinToString()}.")
         }
         if (scan.weekList != null) {
-            report.warn("Psych's weekList.txt order is not used by V-Slice; levels are listed in their own order.")
+            report.warn("V-Slice 不用 Psych 的 weekList.txt 顺序；关卡按自己的顺序排。")
         }
 
         return ModConversionResult(written, report.build())
@@ -162,7 +162,7 @@ class ModConverter(
                 written++
                 ids += id
                 result.report.warnings.forEach { report.warn("Stage $id: $it") }
-                result.report.sections.filter { it.title == "Notes" || it.title == "Skipped objects" }.forEach { section ->
+                result.report.sections.filter { it.title == "Notes" || it.title == "跳过的物件" }.forEach { section ->
                     val lines = section.lines.filterNot { it.startsWith("Character positions use") || it.startsWith("Layers keep") }
                     if (lines.isNotEmpty()) report.section("Stage $id · ${section.title}", lines)
                 }
@@ -187,14 +187,14 @@ class ModConverter(
         val key = skin.trim().lowercase() + "|" + splash.trim().lowercase() + "|" + strumline
         return noteStyles.getOrPut(key) {
             val notes = sheet(skin)
-            if (notes == null) report.warn("Note skin images/$skin.xml was not found; ${label.ifBlank { "its songs" }} keep the default note style.")
+            if (notes == null) report.warn("音符皮肤 images/$skin.xml was not found; ${label.ifBlank { "its songs" }} keep the default note style.")
             val style = notes?.let { PsychNoteStyles.build(skin, it, splash.takeIf { s -> s.isNotBlank() }, splash.takeIf { s -> s.isNotBlank() }?.let(::sheet), strumline) }
             if (notes != null && style == null) report.warn("images/$skin.xml has no Psych note animations (purple0…), so it was not turned into a note style.")
             style?.let {
                 val id = if (strumline) it.id else it.id + "-notes"
                 writer.writeText("data/notestyles/$id.json", it.json)
                 written++
-                report.section("Note style $id", listOf("Made from images/$skin.") + it.notes)
+                report.section("Note style $id", listOf("由这些图片生成：images/$skin.") + it.notes)
                 id
             }
         }
@@ -205,7 +205,7 @@ class ModConverter(
         val animation = pathIndex["${folder}animation.json"] ?: return null
         val spritemaps = pathIndex.filterKeys { it.startsWith(folder) && !it.substring(folder.length).contains('/') && AnimateAtlases.isAtlasFile(it.substringAfterLast('/')) }.values.filter { it != animation }.sortedBy { it.lowercase() }
         return runCatching { AnimateAtlas.parse(files.readText(animation), spritemaps.map { files.readText(it) }) }
-            .onFailure { report.warn("Animate atlas images/$image could not be read: ${it.message}") }
+            .onFailure { report.warn("Animate 图集 images/$image could not be read: ${it.message}") }
             .getOrNull()
     }
 
@@ -237,7 +237,7 @@ class ModConverter(
                         songName = main.name,
                         extraEvents = extraEvents,
                         customStageIds = stageIds,
-                        noteStyle = noteStyleFor(main.arrowSkin, main.splashSkin, label = "song ${scanned.id}"),
+                        noteStyle = noteStyleFor(main.arrowSkin, main.splashSkin, label = "歌曲 ${scanned.id}"),
                         pixelStages = pixelStages,
                         playerVocals = listOf(playerKey).takeIf { "voices-${playerKey.lowercase()}" in audioNames },
                         opponentVocals = listOf(opponentKey).takeIf { "voices-${opponentKey.lowercase()}" in audioNames }
@@ -253,7 +253,7 @@ class ModConverter(
                         val target = "songs/${scanned.id}/${file.substringBeforeLast('.')}-${variation.variation}.${file.substringAfterLast('.')}"
                         runCatching { writer.copy(target) { files.open(path) } }
                             .onSuccess { written++ }
-                            .onFailure { report.warn("Could not copy $target: ${it.message}") }
+                            .onFailure { report.warn("复制失败：$target: ${it.message}") }
                     }
                 }
                 keptPsychEvents += conversion.report.keptPsychEvents
@@ -303,14 +303,14 @@ class ModConverter(
                 written++
                 if (result.report.stats.any { it.label == "Accuracy" && it.value != "Exact" }) approximate++
                 result.report.warnings
-                    .filterNot { it.startsWith("Spritesheet XML not provided") }
+                    .filterNot { it.startsWith("没有提供图集 XML") }
                     .forEach { report.warn("Character $id: $it") }
             } catch (e: Exception) {
                 report.warn("Character \"$id\" was not converted: ${e.message}")
             }
         }
         if (approximate > 0) {
-            report.warn("$approximate character(s) are missing their spritesheet XML or Animate atlas files, so their positions are approximate.")
+            report.warn("$approximate character(s) are missing their spritesheet XML or Animate 图集 files, so their positions are approximate.")
         }
     }
 
@@ -332,7 +332,7 @@ class ModConverter(
                     writer.writeText(extraPath, text)
                     written++
                 }
-                result.report.sections.filter { it.title.startsWith("Level script") }.forEach { report.section("Week $id · ${it.title}", it.lines) }
+                result.report.sections.filter { it.title.startsWith("关卡脚本") }.forEach { report.section("Week $id · ${it.title}", it.lines) }
                 result.report.warnings.forEach { report.warn("Week $id: $it") }
                 val missing = result.songIds.filter { it !in songIds }
                 if (missing.isNotEmpty()) {
@@ -366,7 +366,7 @@ class ModConverter(
         val textured = sources.filter { "/custom_notetypes/" in "/" + it.path.lowercase() }.mapNotNull { source ->
             val texture = PsychNoteStyles.textureIn(source.text) ?: return@mapNotNull null
             val typeName = source.path.substringAfterLast('/').substringBeforeLast('.')
-            val style = noteStyleFor(texture, strumline = false, label = "note type $typeName") ?: return@mapNotNull null
+            val style = noteStyleFor(texture, strumline = false, label = "音符类型 $typeName") ?: return@mapNotNull null
             Triple(typeName, texture, style)
         }
         val noteStyles = textured.associate { (typeName, _, style) -> PsychToVSliceChart.noteKindFor(typeName) to style }
@@ -374,7 +374,7 @@ class ModConverter(
         val scriptedEvents = sources.map { ScriptConverter.detectTarget(it.path) }.filter { it.scope == com.brenninhotools.vconverter.script.ScriptScope.EVENT }.map { it.key }
         val outputs = bundle.files + ScriptConverter.eventFiles(keptEventNames, scriptedEvents)
         val renamed = keptEventNames.filter { ScriptConverter.eventId(it) != it }
-        if (renamed.isNotEmpty()) report.section("Events renamed to V-Slice ids", renamed.map { "\"$it\" → \"${ScriptConverter.eventId(it)}\"" })
+        if (renamed.isNotEmpty()) report.section("事件已改名为 V-Slice 的 id", renamed.map { "\"$it\" → \"${ScriptConverter.eventId(it)}\"" })
         outputs.forEach { file ->
             writer.writeText(file.path, file.content)
             written++
@@ -390,7 +390,7 @@ class ModConverter(
                 written++
                 path
             }
-            report.section("Note type $typeName", listOf("Its texture images/$texture became note style \"$style\", applied by $path."))
+            report.section("Note type $typeName", listOf("它的贴图 images/$texture became note style \"$style\", applied by $path."))
         }
         report.stat("Scripts", bundle.converted)
         bundle.report.sections.forEach { report.section("Script · ${it.title}", it.lines) }
@@ -407,7 +407,7 @@ class ModConverter(
                 writer.copy(target) { files.open(path) }
                 written++
             } catch (e: Exception) {
-                report.warn("Could not copy $target: ${e.message}")
+                report.warn("复制失败：$target: ${e.message}")
             }
         }
         scan.packIcon?.let { icon ->
@@ -423,7 +423,7 @@ class ModConverter(
         val contributors = JSONArray()
         if (info.author.isNotBlank()) contributors.put(JSONObject().put("name", info.author))
         val meta = JSONObject()
-            .put("title", info.title.ifBlank { "Converted Mod" })
+            .put("title", info.title.ifBlank { "已转换模组" })
             .put("description", info.description)
             .put("contributors", contributors)
             .put("homepage", "")

@@ -53,7 +53,7 @@ class XmlNode(val name: String, val attributes: Map<String, String>, val childre
                     i++
                 }
             }
-            return root ?: throw XmlException("The file has no XML element.")
+            return root ?: throw XmlException("文件里没有 XML 元素。")
         }
 
         private fun skipMisc() {

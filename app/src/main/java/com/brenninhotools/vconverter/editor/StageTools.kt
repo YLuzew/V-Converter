@@ -55,7 +55,7 @@ object StageLoader {
         val (document, source) = vslice?.let { it to "V-Slice" }
             ?: convert(PsychStagesConverter(), files.filter { it.first.substringAfterLast('.').lowercase() in setOf("json", "lua", "xml") })?.let { it to "Psych Engine" }
             ?: convert(CodenameStagesConverter(), files.filter { it.first.substringAfterLast('.').lowercase() in setOf("xml", "png") })?.let { it to "Codename Engine" }
-            ?: throw IllegalArgumentException("No stage found. Pick a V-Slice or Psych stage .json or a Codename stage .xml, with its images.")
+            ?: throw IllegalArgumentException("没有找到背景。请选择 V-Slice 或 Psych 的背景 .json，或 Codename 的背景 .xml，连同它的图片。")
         return LoadedStage(document, assets, source)
     }
 
@@ -117,7 +117,7 @@ object StageExport {
         }
         report.stat("Props", document.props.size)
         report.stat("Files", files.size)
-        if (missing.isNotEmpty()) report.section("Images to add", missing)
+        if (missing.isNotEmpty()) report.section("要添加的图片", missing)
         return ConvertedOutput(files, report.build())
     }
 

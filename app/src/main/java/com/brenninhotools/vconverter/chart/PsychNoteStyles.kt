@@ -55,19 +55,19 @@ object PsychNoteStyles {
             var found = 0
             directions.forEachIndexed { i, dir ->
                 val list = JSONArray()
-                (1..2).map { "note splash ${colors[i]} $it" }.filter { splashAtlas.hasPrefix(it) }.forEach { list.put(JSONObject().put("prefix", it)) }
+                (1..2).map { "音符水花 ${colors[i]} $it" }.filter { splashAtlas.hasPrefix(it) }.forEach { list.put(JSONObject().put("prefix", it)) }
                 found += list.length()
                 data.put("${dir}Splashes", list)
             }
             if (found > 0) {
                 val splashPath = splashSkin.trim().replace('\\', '/').removePrefix("images/").removeSuffix(".png")
                 assets.put("noteSplash", JSONObject().put("assetPath", splashPath).put("alpha", 0.6).put("data", data))
-                notes += "Note splashes come from images/$splashPath."
+                notes += "音符打击特效来自 images/$splashPath."
             }
         }
-        if (notesAtlas == null) notes += "The spritesheet XML was not available, so Psych's default animation names were assumed (purple0…, arrowLEFT, left press, left confirm)."
-        if (!hasStrums && strumline) notes += "The sheet has no Psych strum animations (arrowLEFT…), so the strumline keeps V-Slice's default look."
-        notes += "Hold notes keep V-Slice's default sheet: V-Slice draws sustains from a separate strip image, which Psych sheets don't have."
+        if (notesAtlas == null) notes += "没有拿到图集 XML，所以按 Psych 的默认动画名处理了（purple0…、arrowLEFT、left press、left confirm）。"
+        if (!hasStrums && strumline) notes += "图集里没有 Psych 的扫弦动画（arrowLEFT…），所以扫弦线保留 V-Slice 的默认外观。"
+        notes += "长条音符保留 V-Slice 的默认图集：V-Slice 是用单独的一条长图来画长条的，Psych 的图集里没有这个。"
         val root = JSONObject()
             .put("version", NOTE_STYLE_VERSION)
             .put("name", name.ifBlank { path.substringAfterLast('/') })

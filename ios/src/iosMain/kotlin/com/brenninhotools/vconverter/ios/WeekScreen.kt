@@ -126,7 +126,7 @@ class IosWeekEditor(private val scope: CoroutineScope) {
                 output = null
                 status = Status.Info("Opened ${loaded.document.id} from ${loaded.source}: ${weekSummary(loaded.document)}, ${decoded.size} image(s).")
             } catch (e: Exception) {
-                status = Status.Error(e.message ?: "Could not open the week.")
+                status = Status.Error(e.message ?: "打开周目失败。")
             }
         }
     }
@@ -173,7 +173,7 @@ class IosWeekEditor(private val scope: CoroutineScope) {
         editor.load(WeekDocument("new-week", "New Week"), emptyMap(), emptyMap())
         source = "New week"
         output = null
-        status = Status.Info("Started a new week with the base game menu characters. Add its songs and title image.")
+        status = Status.Info("已新建周目，菜单人物用的是本体默认值。加上歌曲和标题图片就能用。")
     }
 
     fun export() {
@@ -187,7 +187,7 @@ class IosWeekEditor(private val scope: CoroutineScope) {
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = Status.Error(e.message ?: "Could not export the week.")
+                status = Status.Error(e.message ?: "导出周目失败。")
             }
         }
     }
@@ -205,7 +205,7 @@ class IosWeekEditor(private val scope: CoroutineScope) {
                     if (zip) Dialogs.export(target)
                     onSaved(target)
                 } catch (e: Exception) {
-                    status = Status.Error(e.message ?: "Could not save the files.")
+                    status = Status.Error(e.message ?: "保存文件失败。")
                 }
             }
         }

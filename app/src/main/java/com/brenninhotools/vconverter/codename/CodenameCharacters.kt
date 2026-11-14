@@ -51,7 +51,7 @@ object CodenameCharacterParser {
     fun parse(id: String, raw: String): CodenameCharacter {
         val root = XmlNode.parse(raw)
         if (!root.name.equals("character", ignoreCase = true)) {
-            throw IllegalArgumentException("This XML is not a Codename Engine character (root is <${root.name}>).")
+            throw IllegalArgumentException("这个 XML 不是 Codename Engine 的人物（根节点是 <${root.name}>).")
         }
         val defaultFps = root.double("defFps") ?: 24.0
         val anims = root.elements("anim").mapNotNull { node ->
@@ -129,7 +129,7 @@ object CodenamePsychCharacter {
         val images = character.images.toMutableList()
         if (gameOver != null) {
             if (gameOver.scale != character.scale) {
-                notes.warn("Game over character \"${gameOver.id}\" has a different scale; its animations were not merged.")
+                notes.warn("死亡人物「${gameOver.id}\" has a different scale; its animations were not merged.")
             } else {
                 val dx = (if (mirrored) -character.x else character.x) - gameOver.x
                 val dy = character.y - gameOver.y
@@ -150,7 +150,7 @@ object CodenamePsychCharacter {
                 camX -= frame.sourceWidth * character.scale / 2.0
                 camY -= frame.sourceHeight * character.scale / 2.0
             } else {
-                notes.warn("centercam=\"false\" moves the camera to the character's corner in Codename; without the spritesheet XML the camera offset is approximate.")
+                notes.warn("centercam=\"false\" 在 Codename 里把摄像机移到人物的角落；没有 spritesheet XML 时摄像机偏移是近似值。")
             }
         }
         val psychCamX = when (slot) {
@@ -177,10 +177,10 @@ object CodenamePsychCharacter {
             animations = animations
         )
         if (mirrored) {
-            notes.warn("This character was made for the ${if (character.playerOffsets) "player" else "opponent"} side and is used on the other one; Codename mirrors it at runtime, so singLEFT/singRIGHT were swapped and the offsets mirrored.")
+            notes.warn("这个人物是为「${if (character.playerOffsets) "player" else "opponent"} side and is used on the other one; Codename mirrors it at runtime, so singLEFT/singRIGHT were swapped and the offsets mirrored.")
         }
         if (character.animations.any { it.label }) {
-            notes.warn("Some animations use Animate frame labels; check them in the converted character.")
+            notes.warn("有些动画用了 Animate 帧标签；在转换后的人物里核对一下。")
         }
         return CodenamePsychBuild(psych, mirrored, notes.build())
     }
@@ -208,7 +208,7 @@ object CodenameToVSliceCharacter {
         character.interval?.let { json.put("danceEvery", it.coerceAtLeast(1)) }
         val report = result.report.let { base ->
             base.copy(
-                warnings = base.warnings.filterNot { it.startsWith("Psych plays") } + built.notes.warnings.map { it.replace("check them in the converted character", "V-Slice needs symbol names, so check them in the character JSON") },
+                warnings = base.warnings.filterNot { it.startsWith("Psych plays") } + built.notes.warnings.map { it.replace("在转换后的人物里检查它们", "V-Slice 需要符号名，所以在人物 JSON 里检查它们") },
                 sections = base.sections.filterNot { it.title == "Notes" } + built.notes.sections
             )
         }

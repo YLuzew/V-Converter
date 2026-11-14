@@ -21,15 +21,15 @@ data class ChartTweaks(
     val isEmpty: Boolean get() = this == ChartTweaks(keepUnknownEvents = keepUnknownEvents)
 
     fun summary(): List<String> = buildList {
-        if (songName.isNotBlank()) add("Song name → $songName")
+        if (songName.isNotBlank()) add("歌曲名 → $songName")
         if (artist.isNotBlank()) add("Artist → $artist")
         if (charter.isNotBlank()) add("Charter → $charter")
         if (player.isNotBlank()) add("Player → $player")
         if (opponent.isNotBlank()) add("Opponent → $opponent")
         if (girlfriend.isNotBlank()) add("Girlfriend → $girlfriend")
         if (stage.isNotBlank()) add("Stage → $stage")
-        if (noteStyle.isNotBlank()) add("Note style → $noteStyle")
-        speeds.forEach { (difficulty, speed) -> add("Scroll speed ($difficulty) → ${speed.toJsonNumber()}") }
+        if (noteStyle.isNotBlank()) add("音符样式 → $noteStyle")
+        speeds.forEach { (difficulty, speed) -> add("卷动速度（$difficulty) → ${speed.toJsonNumber()}") }
     }
 }
 

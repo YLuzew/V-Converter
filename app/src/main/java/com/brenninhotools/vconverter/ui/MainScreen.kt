@@ -148,8 +148,8 @@ enum class PlayTab(
     override val title: String,
     override val description: String
 ) : AppTab {
-    PLAY("Play", R.drawable.ic_tab_chart, Funkin.Up, "PlayTest", "Play any song of a mod, a converter's result or the Chart Editor's chart, with its stage and characters, and see what is broken."),
-    REPORT("Report", R.drawable.ic_warning, Funkin.Warning, "PlayTest report", "Problems found in the chart, characters, stage, audio and conversion of the loaded song.")
+    PLAY("Play", R.drawable.ic_tab_chart, Funkin.Up, "PlayTest", "Play any song of a mod, a converter's result or the 谱面编辑器's chart, with its stage and characters, and see what is broken."),
+    REPORT("Report", R.drawable.ic_warning, Funkin.Warning, "PlayTest report", "在加载的这首歌的谱子、人物、背景、音频和转换结果里发现的问题。")
 }
 
 enum class OnlineTab(
@@ -159,10 +159,10 @@ enum class OnlineTab(
     override val title: String,
     override val description: String
 ) : AppTab {
-    MODS("Mods", R.drawable.ic_download, Funkin.Pink, "Mod Gallery", "Find mods shared on the V-Converter server and download them."),
-    SHARE("Share", R.drawable.ic_share, Funkin.Up, "Share a mod", "Upload a mod .zip to the server's gallery so others can download it."),
-    ROOMS("Rooms", R.drawable.ic_tab_chart, Funkin.Left, "Public rooms", "Join a Multieditor room someone listed publicly and edit together."),
-    NEWS("News", R.drawable.ic_warning, Funkin.Down, "News", "New versions of V-Converter and announcements from the server.")
+    MODS("Mods", R.drawable.ic_download, Funkin.Pink, "Mod Gallery", "在 V-Converter 服务器上找别人分享的模组并下载。"),
+    SHARE("Share", R.drawable.ic_share, Funkin.Up, "Share a mod", "把模组 .zip 上传到服务器画廊，让别人能下载。"),
+    ROOMS("Rooms", R.drawable.ic_tab_chart, Funkin.Left, "公开房间", "加入别人公开列出的多人编辑房间，一起编辑。"),
+    NEWS("News", R.drawable.ic_warning, Funkin.Down, "News", "V-Converter 的新版本和服务器公告。")
 }
 
 enum class Tab(
@@ -186,20 +186,20 @@ enum class Tab(
         Direction.VSLICE_TO_PSYCH -> reverseDescription
         Direction.CODENAME_TO_VSLICE -> codenameDescription
         Direction.CODENAME_TO_PSYCH -> when (this) {
-            MOD -> "A full Codename mod into a Psych mod: charts, scripts, events and audio."
-            CHARTS -> "Codename strumline charts and events into Psych difficulty charts."
-            CHARACTERS -> "Character XML into Psych JSON with unscaled offsets."
-            STAGES -> "Stage XML into Psych stage JSON plus a stage script."
-            WEEKS -> "Week XMLs into Psych weeks, weekList.txt and menu characters."
-            SCRIPTS -> "Codename HScript into Psych HScript (.hx) with the right callbacks."
+            MOD -> "把整个 Codename 模组转成 Psych 模组：谱子、脚本、事件和音频。"
+            CHARTS -> "把 Codename strumline 谱子和事件转成 Psych 难度谱子。"
+            CHARACTERS -> "把人物 XML 转成 Psych JSON，偏移未缩放。"
+            STAGES -> "把背景 XML 转成 Psych 背景 JSON，外加一个背景脚本。"
+            WEEKS -> "把周目 XML 转成 Psych 周目、weekList.txt 和菜单人物。"
+            SCRIPTS -> "把 Codename HScript 转成 Psych HScript（.hx），回调已对上。"
         }
         Direction.PSYCH_TO_CODENAME -> when (this) {
-            MOD -> "A full Psych mod into a Codename mod: songs, Lua/HScript, events and audio."
-            CHARTS -> "Psych charts and events.json into Codename strumlines and meta.json."
-            CHARACTERS -> "Character JSON into Codename XML with scaled offsets."
-            STAGES -> "Stage JSON (and stage Lua sprites) into Codename stage XML."
-            WEEKS -> "Psych weeks into week XMLs, weeks.txt and menu characters."
-            SCRIPTS -> "Lua and HScript into Codename HScript with Psych helpers."
+            MOD -> "把整个 Psych 模组转成 Codename 模组：歌曲、Lua/HScript、事件和音频。"
+            CHARTS -> "把 Psych 谱子和 events.json 转成 Codename 的 strumline 与 meta.json。"
+            CHARACTERS -> "把人物 JSON 转成 Codename XML，偏移已缩放。"
+            STAGES -> "把背景 JSON（以及背景 Lua 精灵）转成 Codename 背景 XML。"
+            WEEKS -> "把 Psych 周目转成周目 XML、weeks.txt 和菜单人物。"
+            SCRIPTS -> "把 Lua 和 HScript 转成带 Psych 辅助的 Codename HScript。"
         }
         else -> com.brenninhotools.vconverter.ui.nmv.nmvDescription(direction, this)
     }
@@ -269,12 +269,12 @@ enum class GenTab(
     override val title: String,
     override val description: String
 ) : AppTab {
-    MOD("Mod", R.drawable.ic_tab_mod, Funkin.Pink, "New mod", "A ready V-Slice mod folder with metadata and icon."),
-    SONG("Chart", R.drawable.ic_tab_chart, Funkin.Down, "Chart Editor", "Start a song or open any chart, then place notes, events and BPM changes to the music."),
-    CHARACTER("Char", R.drawable.ic_tab_character, Funkin.Left, "Character Editor", "Open any character or a spritesheet, then preview the animations and fix offsets, camera and scale."),
-    STAGE("Stage", R.drawable.ic_tab_stage, Funkin.Up, "Stage Editor", "Open any stage or start from your images, then place props and characters with the game camera in view."),
-    WEEK("Week", R.drawable.ic_tab_week, Funkin.Right, "Week Editor", "Open any week or start a new one, then lay out the story menu, its songs and how it unlocks."),
-    SCRIPT("Script", R.drawable.ic_tab_script, Funkin.Lavender, "New script", "Ready-to-edit .hxc classes for V-Slice.")
+    MOD("Mod", R.drawable.ic_tab_mod, Funkin.Pink, "New mod", "一个现成的 V-Slice 模组文件夹，含元数据和图标。"),
+    SONG("Chart", R.drawable.ic_tab_chart, Funkin.Down, "谱面编辑器", "新建一首歌或打开任意谱子，然后跟着音乐摆音符、放事件、改 BPM。"),
+    CHARACTER("Char", R.drawable.ic_tab_character, Funkin.Left, "人物编辑器", "打开任意人物或精灵图集，预览动画并修偏移、摄像机和缩放。"),
+    STAGE("Stage", R.drawable.ic_tab_stage, Funkin.Up, "背景编辑器", "打开任意背景或从自己的图片开始，在游戏摄像机视角下摆物件和人物。"),
+    WEEK("Week", R.drawable.ic_tab_week, Funkin.Right, "Week Editor", "打开任意周目或新建一个，排布故事菜单、周目歌曲和解锁方式。"),
+    SCRIPT("Script", R.drawable.ic_tab_script, Funkin.Lavender, "New script", "可直接编辑的 V-Slice .hxc 类。")
 }
 
 @Composable
@@ -409,7 +409,7 @@ fun MainScreen() {
 
             override fun chart(document: com.brenninhotools.vconverter.editor.ChartDocument, audio: List<com.brenninhotools.vconverter.editor.EditorAudio>) {
                 genSong.pause()
-                playtest.state.useChart(document, audio, "Chart Editor · ${document.meta.songName.ifBlank { document.id }}")
+                playtest.state.useChart(document, audio, "谱面编辑器 · ${document.meta.songName.ifBlank { document.id }}")
                 section = Section.PLAYTEST
                 playTab = PlayTab.PLAY
             }
@@ -495,41 +495,41 @@ fun MainScreen() {
                     } else if (currentDirection == Direction.CODENAME_TO_VSLICE && current is Tab) when (current) {
                         Tab.MOD -> CodenameModScreen(cnMod, folderName, save)
                         Tab.CHARTS -> ChartsScreen(cnCharts, folderName, save)
-                        Tab.CHARACTERS -> ReverseScreen(cnCharacters, Funkin.Left, "Characters", "Add Codename characters", "Pick data/characters/*.xml with their spritesheet .xml (images/characters/…) for exact positions. Add <name>-dead.xml to merge the game over animations.", R.drawable.ic_tab_character, folderName, save, buttonText = "Convert to V-Slice")
-                        Tab.STAGES -> ReverseScreen(cnStages, Funkin.Up, "Stages", "Add Codename stages", "Pick data/stages/*.xml. Add the stage images (.png and spritesheet .xml) so scaled sprites keep their exact spot.", R.drawable.ic_tab_stage, folderName, save, buttonText = "Convert to V-Slice")
-                        Tab.WEEKS -> ReverseScreen(cnWeeks, Funkin.Right, "Weeks", "Add Codename weeks", "Pick data/weeks/weeks/*.xml plus data/weeks/characters/*.xml for the menu characters.", R.drawable.ic_tab_week, folderName, save, buttonText = "Convert to V-Slice")
-                        Tab.SCRIPTS -> ReverseScreen(cnScripts, Funkin.Lavender, "Scripts", "Add Codename scripts", "Pick .hx scripts. Add the stage XML for stage scripts and data/events/*.json for custom events. Archives keep the folders, so song, stage, event and note scripts get the right scope.", R.drawable.ic_tab_script, folderName, save, buttonText = "Convert to V-Slice")
+                        Tab.CHARACTERS -> ReverseScreen(cnCharacters, Funkin.Left, "Characters", "添加 Codename 人物", "选择 data/characters/*.xml 和对应的精灵图集 .xml（images/characters/…），位置才准确。加上 <名字>-dead.xml 可以把死亡动画合并进来。", R.drawable.ic_tab_character, folderName, save, buttonText = "转换为 V-Slice")
+                        Tab.STAGES -> ReverseScreen(cnStages, Funkin.Up, "Stages", "添加 Codename 背景", "选择 data/stages/*.xml。把背景图片（.png 和精灵图集 .xml）也加上，缩放过的精灵才能保持准确位置。", R.drawable.ic_tab_stage, folderName, save, buttonText = "转换为 V-Slice")
+                        Tab.WEEKS -> ReverseScreen(cnWeeks, Funkin.Right, "Weeks", "添加 Codename 周目", "选择 data/weeks/weeks/*.xml，再选 data/weeks/characters/*.xml 作为菜单人物。", R.drawable.ic_tab_week, folderName, save, buttonText = "转换为 V-Slice")
+                        Tab.SCRIPTS -> ReverseScreen(cnScripts, Funkin.Lavender, "Scripts", "添加 Codename 脚本", "选择 .hx 脚本。给背景脚本补上背景 XML，给自定义事件补上 data/events/*.json。压缩包会保留文件夹结构，歌曲、背景、事件和音符脚本都能落到正确的作用域。", R.drawable.ic_tab_script, folderName, save, buttonText = "转换为 V-Slice")
                     } else if (currentDirection == Direction.CODENAME_TO_PSYCH && current is Tab) when (current) {
                         Tab.MOD -> CodenameModScreen(
                             c2pMod, folderName, save,
-                            intro = "Convert a whole Codename Engine mod to Psych: songs and variants, characters, stages (with their scripts), weeks, HScript scripts, events, note types, images and audio.",
-                            infoNote = "Written to pack.json (read from data/config/modpack.ini). icon.png becomes pack.png.",
-                            convertNote = "Download the converted mod as a .zip (unzip it into Psych's mods folder), or write it straight into an empty mod folder."
+                            intro = "把整个 Codename Engine 模组转成 Psych：歌曲与变体、人物、背景（连同背景脚本）、周目、HScript 脚本、事件、音符类型、图片与音频。",
+                            infoNote = "写入 pack.json（来源是 data/config/modpack.ini）。icon.png 会变成 pack.png。",
+                            convertNote = "把转换好的模组下载成 .zip（解压到 Psych 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
                         )
                         Tab.CHARTS -> ChartsScreen(c2pCharts, folderName, save)
-                        Tab.CHARACTERS -> ReverseScreen(c2pCharacters, Funkin.Left, "Characters", "Add Codename characters", "Pick data/characters/*.xml with their spritesheet .xml (images/characters/…), or Animation.json + spritemap*.json for Animate atlases, so offsets stay exact.", R.drawable.ic_tab_character, folderName, save)
-                        Tab.STAGES -> ReverseScreen(c2pStages, Funkin.Up, "Stages", "Add Codename stages", "Pick data/stages/*.xml. Sprites become stage objects; beat dancers, blends and extra settings go into a stage script.", R.drawable.ic_tab_stage, folderName, save)
-                        Tab.WEEKS -> ReverseScreen(c2pWeeks, Funkin.Right, "Weeks", "Add Codename weeks", "Pick data/weeks/weeks/*.xml, data/weeks/characters/*.xml and the songs' meta.json for freeplay icons and colors.", R.drawable.ic_tab_week, folderName, save)
-                        Tab.SCRIPTS -> ReverseScreen(c2pScripts, Funkin.Lavender, "Scripts", "Add Codename scripts", "Pick .hx scripts. Add the stage XML for stage scripts and data/events/*.json for custom events. Archives keep the folders, so song, stage, event and note scripts land in the right Psych folder.", R.drawable.ic_tab_script, folderName, save)
+                        Tab.CHARACTERS -> ReverseScreen(c2pCharacters, Funkin.Left, "Characters", "添加 Codename 人物", "选择 data/characters/*.xml 和对应的精灵图集 .xml（images/characters/…）；Animate 图集则用 Animation.json + spritemap*.json，这样偏移才准确。", R.drawable.ic_tab_character, folderName, save)
+                        Tab.STAGES -> ReverseScreen(c2pStages, Funkin.Up, "Stages", "添加 Codename 背景", "选择 data/stages/*.xml。精灵会变成背景物件；跟拍动作、混合模式和额外设置会写进背景脚本。", R.drawable.ic_tab_stage, folderName, save)
+                        Tab.WEEKS -> ReverseScreen(c2pWeeks, Funkin.Right, "Weeks", "添加 Codename 周目", "选择 data/weeks/weeks/*.xml、data/weeks/characters/*.xml，再选歌曲的 meta.json 来带出自由游玩图标和颜色。", R.drawable.ic_tab_week, folderName, save)
+                        Tab.SCRIPTS -> ReverseScreen(c2pScripts, Funkin.Lavender, "Scripts", "添加 Codename 脚本", "选择 .hx 脚本。给背景脚本补上背景 XML，给自定义事件补上 data/events/*.json。压缩包会保留文件夹结构，歌曲、背景、事件和音符脚本会落到对应的 Psych 文件夹。", R.drawable.ic_tab_script, folderName, save)
                     } else if (currentDirection == Direction.PSYCH_TO_CODENAME && current is Tab) when (current) {
                         Tab.MOD -> ModScreen(
                             p2cMod, folderName, save,
-                            intro = "Convert a whole Psych Engine mod to Codename: songs, characters, stages, weeks, Lua/HScript scripts, custom events, note types, images and audio.",
-                            infoNote = "Written to data/config/modpack.ini. pack.png becomes icon.png.",
-                            convertNote = "Download the converted mod as a .zip (unzip it into Codename's mods folder), or write it straight into an empty mod folder."
+                            intro = "把整个 Psych Engine 模组转成 Codename：歌曲、人物、背景、周目、Lua/HScript 脚本、自定义事件、音符类型、图片与音频。",
+                            infoNote = "写入 data/config/modpack.ini。pack.png 会变成 icon.png。",
+                            convertNote = "把转换好的模组下载成 .zip（解压到 Codename 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
                         )
                         Tab.CHARTS -> ChartsScreen(p2cCharts, folderName, save)
-                        Tab.CHARACTERS -> ReverseScreen(p2cCharacters, Funkin.Left, "Characters", "Add Psych characters", "Pick characters/*.json. Offsets are scaled for Codename and the side decides the camera offsets. Add Animation.json + spritemap*.json for Animate atlas characters.", R.drawable.ic_tab_character, folderName, save, buttonText = "Convert to Codename")
-                        Tab.STAGES -> ReverseScreen(p2cStages, Funkin.Up, "Stages", "Add Psych stages", "Pick stages/*.json and, if the stage builds its sprites in Lua, stages/<stage>.lua: those sprites move into the stage XML.", R.drawable.ic_tab_stage, folderName, save, buttonText = "Convert to Codename")
-                        Tab.WEEKS -> ReverseScreen(p2cWeeks, Funkin.Right, "Weeks", "Add Psych weeks", "Pick weeks/*.json and images/menucharacters/*.json.", R.drawable.ic_tab_week, folderName, save, buttonText = "Convert to Codename")
-                        Tab.SCRIPTS -> ReverseScreen(p2cScripts, Funkin.Lavender, "Scripts", "Add Lua / HScript", "Pick .lua and .hx scripts. Archives keep the folders, so scripts/, data/<song>/, stages/, custom_events/ and custom_notetypes/ land in the right Codename folder. Add stages/*.json for stage scripts.", R.drawable.ic_tab_script, folderName, save, buttonText = "Convert to Codename")
+                        Tab.CHARACTERS -> ReverseScreen(p2cCharacters, Funkin.Left, "Characters", "添加 Psych 人物", "选择 characters/*.json。偏移会按 Codename 缩放，站位决定摄像机偏移。Animate 图集人物再补上 Animation.json + spritemap*.json。", R.drawable.ic_tab_character, folderName, save, buttonText = "转换为 Codename")
+                        Tab.STAGES -> ReverseScreen(p2cStages, Funkin.Up, "Stages", "添加 Psych 背景", "选择 stages/*.json；如果背景是在 Lua 里生成精灵的，再选 stages/<背景>.lua：那些精灵会被搬进背景 XML。", R.drawable.ic_tab_stage, folderName, save, buttonText = "转换为 Codename")
+                        Tab.WEEKS -> ReverseScreen(p2cWeeks, Funkin.Right, "Weeks", "添加 Psych 周目", "选择 weeks/*.json 和 images/menucharacters/*.json。", R.drawable.ic_tab_week, folderName, save, buttonText = "转换为 Codename")
+                        Tab.SCRIPTS -> ReverseScreen(p2cScripts, Funkin.Lavender, "Scripts", "添加 Lua / HScript", "挑 .lua 和 .hx 脚本。压缩包会保留目录结构，所以 scripts/、data/<song>/、stages/、custom_events/ 和 custom_notetypes/ 会落进对应的 Codename 目录。背景脚本再加 stages/*.json。", R.drawable.ic_tab_script, folderName, save, buttonText = "转换为 Codename")
                     } else if (currentDirection == Direction.VSLICE_TO_PSYCH) when (current) {
                         Tab.MOD -> ReverseModScreen(revMod, folderName, save)
                         Tab.CHARTS -> ChartsScreen(revCharts, folderName, save)
-                        Tab.CHARACTERS -> ReverseScreen(revCharacters, Funkin.Left, "Characters", "Add V-Slice characters", "Pick data/characters/*.json with their spritesheet .xml (images/…), or Animation.json + spritemap*.json for Animate atlases, for exact positions. Archives work too.", R.drawable.ic_tab_character, folderName, save)
-                        Tab.STAGES -> ReverseScreen(revStages, Funkin.Up, "Stages", "Add V-Slice stages", "Pick data/stages/*.json. Props, layers, scroll and animations become Psych stage objects.", R.drawable.ic_tab_stage, folderName, save)
-                        Tab.WEEKS -> ReverseScreen(revWeeks, Funkin.Right, "Levels", "Add V-Slice levels", "Pick data/levels/*.json, plus the songs' -metadata.json files for names, icons and difficulties.", R.drawable.ic_tab_week, folderName, save)
-                        Tab.SCRIPTS -> ReverseScreen(revScripts, Funkin.Lavender, "Scripts", "Add .hxc scripts", "Pick V-Slice .hxc scripts. Modules, songs, stages, characters, song events and note kinds become Psych HScript files in the right folders.", R.drawable.ic_tab_script, folderName, save)
+                        Tab.CHARACTERS -> ReverseScreen(revCharacters, Funkin.Left, "Characters", "添加 V-Slice 人物", "选择 data/characters/*.json 和对应的精灵图集 .xml（images/…）；Animate 图集用 Animation.json + spritemap*.json，位置才准确。压缩包也可以。", R.drawable.ic_tab_character, folderName, save)
+                        Tab.STAGES -> ReverseScreen(revStages, Funkin.Up, "Stages", "添加 V-Slice 背景", "选择 data/stages/*.json。物件、图层、滚动和动画会变成 Psych 的背景物件。", R.drawable.ic_tab_stage, folderName, save)
+                        Tab.WEEKS -> ReverseScreen(revWeeks, Funkin.Right, "Levels", "添加 V-Slice 关卡", "选择 data/levels/*.json，再选歌曲的 -metadata.json 带出名称、图标和难度。", R.drawable.ic_tab_week, folderName, save)
+                        Tab.SCRIPTS -> ReverseScreen(revScripts, Funkin.Lavender, "Scripts", "添加 .hxc 脚本", "选择 V-Slice 的 .hxc 脚本。模块、歌曲、背景、人物、歌曲事件和音符类型会变成 Psych 的 HScript 文件，放进对应文件夹。", R.drawable.ic_tab_script, folderName, save)
                         else -> Unit
                     } else when (current) {
                         Tab.MOD -> ModScreen(mod, folderName, save)
@@ -599,11 +599,11 @@ private fun Header(
                 Text("V-CONVERTER", style = MaterialTheme.typography.titleLarge, color = Funkin.Text, maxLines = 1)
                 AnimatedContent(targetState = section to direction, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "subtitle") { (current, currentDirection) ->
                     if (current == Section.GENERATOR) {
-                        Text("New V-Slice content", style = MaterialTheme.typography.labelSmall, color = Funkin.Warning, maxLines = 1)
+                        Text("新建 V-Slice 内容", style = MaterialTheme.typography.labelSmall, color = Funkin.Warning, maxLines = 1)
                     } else if (current == Section.ONLINE) {
-                        Text("Mods, updates and news", style = MaterialTheme.typography.labelSmall, color = Funkin.Pink, maxLines = 1)
+                        Text("模组、更新与新闻", style = MaterialTheme.typography.labelSmall, color = Funkin.Pink, maxLines = 1)
                     } else if (current == Section.PLAYTEST) {
-                        Text("Play and check songs", style = MaterialTheme.typography.labelSmall, color = Funkin.Up, maxLines = 1)
+                        Text("试玩并检查歌曲", style = MaterialTheme.typography.labelSmall, color = Funkin.Up, maxLines = 1)
                     } else {
                         Text(
                             currentDirection.label,
@@ -638,7 +638,7 @@ private fun FolderChip(folderName: String?, onClick: () -> Unit) {
             .padding(start = 10.dp, end = 12.dp, top = 7.dp, bottom = 7.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(painterResource(R.drawable.ic_folder), contentDescription = "Mod folder", tint = tint, modifier = Modifier.size(16.dp))
+        Icon(painterResource(R.drawable.ic_folder), contentDescription = "模组文件夹", tint = tint, modifier = Modifier.size(16.dp))
         Spacer(Modifier.width(6.dp))
         Column {
             Text("MOD FOLDER", style = MaterialTheme.typography.labelSmall, fontSize = 9.sp, color = Funkin.Muted, maxLines = 1)
@@ -820,7 +820,7 @@ private fun EngineBridge(direction: Direction, onChange: (Direction) -> Unit) {
             ) {
                 Icon(
                     painterResource(if (direction.canSwap) R.drawable.ic_swap else R.drawable.ic_arrow_forward),
-                    contentDescription = if (direction.canSwap) "Swap direction" else null,
+                    contentDescription = if (direction.canSwap) "交换方向" else null,
                     tint = Funkin.Ink,
                     modifier = Modifier
                         .size(20.dp)

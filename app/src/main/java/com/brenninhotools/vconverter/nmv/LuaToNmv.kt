@@ -95,10 +95,10 @@ class LuaToNmv(skipLines: Set<Int> = emptySet()) : LuaTranspiler(skipLines) {
         val result = transpile(source) ?: return NmvScriptOut("", issues.toList(), emptyList())
         val methods = globalMethods().toSet()
         methods.filter { it in PsychApi.callbacks && it !in bridges && it !in direct && it !in internal }.forEach {
-            issue(0, "Psych callback '$it' has no NightmareVision event, so it never runs.")
+            issue(0, "Psych 回调 '$it' has no NightmareVision event, so it never runs.")
         }
         PsychApi.unsupportedCallbacks.filter { it in methods && it !in direct }.forEach {
-            issue(0, "Psych callback '$it' has no NightmareVision event, so it never runs.")
+            issue(0, "Psych 回调 '$it' has no NightmareVision event, so it never runs.")
         }
         val adapters = StringBuilder()
         val resolved = NmvPsychApi.resolve(used.toSet())
@@ -278,7 +278,7 @@ class LuaToNmv(skipLines: Set<Int> = emptySet()) : LuaTranspiler(skipLines) {
             "defaultGirlfriendX" -> "game.gfPosition.x"
             "defaultGirlfriendY" -> "game.gfPosition.y"
             else -> {
-                issue(line, "Unknown variable '$name' (not defined in this script) became null.")
+                issue(line, "未知变量 '$name' (not defined in this script) became null.")
                 "null"
             }
         }
@@ -287,11 +287,11 @@ class LuaToNmv(skipLines: Set<Int> = emptySet()) : LuaTranspiler(skipLines) {
     private fun haxeCode(args: List<Expr>, line: Int): String {
         val code = (args.getOrNull(0) as? Expr.Str)?.value
         if (code == null) {
-            issue(line, "runHaxeCode() with code built at runtime cannot be converted.")
+            issue(line, "runHaxeCode() 的代码是运行时拼出来的，没法转换。")
             return "null"
         }
         val converted = NmvScripts.psychHxToNmv(code)
-        converted.issues.forEach { issue(line, "runHaxeCode: ${it.message}") }
+        converted.issues.forEach { issue(line, "runHaxeCode：${it.message}") }
         val tokens = HxSource.tokenize(converted.source)
         val statements = StringBuilder()
         (args.getOrNull(1) as? Expr.Table)?.fields?.filterIsInstance<TableField.Named>()?.forEach {

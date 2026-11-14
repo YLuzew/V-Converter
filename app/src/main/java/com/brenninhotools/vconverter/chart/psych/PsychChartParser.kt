@@ -19,11 +19,11 @@ object PsychChartParser {
         val root = try {
             JSONObject(raw.trim().removePrefix("﻿"))
         } catch (e: JSONException) {
-            throw PsychChartException("The file is not valid JSON: ${e.message}", e)
+            throw PsychChartException("该文件不是有效的 JSON：${e.message}", e)
         }
         val song = (root.value("song") as? JSONObject) ?: root
         if (song.value("notes") !is JSONArray && song.value("events") !is JSONArray) {
-            throw PsychChartException("This JSON does not look like a Psych Engine chart (no \"notes\" or \"events\" found).")
+            throw PsychChartException("这个 JSON 不像 Psych Engine 谱子（没找到 \"notes\" 或 \"events\"）。")
         }
 
         val format = song.value("format").asText().ifBlank { "unknown" }

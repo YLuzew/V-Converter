@@ -128,7 +128,7 @@ class IosStageEditor(private val scope: CoroutineScope) {
                         if (missing > 0) " $missing prop(s) have no image yet: open the mod folder or add the images." else ""
                 )
             } catch (e: Exception) {
-                status = Status.Error(e.message ?: "Could not open the stage.")
+                status = Status.Error(e.message ?: "打开背景失败。")
             }
         }
     }
@@ -165,7 +165,7 @@ class IosStageEditor(private val scope: CoroutineScope) {
         editor.load(StageDocument("new-stage", "New Stage"), emptyMap(), emptyMap())
         source = "New stage"
         output = null
-        status = Status.Info("Started a new stage with the base game character positions. Add images to build it.")
+        status = Status.Info("已新建背景，人物位置用的是本体默认值。加上图片就能搭起来。")
     }
 
     fun export() {
@@ -179,7 +179,7 @@ class IosStageEditor(private val scope: CoroutineScope) {
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = Status.Error(e.message ?: "Could not export the stage.")
+                status = Status.Error(e.message ?: "导出背景失败。")
             }
         }
     }
@@ -197,7 +197,7 @@ class IosStageEditor(private val scope: CoroutineScope) {
                     if (zip) Dialogs.export(target)
                     onSaved(target)
                 } catch (e: Exception) {
-                    status = Status.Error(e.message ?: "Could not save the files.")
+                    status = Status.Error(e.message ?: "保存文件失败。")
                 }
             }
         }

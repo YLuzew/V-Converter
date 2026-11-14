@@ -85,7 +85,7 @@ class ScriptsViewModel(application: Application) : BaseConverterViewModel(applic
     fun convert() {
         runTask {
             try {
-                require(scripts.isNotEmpty()) { "Add at least one Psych Engine script." }
+                require(scripts.isNotEmpty()) { "至少添加一个 Psych Engine 脚本。" }
                 val missing = scripts.firstOrNull { it.scope != ScriptScope.GLOBAL && it.target.isBlank() }
                 require(missing == null) { "${missing?.fileName} needs a ${missing?.scope?.label?.lowercase()} name." }
                 val slug = ScriptConverter.slug(modName.ifBlank { "VConverter" })
@@ -97,7 +97,7 @@ class ScriptsViewModel(application: Application) : BaseConverterViewModel(applic
                     }
                     val noteTypes = snapshot.filter { it.scope == ScriptScope.NOTE_TYPE }.map { it.target.trim() }
                     val bundle = ScriptConverter.convert(slug, sources, ScriptConverter.noteTypeMap(noteTypes))
-                    require(bundle.converted > 0) { bundle.report.warnings.firstOrNull() ?: "No script could be converted." }
+                    require(bundle.converted > 0) { bundle.report.warnings.firstOrNull() ?: "没有脚本能转换。" }
                     val files = bundle.files.map { file ->
                         OutputFile(file.path.substringBeforeLast('/').split('/'), file.path.substringAfterLast('/'), file.content)
                     }
@@ -107,7 +107,7 @@ class ScriptsViewModel(application: Application) : BaseConverterViewModel(applic
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Conversion failed.")
+                status = StatusMessage.Error(e.message ?: "转换失败。")
             }
         }
     }

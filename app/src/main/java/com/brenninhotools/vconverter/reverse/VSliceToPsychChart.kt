@@ -52,14 +52,14 @@ object VSliceToPsychChart {
         formatToSongPath(if (variation.isEmpty() || variation == "default") songId else "$songId-$variation").ifEmpty { "song" }
 
     fun convertAll(songId: String, sources: List<VSliceSongSource>, stageZoom: Double? = null): List<ReverseChartResult> {
-        require(sources.isNotEmpty()) { "Add the song's metadata and chart files." }
+        require(sources.isNotEmpty()) { "加上歌曲的元数据和谱子文件。" }
         return sources.groupBy { it.variation }.toSortedMutableMap().map { (variation, group) ->
             convert(songIdFor(songId, variation), group, stageZoom)
         }
     }
 
     fun convert(songId: String, sources: List<VSliceSongSource>, stageZoom: Double? = null): ReverseChartResult {
-        require(sources.isNotEmpty()) { "Add the song's metadata and chart files." }
+        require(sources.isNotEmpty()) { "加上歌曲的元数据和谱子文件。" }
         val id = formatToSongPath(songId).ifEmpty { "song" }
         val report = ReportBuilder()
         val files = mutableListOf<PsychChartFile>()
@@ -117,15 +117,15 @@ object VSliceToPsychChart {
 
         report.section("Difficulties", difficulties.map { d -> "data/$id/$id${if (d == "normal") "" else "-$d"}.json" })
         if (difficulties.any { it !in listOf("easy", "normal", "hard") }) {
-            report.warn("Psych only lists Easy/Normal/Hard by default. Add the extra difficulties to the week's \"difficulties\" field (the Weeks converter does this).")
+            report.warn("Psych 默认只列 Easy/Normal/Hard。把多出来的难度加进周目的 \"difficulties\" 字段（周目转换器会自动做这一步）。")
         }
-        if (lostFocus > 0) report.warn("$lostFocus camera focus changes happen in the middle of a section; Psych moves the camera once per section, so they snap to the section they fall in.")
-        if (skipped.isNotEmpty()) report.section("Events with no Psych equivalent (kept under their V-Slice names for scripts)", skipped.map { (k, v) -> "$k ×$v" })
-        if (mainMeta.offsetInstrumental != 0.0) report.section("Audio offset", listOf("The V-Slice instrumental offset (${mainMeta.offsetInstrumental.toJsonNumber()} ms) became the Psych chart offset."))
-        if (mainMeta.noteStyle.equals("pixel", ignoreCase = true)) report.warn("Pixel note style: the charts use Psych's pixelUI skins; make sure the stage is a pixel stage (isPixelStage).")
+        if (lostFocus > 0) report.warn("$lost对准摄像机 focus changes happen in the middle of a section; Psych moves the camera once per section, so they snap to the section they fall in.")
+        if (skipped.isNotEmpty()) report.section("Psych 里没有对应物的事件（保留 V-Slice 原名，供脚本使用）", skipped.map { (k, v) -> "$k ×$v" })
+        if (mainMeta.offsetInstrumental != 0.0) report.section("音频偏移", listOf("V-Slice 的伴奏偏移（${mainMeta.offsetInstrumental.toJsonNumber()} ms) became the Psych chart offset."))
+        if (mainMeta.noteStyle.equals("pixel", ignoreCase = true)) report.warn("像素音符样式：谱子用的是 Psych 的 pixelUI 皮肤；确认背景是像素背景（isPixelStage）。")
         report.section("Audio", listOf("songs/$id/Inst.ogg", "songs/$id/Voices.ogg or Voices-Player.ogg + Voices-Opponent.ogg"))
         if (name != mainMeta.songName && mainMeta.songName.isNotBlank()) {
-            report.warn("Psych finds songs by name, so \"${mainMeta.songName}\" is saved as \"$name\" to match the folder.")
+            report.warn("Psych 是按名字找歌的，所以「${mainMeta.songName}\" is saved as \"$name\" to match the folder.")
         }
         return ReverseChartResult(id, name, files, difficulties.distinct(), report.build())
     }
@@ -269,7 +269,7 @@ object VSliceToPsychChart {
                     val zoom = field(v, "zoom").asDouble(1.0)
                     val mode = field(v, "mode").asText()
                     val value = if (mode == "direct") zoom else stageZoom?.let { zoom * it }
-                    if (value != null) add(event.time, "Set Property", "defaultCamZoom", value.toJsonNumber().toString()) else skip("ZoomCamera (stage mode)")
+                    if (value != null) add(event.time, "Set Property", "defaultCamZoom", value.toJsonNumber().toString()) else skip("ZoomCamera（背景模式）")
                 }
                 "SetCameraBop" -> add(event.time, "Set Property", "camZoomingMult", field(v, "intensity").asDouble(1.0).toJsonNumber().toString())
                 "PsychEvent" -> add(event.time, field(v, "name").asText(), field(v, "value1").asText(), field(v, "value2").asText())

@@ -69,32 +69,32 @@ fun WeekInfoPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
             TextValueField("Story name", doc.name, Modifier.weight(1f)) { v -> state.edit { it.copy(name = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Week name (Psych freeplay)", doc.weekName, Modifier.weight(1f)) { v -> state.edit { it.copy(weekName = v) } }
-            TextValueField("Title image (images/…)", doc.titleAsset.ifBlank { doc.title }, Modifier.weight(1f)) { v -> state.edit { it.copy(titleAsset = v.trim()) } }
+            TextValueField("周目名（Psych 自由游玩）", doc.weekName, Modifier.weight(1f)) { v -> state.edit { it.copy(weekName = v) } }
+            TextValueField("标题图（images/…）", doc.titleAsset.ifBlank { doc.title }, Modifier.weight(1f)) { v -> state.edit { it.copy(titleAsset = v.trim()) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextValueField("Background (#RRGGBB or images/…)", doc.background, Modifier.weight(1f)) { v -> state.edit { it.copy(background = v.trim()) } }
+            TextValueField("背景（#RRGGBB 或 images/…）", doc.background, Modifier.weight(1f)) { v -> state.edit { it.copy(background = v.trim()) } }
             if (doc.backgroundIsColor) {
                 Row(Modifier.size(28.dp).clip(RoundedCornerShape(6.dp)).background(swatch(doc.background))) {}
             }
         }
-        TextValueField("Difficulties (comma separated)", doc.difficulties.joinToString(", "), Modifier.fillMaxWidth()) { v ->
+        TextValueField("难度（逗号分隔）", doc.difficulties.joinToString(", "), Modifier.fillMaxWidth()) { v ->
             val list = v.split(',').map { it.trim().lowercase() }.filter { it.isNotEmpty() }.distinct()
             if (list.isNotEmpty()) state.edit { it.copy(difficulties = list) }
         }
         Row {
-            WeekCheck("Show in story mode", doc.visible) { v -> state.edit { it.copy(visible = v) } }
-            WeekCheck("Hide songs from freeplay", doc.hideFreeplay) { v -> state.edit { it.copy(hideFreeplay = v) } }
+            WeekCheck("在故事模式中显示", doc.visible) { v -> state.edit { it.copy(visible = v) } }
+            WeekCheck("从自由游玩中隐藏歌曲", doc.hideFreeplay) { v -> state.edit { it.copy(hideFreeplay = v) } }
         }
         EditorSectionTitle("Unlocking")
-        TextValueField("Week to beat first (weekBefore)", doc.weekBefore, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(weekBefore = v.trim()) } }
+        TextValueField("前置周目（weekBefore）", doc.weekBefore, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(weekBefore = v.trim()) } }
         Row {
-            WeekCheck("Start unlocked", doc.startUnlocked) { v -> state.edit { it.copy(startUnlocked = v) } }
-            WeekCheck("Hidden until unlocked", doc.hiddenUntilUnlocked) { v -> state.edit { it.copy(hiddenUntilUnlocked = v) } }
+            WeekCheck("初始解锁", doc.startUnlocked) { v -> state.edit { it.copy(startUnlocked = v) } }
+            WeekCheck("解锁前隐藏", doc.hiddenUntilUnlocked) { v -> state.edit { it.copy(hiddenUntilUnlocked = v) } }
         }
         Text(
-            if (doc.isLocked) "Locked until \"${doc.weekBefore}\" is beaten. V-Slice gets a level script for it (scripts/levels/), Psych keeps it in the week file; Codename has no week locking."
-            else "Turn off \"Start unlocked\" and name a week to lock this one until that week is beaten.",
+            if (doc.isLocked) "锁定直到「${doc.weekBefore}\" is beaten. V-Slice gets a level script for it (scripts/levels/), Psych keeps it in the week file; Codename has no week locking."
+            else "关掉「初始解锁」再填一个周目名，就能把这个周目锁到那个周目通关为止。",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -126,7 +126,7 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
                 }
             }
         }
-        if (doc.songs.isEmpty()) Text("No songs yet: add the songs of this week below, in the order they play.", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+        if (doc.songs.isEmpty()) Text("还没有歌曲：把这一周的歌曲按播放顺序加到下面。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             TextValueField("Song name", draft, Modifier.weight(1f)) { draft = it }
             EditorChip("Add song", false) {
@@ -139,15 +139,15 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
         if (song != null) {
             EditorSectionTitle(song.displayName)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                TextValueField("Song id (data/songs/…)", song.id, Modifier.weight(1f)) { v ->
+                TextValueField("歌曲 ID（data/songs/…）", song.id, Modifier.weight(1f)) { v ->
                     val clean = v.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
                     if (clean.isNotEmpty() && doc.songs.none { it !== song && it.id == clean }) state.edit { it.replaceSong(index, song.copy(id = clean)) }
                 }
-                TextValueField("Display name", song.name, Modifier.weight(1f)) { v -> state.edit { it.replaceSong(index, song.copy(name = v)) } }
+                TextValueField("显示名", song.name, Modifier.weight(1f)) { v -> state.edit { it.replaceSong(index, song.copy(name = v)) } }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                TextValueField("Freeplay icon", song.icon, Modifier.weight(1f)) { v -> state.edit { it.replaceSong(index, song.copy(icon = v.trim())) } }
-                TextValueField("Freeplay color (#RRGGBB)", song.color, Modifier.weight(1f)) { v ->
+                TextValueField("自由游玩图标", song.icon, Modifier.weight(1f)) { v -> state.edit { it.replaceSong(index, song.copy(icon = v.trim())) } }
+                TextValueField("自由游玩颜色（#RRGGBB）", song.color, Modifier.weight(1f)) { v ->
                     val hex = v.trim().removePrefix("#")
                     if (hex.matches(Regex("[0-9A-Fa-f]{6}"))) state.edit { it.replaceSong(index, song.copy(color = "#" + hex.uppercase())) }
                 }
@@ -157,7 +157,7 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
                 EditorChip("Move down", false) { state.moveSong(index, 1) }
                 EditorChip("Remove", false) { state.removeSong(index) }
             }
-            Text("Icon and color are used by Psych's freeplay; V-Slice reads the song's own metadata.", fontSize = 12.sp, color = scheme.onSurfaceVariant)
+            Text("图标和颜色供 Psych 的自由游玩使用；V-Slice 读歌曲自己的元数据。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
         }
     }
 }
@@ -167,7 +167,7 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
 fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoadImage: ((WeekSlot) -> Unit)? = null) {
     val doc = state.document
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Menu characters")
+        EditorSectionTitle("菜单人物")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             WeekSlot.entries.forEach { slot ->
                 val prop = doc.prop(slot)
@@ -179,7 +179,7 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
         val slot = state.selected
         if (slot == null) {
             Text(
-                "Tap a character in the preview (or above) to edit it, then drag it to move it. Each slot sits a quarter of the screen further right, like V-Slice's story menu.",
+                "点预览里（或上方）的人物来编辑，然后拖动它移动。每个站位依次向右挪四分之一屏宽，跟 V-Slice 的故事菜单一致。",
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -211,8 +211,8 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
         }
         if (state.imageFor(prop.assetPath) == null) {
             Text(
-                if (prop.isBase) "The base game sprite isn't bundled, so it shows as a box; it is not exported (the game already has it)."
-                else "No image loaded for images/${prop.assetPath}.png yet: use \"Load image…\" with the .png and its .xml.",
+                if (prop.isBase) "基础游戏的精灵没有打包进来，所以显示成方块；它不会被导出（游戏里本来就有）。"
+                else "还没有为 images/${prop.assetPath}.png yet: use \"Load image…\" with the .png and its .xml.",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -223,19 +223,19 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
 @Composable
 private fun PropFields(state: WeekEditorState, slot: WeekSlot, prop: WeekProp) {
     fun update(change: (WeekProp) -> WeekProp) = state.updateProp(slot, change)
-    TextValueField("Image (images/…)", prop.assetPath, Modifier.fillMaxWidth()) { v -> if (v.isNotBlank()) update { it.copy(assetPath = v.trim()) } }
+    TextValueField("图片（images/…）", prop.assetPath, Modifier.fillMaxWidth()) { v -> if (v.isNotBlank()) update { it.copy(assetPath = v.trim()) } }
     val prefixes = state.imageFor(prop.assetPath)?.atlas?.prefixes() ?: emptyList()
     val idle = prop.anim(prop.idleName)?.prefix ?: ""
     val confirm = prop.anim("confirm")?.prefix ?: ""
     if (prefixes.isNotEmpty()) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            ChoiceField("Idle animation", idle, prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix(it.idleName, v) } }
-            ChoiceField("Confirm animation", confirm, listOf("" to "None") + prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
+            ChoiceField("待机动画", idle, prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix(it.idleName, v) } }
+            ChoiceField("确认动画", confirm, listOf("" to "None") + prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
         }
     } else {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextValueField("Idle prefix", idle, Modifier.weight(1f)) { v -> update { it.withPrefix(it.idleName, v) } }
-            TextValueField("Confirm prefix", confirm, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
+            TextValueField("确认前缀", confirm, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
         }
     }
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -244,12 +244,12 @@ private fun PropFields(state: WeekEditorState, slot: WeekSlot, prop: WeekProp) {
         NumberField("Scale", prop.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
-        NumberField("Dance every (beats)", prop.danceEvery, Modifier.weight(1f)) { v -> if (v >= 0) update { it.copy(danceEvery = v) } }
+        NumberField("待机间隔（拍）", prop.danceEvery, Modifier.weight(1f)) { v -> if (v >= 0) update { it.copy(danceEvery = v) } }
         WeekCheck("Pixel", prop.isPixel) { v -> update { it.copy(isPixel = v) } }
         WeekCheck("Flip X", prop.flipX) { v -> update { it.copy(flipX = v) } }
     }
     if (confirm.isNotEmpty()) {
-        Text("Press \"Confirm\" above the preview to play the confirm animation.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text("点预览上方的「确认」来播放确认动画。", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 

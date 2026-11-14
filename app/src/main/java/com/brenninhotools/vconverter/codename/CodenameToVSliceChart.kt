@@ -70,13 +70,13 @@ object CodenameToVSliceChart {
     fun noteKindFor(name: String): String = noteKinds[name.trim().lowercase()] ?: PsychToVSliceChart.noteKindFor(name)
 
     fun convert(song: CodenameSong, options: CodenameChartOptions = CodenameChartOptions()): CodenameChartResult {
-        require(song.charts.isNotEmpty()) { "Select at least one Codename Engine chart." }
+        require(song.charts.isNotEmpty()) { "至少选一个 Codename Engine 谱子。" }
         val report = ReportBuilder()
         val ordered = song.charts.entries
             .map { PsychToVSliceChart.normalizeDifficulty(it.key) to it.value }
             .sortedWith(compareBy({ rank(it.first) }, { it.first }))
         ordered.groupBy { it.first }.forEach { (difficulty, group) ->
-            require(group.size == 1) { "The difficulty \"$difficulty\" is assigned to more than one chart." }
+            require(group.size == 1) { "难度「$difficulty\" is assigned to more than one chart." }
         }
         val mainEntry = ordered.firstOrNull { it.first == "normal" } ?: ordered.first()
         val main = mainEntry.second
@@ -179,7 +179,7 @@ object CodenameToVSliceChart {
         report.stat("Events", events.size)
         report.section("Notes", counts)
         report.section("Events", listOf("$converted Codename events converted to V-Slice events or time changes"))
-        if (kept.isNotEmpty()) report.section("Kept as V-Slice events (scripts handle them)", kept.map { (name, count) -> "$name ×$count → ${CodenameEvents.eventId(name)}" })
+        if (kept.isNotEmpty()) report.section("保留为 V-Slice 事件（由脚本处理）", kept.map { (name, count) -> "$name ×$count → ${CodenameEvents.eventId(name)}" })
         if (kinds.isNotEmpty()) report.section("Note kinds", kinds.map { kind -> "${kindNames[kind]} → $kind" })
 
         val stage = when {
@@ -210,7 +210,7 @@ object CodenameToVSliceChart {
             songVariations = options.songVariations,
             generatedBy = options.generatedBy
         )
-        if (meta.color.isNotBlank()) report.section("Not carried over", listOf("Freeplay color ${meta.color} and icon \"${meta.icon}\" (V-Slice reads the icon from the character)"))
+        if (meta.color.isNotBlank()) report.section("没有带过来", listOf("自由游玩颜色 ${meta.color} and icon \"${meta.icon}\" (V-Slice reads the icon from the character)"))
         return CodenameChartResult(
             metadata,
             VSliceChart(scrollSpeed, events, notes, options.generatedBy),

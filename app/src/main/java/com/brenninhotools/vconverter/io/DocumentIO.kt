@@ -20,14 +20,14 @@ object DocumentIO {
 
     fun readBytes(context: Context, uri: Uri): ByteArray =
         context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
-            ?: throw IOException("Could not open ${displayName(context, uri)}")
+            ?: throw IOException("打开失败：${displayName(context, uri)}")
 
     fun readText(context: Context, uri: Uri): String =
         context.contentResolver.openInputStream(uri)?.use { it.bufferedReader(Charsets.UTF_8).readText() }
-            ?: throw IOException("Could not open ${displayName(context, uri)}")
+            ?: throw IOException("打开失败：${displayName(context, uri)}")
 
     fun folderName(context: Context, treeUri: Uri): String =
-        DocumentFile.fromTreeUri(context, treeUri)?.name ?: "Selected folder"
+        DocumentFile.fromTreeUri(context, treeUri)?.name ?: "已选文件夹"
 
     fun hasAccess(context: Context, treeUri: Uri): Boolean =
         context.contentResolver.persistedUriPermissions.any { it.uri == treeUri && it.isWritePermission } &&

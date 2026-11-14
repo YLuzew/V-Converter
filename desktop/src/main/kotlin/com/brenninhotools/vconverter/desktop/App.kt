@@ -219,7 +219,7 @@ private fun Hero(state: AppState) {
                 .padding(18.dp)
         ) {
             Text(tool.title.uppercase(), style = MaterialTheme.typography.headlineSmall, color = Palette.Text)
-            Text(when (tool) { EditorTool.ONLINE -> "Mods, updates and news"; EditorTool.PLAYTEST -> "Play and check songs"; else -> "V-Slice, with Psych and Codename export" }, style = MaterialTheme.typography.titleSmall, color = tool.accent)
+            Text(when (tool) { EditorTool.ONLINE -> "模组、更新与新闻"; EditorTool.PLAYTEST -> "试玩并检查歌曲"; else -> "V-Slice, with Psych and Codename export" }, style = MaterialTheme.typography.titleSmall, color = tool.accent)
             Spacer(Modifier.height(4.dp))
             Text(tool.hint, style = MaterialTheme.typography.bodyMedium, color = Palette.Muted)
         }

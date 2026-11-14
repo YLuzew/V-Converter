@@ -190,7 +190,7 @@ fun AssetPicker(
         Column(modifier = Modifier.weight(1f).padding(vertical = 6.dp)) {
             Text(label, style = MaterialTheme.typography.labelSmall, color = Funkin.Muted)
             Text(
-                fileName ?: "Tap to pick (optional)",
+                fileName ?: "点击选择（可选）",
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (picked) Funkin.Text else Funkin.Muted,
                 maxLines = 1,
@@ -199,7 +199,7 @@ fun AssetPicker(
         }
         if (picked) {
             IconButton(onClick = UiSound.wrap(onClear), enabled = enabled) {
-                Icon(painterResource(R.drawable.ic_close), contentDescription = "Remove $label", tint = Funkin.Muted, modifier = Modifier.size(18.dp))
+                Icon(painterResource(R.drawable.ic_close), contentDescription = "移除 $label", tint = Funkin.Muted, modifier = Modifier.size(18.dp))
             }
         }
     }

@@ -61,7 +61,7 @@ class CharactersViewModel(application: Application) : BaseConverterViewModel(app
                         val id = sanitizeId(file.name.substringBeforeLast('.'))
                         Item.Character(PickedCharacter(file.path, file.name, id, PsychToVSliceCharacter.defaultSlot(id, character), character))
                     }
-                    else -> throw IllegalArgumentException("Only .json characters, .xml spritesheets and .zip/.rar/.7z archives are supported.")
+                    else -> throw IllegalArgumentException("只支持 .json 人物、.xml 精灵图集和 .zip/.rar/.7z 压缩包。")
                 }
             }
             val added = loaded.items.filterIsInstance<Item.Character>().map { it.item }
@@ -107,9 +107,9 @@ class CharactersViewModel(application: Application) : BaseConverterViewModel(app
     fun convert() {
         runTask {
             try {
-                require(characters.isNotEmpty()) { "Add at least one Psych Engine character." }
+                require(characters.isNotEmpty()) { "至少加一个 Psych Engine 人物。" }
                 val ids = characters.map { sanitizeId(it.id) }
-                require(ids.none { it.isEmpty() }) { "Every character needs an id." }
+                require(ids.none { it.isEmpty() }) { "每个人物都需要一个 ID。" }
                 val duplicate = ids.groupBy { it }.entries.firstOrNull { it.value.size > 1 }?.key
                 require(duplicate == null) { "The id \"$duplicate\" is used more than once." }
 
@@ -132,7 +132,7 @@ class CharactersViewModel(application: Application) : BaseConverterViewModel(app
                 status = null
             } catch (e: Exception) {
                 output = null
-                status = StatusMessage.Error(e.message ?: "Conversion failed.")
+                status = StatusMessage.Error(e.message ?: "转换失败。")
             }
         }
     }

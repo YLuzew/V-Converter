@@ -62,7 +62,7 @@ class TreeModFiles(context: Context, private val treeUri: Uri, onFound: (Int) ->
     override fun open(path: String): InputStream {
         val id = entries[path]?.first ?: throw IOException("Missing file $path")
         return resolver.openInputStream(DocumentsContract.buildDocumentUriUsingTree(treeUri, id))
-            ?: throw IOException("Could not open $path")
+            ?: throw IOException("打开失败：$path")
     }
 
     override fun size(path: String): Long = entries[path]?.second ?: 0L
@@ -83,7 +83,7 @@ class TreeModWriter(context: Context, private val treeUri: Uri) : ModWriter {
     }
 
     private fun output(path: String) =
-        resolver.openOutputStream(synchronized(this) { fileUri(path) }, "wt") ?: throw IOException("Could not write $path")
+        resolver.openOutputStream(synchronized(this) { fileUri(path) }, "wt") ?: throw IOException("写入失败：$path")
 
     private fun listing(directoryId: String): MutableMap<String, Child> =
         listings.getOrPut(directoryId) {
@@ -100,7 +100,7 @@ class TreeModWriter(context: Context, private val treeUri: Uri) : ModWriter {
             existing == null -> {
                 val parentUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, parentId)
                 val created = DocumentsContract.createDocument(resolver, parentUri, Document.MIME_TYPE_DIR, name)
-                    ?: throw IOException("Could not create the folder $path")
+                    ?: throw IOException("建不了文件夹 $path")
                 val createdId = DocumentsContract.getDocumentId(created)
                 listing(parentId)[name] = Child(createdId, name, true, 0)
                 createdId
@@ -122,7 +122,7 @@ class TreeModWriter(context: Context, private val treeUri: Uri) : ModWriter {
         }
         val parentUri = DocumentsContract.buildDocumentUriUsingTree(treeUri, parentId)
         val created = DocumentsContract.createDocument(resolver, parentUri, "application/octet-stream", name)
-            ?: throw IOException("Could not create $path")
+            ?: throw IOException("创建不了 $path")
         listing(parentId)[name] = Child(DocumentsContract.getDocumentId(created), name, false, 0)
         return created
     }

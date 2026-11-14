@@ -36,8 +36,8 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
         FunkinCard {
             SectionTitle("Characters", accent, 1)
             DropZone(
-                title = "Add characters & sheets",
-                hint = "Pick Psych character .json files together with their spritesheet .xml files (images/characters), or Animation.json + spritemap1.json for Animate atlas characters. They make positions pixel-exact. You can also pick a .zip/.rar/.7z.",
+                title = "添加人物与图集",
+                hint = "选择 Psych 人物 .json 和对应的精灵图集 .xml（images/characters）；Animate 图集人物再加 Animation.json + spritemap1.json。这样位置能精确到像素。也可以直接选 .zip/.rar/.7z。",
                 accent = accent,
                 icon = R.drawable.ic_tab_character,
                 enabled = !busy,
@@ -58,7 +58,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                     enabled = !busy,
                     onRemove = { viewModel.remove(index) },
                     tags = {
-                        if (viewModel.isAnimate(item)) Tag("Animate atlas", Funkin.Up)
+                        if (viewModel.isAnimate(item)) Tag("Animate 图集", Funkin.Up)
                         else if (missing.isEmpty()) Tag("Sheet found", Funkin.Up) else Tag("Missing ${missing.size} sheet(s)", Funkin.Warning)
                         Tag("${item.character.animations.size} anims", Funkin.Muted)
                         Tag("Scale ${item.character.scale}", Funkin.Muted)
@@ -66,7 +66,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                     }
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        FunkinTextField(item.id, { viewModel.setId(index, it) }, "Character id", accent, enabled = !busy)
+                        FunkinTextField(item.id, { viewModel.setId(index, it) }, "人物 ID", accent, enabled = !busy)
                         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                             CharacterSlot.entries.forEachIndexed { slotIndex, slot ->
                                 SegmentedButton(
@@ -90,7 +90,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                         }
                         if (missing.isNotEmpty()) {
                             Text(
-                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate atlas)",
+                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate 图集)",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Funkin.Warning
                             )
@@ -100,7 +100,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
             }
             if (viewModel.characters.isNotEmpty()) {
                 Text(
-                    "Slot = where the character usually stands. It decides how offsets are rebased.",
+                    "站位 = 人物平时站的位置，它决定偏移怎么重设基准。",
                     style = MaterialTheme.typography.bodySmall,
                     color = Funkin.Muted
                 )

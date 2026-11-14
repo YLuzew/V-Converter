@@ -71,7 +71,7 @@ class ReverseChartsConverter : FileConverter() {
                 result.report.warnings.forEach { report.warn("${result.songId}: $it") }
             }
         }
-        require(files.isNotEmpty()) { "Nothing to convert: add a song's metadata and chart files together." }
+        require(files.isNotEmpty()) { "没有可转换的东西：把歌曲的元数据和谱子文件一起加进来。" }
         return ConvertedOutput(files, report.build())
     }
 }
@@ -84,14 +84,14 @@ class ReverseCharactersConverter : FileConverter() {
     override fun accept(file: ImportedFile) = (file.extension == "json" && (file.isUnder("characters") || AnimateAtlases.isAtlasFile(file.name))) || (file.extension == "xml" && file.isUnder("images"))
 
     override fun classify(file: ImportedFile, text: String): PickedText = when {
-        AnimateAtlases.isAtlasFile(file.name) -> PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
+        AnimateAtlases.isAtlasFile(file.name) -> PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
         else -> classifySheet(file, text)
     }
 
     private fun classifySheet(file: ImportedFile, text: String): PickedText = when (file.extension) {
         "xml" -> {
             val atlas = SparrowAtlas.parse(text)
-            require(atlas.frames.isNotEmpty()) { "no Sparrow frames" }
+            require(atlas.frames.isNotEmpty()) { "没有 Sparrow 帧" }
             PickedText(file.path, file.name, file.path, text, "atlas", "${atlas.frames.size} frames")
         }
         "json" -> {
@@ -99,7 +99,7 @@ class ReverseCharactersConverter : FileConverter() {
             val id = file.name.substringBeforeLast('.')
             PickedText(file.path, file.name, file.path, text, "character", "${c.animations.size} anims", VSliceToPsychCharacter.defaultSlot(id, c))
         }
-        else -> throw IllegalArgumentException("only V-Slice character .json and spritesheet .xml files")
+        else -> throw IllegalArgumentException("只支持 V-Slice 人物 .json 和 spritesheet .xml")
     }
 
     override fun canConvert(items: List<PickedText>): Boolean = items.any { it.kind == "character" }
@@ -131,7 +131,7 @@ class ReverseStagesConverter : FileConverter() {
     override fun classify(file: ImportedFile, text: String): PickedText {
         if (file.extension == "xml") {
             val atlas = SparrowAtlas.parse(text)
-            require(atlas.frames.isNotEmpty()) { "not a Sparrow spritesheet" }
+            require(atlas.frames.isNotEmpty()) { "不是 Sparrow 图集" }
             val parts = file.path.replace('\\', '/').split('/')
             val start = parts.indexOfLast { it.equals("images", ignoreCase = true) }
             val image = (if (start >= 0) parts.drop(start + 1) else listOf(parts.last())).joinToString("/").substringBeforeLast('.')
@@ -210,7 +210,7 @@ class ReverseScriptsConverter : FileConverter() {
     override fun accept(file: ImportedFile) = file.extension == "hxc"
 
     override fun classify(file: ImportedFile, text: String): PickedText {
-        require(file.extension == "hxc") { "not a .hxc script" }
+        require(file.extension == "hxc") { "不是 .hxc 脚本" }
         val result = HxcToPsych.convert(file.name, text)
         return PickedText(file.path, file.name, file.path, text, "script", result.kind.label + if (result.targetId.isNotEmpty()) " · ${result.targetId}" else "")
     }
@@ -225,7 +225,7 @@ class ReverseScriptsConverter : FileConverter() {
                 failures += "${item.name}: ${e.message}"
             }
         }
-        require(results.isNotEmpty()) { failures.firstOrNull() ?: "No script could be converted." }
+        require(results.isNotEmpty()) { failures.firstOrNull() ?: "没有脚本能转换。" }
         val files = results.flatMap { (_, r) -> r.files.map { out(it.path, it.content) } }
         return ConvertedOutput(files, HxcToPsych.report(results, failures), results.singleOrNull()?.second?.files?.firstOrNull()?.content)
     }

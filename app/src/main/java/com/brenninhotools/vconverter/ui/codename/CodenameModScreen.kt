@@ -33,9 +33,9 @@ fun CodenameModScreen(
     viewModel: CodenameModViewModel,
     modFolderName: String?,
     onConvert: () -> Unit,
-    intro: String = "Convert a whole Codename Engine mod to V-Slice: songs and variants, characters (game over animations merged in), stages, weeks, HScript scripts, events, note types, images and audio.",
-    infoNote: String = "Written to _polymod_meta.json (read from data/config/modpack.ini). icon.png becomes the mod icon.",
-    convertNote: String = "Download the converted mod as a .zip (unzip it into V-Slice's mods folder), or write it straight into an empty mod folder."
+    intro: String = "把整个 Codename Engine 模组转成 V-Slice：歌曲与变体、人物（含合并的死亡动画）、背景、周目、HScript 脚本、事件、音符类型、图片与音频。",
+    infoNote: String = "写入 _polymod_meta.json（来源是 data/config/modpack.ini）。icon.png 会变成模组图标。",
+    convertNote: String = "把转换好的模组下载成 .zip（解压到 V-Slice 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
 ) {
     val accent = Funkin.Orange
     val busy = viewModel.busy
@@ -56,16 +56,16 @@ fun CodenameModScreen(
                 color = Funkin.Muted
             )
             DropZone(
-                title = "Import .zip / .rar / .7z",
-                hint = "The mod can sit inside subfolders of the archive; it is found automatically.",
+                title = "导入 .zip / .rar / .7z",
+                hint = "模组可以在压缩包的子文件夹里，会自动找到。",
                 accent = accent,
                 icon = R.drawable.ic_archive,
                 enabled = !busy,
                 onClick = { archivePicker.launch(arrayOf("*/*")) }
             )
             DropZone(
-                title = "Open mod folder",
-                hint = "Pick the mod's folder inside Codename's mods directory.",
+                title = "打开模组文件夹",
+                hint = "选 Codename 的 mods 目录里那个模组文件夹。",
                 accent = Funkin.Purple,
                 icon = R.drawable.ic_folder,
                 enabled = !busy,
@@ -138,7 +138,7 @@ fun CodenameModScreen(
                 accent = accent,
                 modFolderName = modFolderName,
                 onSave = onConvert,
-                saveLabel = if (modFolderName != null) "Convert into $modFolderName" else "Convert into a mod folder"
+                saveLabel = if (modFolderName != null) "Convert into $modFolderName" else "转换到模组文件夹"
             )
             progress?.let { current ->
                 ModScannerPanel(

@@ -37,7 +37,7 @@ object Importer {
         try {
             context.contentResolver.openInputStream(uri)?.use { input ->
                 copy.outputStream().use { input.copyTo(it, 64 * 1024) }
-            } ?: throw IOException("Could not open $name.")
+            } ?: throw IOException("打开失败：$name.")
             return Archives.extract(copy, name, kind, cache, onProgress)
         } finally {
             copy.delete()
@@ -52,7 +52,7 @@ object Importer {
             val kind = archiveKind(context, uri, name)
             if (kind == null) {
                 files += ImportedFile(name, name, false) {
-                    context.contentResolver.openInputStream(uri) ?: throw IOException("Could not open $name.")
+                    context.contentResolver.openInputStream(uri) ?: throw IOException("打开失败：$name.")
                 }
             } else {
                 val archive = extract(context, uri, name, kind)

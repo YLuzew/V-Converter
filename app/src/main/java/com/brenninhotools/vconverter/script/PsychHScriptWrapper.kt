@@ -231,7 +231,7 @@ class PsychHScriptWrapper(
     fun convert(original: String): GeneratedScript {
         val reflect = ReflectCalls.toVSlice(original)
         val source = reflect.text
-        reflect.unsupported.forEach { issue(0, if (it.endsWith(".typeof")) "Type.typeof is blocked in V-Slice scripts." else "$it doesn't exist in V-Slice's Reflect (funkin.util.ReflectUtil); rewrite that part.") }
+        reflect.unsupported.forEach { issue(0, if (it.endsWith(".typeof")) "V-Slice 脚本里禁用了 Type.typeof。" else "$it doesn't exist in V-Slice's Reflect (funkin.util.ReflectUtil); rewrite that part.") }
         val segs = segments(tokenize(source))
         val functions = segs.filter { it.kind == "function" }.map { it.name }.toSet()
         val fields = segs.filter { it.kind == "var" && it.name.isNotEmpty() }.map { it.name }.toSet()
@@ -278,7 +278,7 @@ class PsychHScriptWrapper(
         }
         PsychApi.callbacks.filter { it in functions }.forEach { callbacks[it] = CallbackRef(arities[it], true) }
         segs.filter { it.kind == "function" && it.name in PsychApi.unsupportedCallbacks }.forEach {
-            issue(it.line, "Psych callback '${it.name}' has no V-Slice event, so it never runs.")
+            issue(it.line, "Psych 回调 '${it.name}' has no V-Slice event, so it never runs.")
         }
 
         val text = ModuleWriter.write(
@@ -303,7 +303,7 @@ class PsychHScriptWrapper(
             )
         )
         if (functions.any { it in setOf("goodNoteHit", "opponentNoteHit", "noteMiss", "onSpawnNote") }) {
-            issue(0, "Note callbacks receive V-Slice NoteSprite objects; fields like note.noteData or note.noteType differ from Psych's Note and may need edits.")
+            issue(0, "音符回调收到的是 V-Slice 的 NoteSprite 对象；note.noteData、note.noteType 这类字段和 Psych 的 Note 不一样，可能要改。")
         }
         return GeneratedScript(className, moduleId, adaptReflect(text), issues.sortedBy { it.line }, callbacks.keys.toList(), emptySet())
     }
@@ -463,7 +463,7 @@ class PsychHScriptWrapper(
                 t.text in fields -> sb.append(memberPrefix).append(t.text)
                 t.text in bareVariables && !(tokens.getOrNull(n1)?.let { it.kind == Kind.PUNCT && it.text == ":" } == true) -> sb.append(bareVariables.getValue(t.text))
                 t.text in psychClasses -> {
-                    issue(t.line, "Psych class '${t.text}' does not exist in V-Slice.")
+                    issue(t.line, "Psych 类 '${t.text}' does not exist in V-Slice.")
                     sb.append(t.text)
                 }
                 else -> sb.append(t.text)

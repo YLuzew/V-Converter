@@ -11,7 +11,7 @@ import platform.posix.fread
 import platform.posix.fseeko
 
 class FileSource(private val file: File) : RandomSource {
-    private val handle: CPointer<FILE> = fopen(file.path, "rb") ?: throw IOException("Could not open ${file.name}.")
+    private val handle: CPointer<FILE> = fopen(file.path, "rb") ?: throw IOException("打开失败：${file.name}.")
 
     override val size: Long = file.length()
 

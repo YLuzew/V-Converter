@@ -43,12 +43,12 @@ class CodenameScriptPlanner(modTitle: String = "") {
         val planned = when (target.scope) {
             CodenameScope.GLOBAL -> module(ScriptConverter.keepName(stem), null)
             CodenameScope.SONG -> when {
-                ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "the base game already has a Song script for \"$key\".")
+                ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "本体的歌曲脚本已经覆盖了「$key\".")
                 !claimed.add("song:$key") -> module(ScriptConverter.pascal(key) + extra + "Module", "song \"$key\" already has a Song script; V-Slice allows one per song.")
                 else -> typed(ScriptBase.SONG, key)
             }
             CodenameScope.STAGE -> when {
-                ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "the base game already has a Stage script for \"$key\".")
+                ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "本体的背景脚本已经覆盖了「$key\".")
                 !claimed.add("stage:$key") -> module(ScriptConverter.pascal(key) + extra + "Module", "stage \"$key\" already has a Stage script; V-Slice allows one per stage.")
                 else -> typed(ScriptBase.STAGE, key)
             }
@@ -56,7 +56,7 @@ class CodenameScriptPlanner(modTitle: String = "") {
                 val kind = CodenameToVSliceChart.noteKindFor(key)
                 when {
                     ScriptBases.isBaseGameId(ScriptBase.NOTE_KIND, kind) -> module(ScriptConverter.pascal(key) + "NoteTypeModule", "\"$kind\" is a base game note kind.")
-                    !fitsNoteKind(text) -> module(ScriptConverter.pascal(key) + "NoteTypeModule", "it uses callbacks a NoteKind never receives (only update, note and create/destroy events reach it).")
+                    !fitsNoteKind(text) -> module(ScriptConverter.pascal(key) + "NoteTypeModule", "它用了 NoteKind 收不到的回调（只有 update、note 和 create/destroy 事件能到它那里）。")
                     !claimed.add("notekind:$kind") -> module(ScriptConverter.pascal(key) + extra + "NoteTypeModule", "note kind \"$kind\" already has a NoteKind script.")
                     else -> typed(ScriptBase.NOTE_KIND, kind, key)
                 }

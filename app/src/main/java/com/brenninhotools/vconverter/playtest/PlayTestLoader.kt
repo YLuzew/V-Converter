@@ -94,7 +94,7 @@ object PlayTestLoader {
 
     fun open(raw: List<Pair<String, ByteArray>>): PlayTestMod {
         val all = clean(raw)
-        require(all.isNotEmpty()) { "Nothing to test: pick a mod folder, a .zip or chart files." }
+        require(all.isNotEmpty()) { "没有可测的：选一个模组文件夹、.zip 或谱子文件。" }
         val vsliceRoot = all.keys.firstNotNullOfOrNull { p -> metadataName.find(p)?.let { p.substring(0, it.range.first + it.groupValues[1].length) } }
         if (vsliceRoot != null) {
             val files = all.filterKeys { it.startsWith(vsliceRoot) }.mapKeys { it.key.removePrefix(vsliceRoot) }
@@ -109,7 +109,7 @@ object PlayTestLoader {
                 writer.files to result.report
             }.getOrNull()
             if (converted != null && songsOf(converted.first).isNotEmpty()) {
-                return PlayTestMod("Codename Engine, converted to V-Slice", converted.first, songsOf(converted.first), converted.second)
+                return PlayTestMod("Codename Engine，已转成 V-Slice", converted.first, songsOf(converted.first), converted.second)
             }
         }
         val psych = runCatching {
@@ -122,7 +122,7 @@ object PlayTestLoader {
             }
         }.getOrNull()
         if (psych != null && songsOf(psych.first).isNotEmpty()) {
-            return PlayTestMod("Psych Engine, converted to V-Slice", psych.first, songsOf(psych.first), psych.second)
+            return PlayTestMod("Psych Engine，已转成 V-Slice", psych.first, songsOf(psych.first), psych.second)
         }
         val loaded = SongLoader.load(all.entries.map { it.key to it.value })
         val song = PlayTestSong(loaded.document, loaded.audio, emptyMap(), emptyMap(), null, loaded.document.meta.stage, PlayTestChecks.chart(loaded.document, loaded.audio))
@@ -153,8 +153,8 @@ object PlayTestLoader {
     fun song(mod: PlayTestMod, ref: PlayTestSongRef): PlayTestSong {
         mod.loose?.let { return it }
         val suffix = if (ref.variation.isEmpty()) "" else "-${ref.variation}"
-        val meta = mod.find("data/songs/${ref.id}/${ref.id}-metadata$suffix.json") ?: throw IllegalArgumentException("No metadata for ${ref.label}.")
-        val chart = mod.find("data/songs/${ref.id}/${ref.id}-chart$suffix.json") ?: throw IllegalArgumentException("No chart file for ${ref.label} (data/songs/${ref.id}/${ref.id}-chart$suffix.json).")
+        val meta = mod.find("data/songs/${ref.id}/${ref.id}-metadata$suffix.json") ?: throw IllegalArgumentException("没有元数据：${ref.label}.")
+        val chart = mod.find("data/songs/${ref.id}/${ref.id}-chart$suffix.json") ?: throw IllegalArgumentException("没有谱子文件：${ref.label} (data/songs/${ref.id}/${ref.id}-chart$suffix.json).")
         val audio = mod.under("songs/${ref.id}").filter { it.first.substringAfterLast('.').lowercase() in setOf("ogg", "mp3", "wav") }
         val loaded = SongLoader.load(listOf(meta, chart) + audio)
         val document = loaded.document

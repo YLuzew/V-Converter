@@ -119,7 +119,7 @@ object VSliceToPsychChart {
         if (difficulties.any { it !in listOf("easy", "normal", "hard") }) {
             report.warn("Psych 默认只列 Easy/Normal/Hard。把多出来的难度加进周目的 \"difficulties\" 字段（周目转换器会自动做这一步）。")
         }
-        if (lostFocus > 0) report.warn("$lost对准摄像机 focus changes happen in the middle of a section; Psych moves the camera once per section, so they snap to the section they fall in.")
+        if (lostFocus > 0) report.warn("$lostFocus focus changes happen in the middle of a section; Psych moves the camera once per section, so they snap to the section they fall in.")
         if (skipped.isNotEmpty()) report.section("Psych 里没有对应物的事件（保留 V-Slice 原名，供脚本使用）", skipped.map { (k, v) -> "$k ×$v" })
         if (mainMeta.offsetInstrumental != 0.0) report.section("音频偏移", listOf("V-Slice 的伴奏偏移（${mainMeta.offsetInstrumental.toJsonNumber()} ms) became the Psych chart offset."))
         if (mainMeta.noteStyle.equals("pixel", ignoreCase = true)) report.warn("像素音符样式：谱子用的是 Psych 的 pixelUI 皮肤；确认背景是像素背景（isPixelStage）。")

@@ -98,7 +98,7 @@ object PsychToVSliceLevel {
             )
         )
         report.section(
-            "自由游玩图标s & colors (V-Slice shows the opponent's images/freeplay/icons/<character>pixel.png and has no per-song color)",
+            "自由游玩图标 & colors (V-Slice shows the opponent's images/freeplay/icons/<character>pixel.png and has no per-song color)",
             week.songs.map { song ->
                 fmt("%s → icon %s, #%02X%02X%02X", SongPath.format(song.name), song.icon.ifBlank { "face" }, song.color[0], song.color[1], song.color[2])
             }

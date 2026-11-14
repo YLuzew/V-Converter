@@ -198,7 +198,7 @@ object Workspace {
         Engine.CODENAME -> when (tab) {
             Tab.MOD -> "Pick the mod folder inside Codename's mods directory, or a .zip / .rar / .7z with the mod."
             Tab.CHARTS -> "songs/<song>/charts/*.json with meta.json and events.json."
-            Tab.CHARACTERS -> "data/characters/*.xml with their spritesheet .xml (or Animation.json + spritemap*.json for Animate 图集es)."
+            Tab.CHARACTERS -> "data/characters/*.xml with their spritesheet .xml (or Animation.json + spritemap*.json for Animate 图集)."
             Tab.STAGES -> "data/stages/*.xml (and the stage images for exact positions)."
             Tab.WEEKS -> "data/weeks/weeks/*.xml and data/weeks/characters/*.xml."
             Tab.SCRIPTS -> ".hx scripts, plus stage XMLs and data/events/*.json for context."
@@ -206,7 +206,7 @@ object Workspace {
         Engine.VSLICE -> when (tab) {
             Tab.MOD -> "Pick the mod folder inside V-Slice's mods directory, or a .zip / .rar / .7z with the mod."
             Tab.CHARTS -> "<song>-metadata.json and <song>-chart.json (and variations)."
-            Tab.CHARACTERS -> "data/characters/*.json with their spritesheet .xml (or Animation.json + spritemap*.json for Animate 图集es)."
+            Tab.CHARACTERS -> "data/characters/*.json with their spritesheet .xml (or Animation.json + spritemap*.json for Animate 图集)."
             Tab.STAGES -> "data/stages/*.json."
             Tab.WEEKS -> "data/levels/*.json plus the songs' -metadata.json files."
             Tab.SCRIPTS -> ".hxc scripts."

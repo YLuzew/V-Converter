@@ -144,7 +144,7 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
             converted.report.sections.forEach { report.section("$id · ${it.title}", it.lines) }
             converted.report.warnings.forEach { report.warn("$id: $it") }
             val missing = character.atlasImages.ifEmpty { listOf(character.image) }.filter { PsychToVSliceCharacter.atlasKey(it) !in atlases && PsychToVSliceCharacter.atlasKey(it) !in animates }
-            if (missing.isNotEmpty()) report.warn("$id: add the spritesheet XML (${missing.joinToString()}), or Animation.json + spritemap for Animate 图集es, for exact offsets.")
+            if (missing.isNotEmpty()) report.warn("$id: add the spritesheet XML (${missing.joinToString()}), or Animation.json + spritemap for Animate 图集, for exact offsets.")
             out("data/characters/$id.json", converted.json)
         }
         return ConvertedOutput(outputs, report.build())

@@ -6,7 +6,7 @@
 
 **Convert Friday Night Funkin' mods between Psych Engine, V-Slice, Codename Engine and NightmareVision, and into FPS Plus.**
 
-[![Build](https://github.com/BrenninhoTools/V-Converter/actions/workflows/build.yml/badge.svg)](https://github.com/BrenninhoTools/V-Converter/actions/workflows/build.yml)
+[![Build](https://github.com/YLuzew/V-Converter/actions/workflows/build.yml/badge.svg)](https://github.com/YLuzew/V-Converter/actions/workflows/build.yml)
 ![Android](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white)
 ![Windows](https://img.shields.io/badge/Windows-0078D4?logo=windows&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black)
@@ -17,6 +17,11 @@
 ![Vibe coded](https://img.shields.io/badge/vibe%20coded-%E2%9C%A8-ff69b4)
 
 </div>
+
+> [!IMPORTANT]
+> **简体中文汉化版。** 本仓库是 [BrenninhoTools/V-Converter](https://github.com/BrenninhoTools/V-Converter) 的汉化分支，由 [YLuzew](https://github.com/YLuzew) 维护。
+> 汉化只改字符串字面量（界面文案），转换逻辑、生成器、文件格式一行未动 —— 用它转出来的模组和原版完全一样。
+> 覆盖 Android / Windows / Linux / macOS / iOS 共用的那套 Compose 界面。漏翻、翻错的，提到[本仓库的 issue](https://github.com/YLuzew/V-Converter/issues)。
 
 > [!NOTE]
 > **This app was vibe coded.** V-Converter was built through vibe coding: the code was written with an AI assistant (Claude) from prompts, then tested and checked against the engines' source code. Conversions are validated, but expect rough edges, and please [open an issue](https://github.com/BrenninhoTools/V-Converter/issues) if something breaks.
@@ -30,13 +35,13 @@ A remake of the V-Slice converter as a native app written in Kotlin, for **Andro
 - [Generator](#generator) · [Chart Editor](#chart-editor) · [Character Editor](#character-editor) · [Stage Editor](#stage-editor) · [Week Editor](#week-editor)
 - [Psych → V-Slice](#psych--v-slice) · [V-Slice → Psych](#v-slice--psych) · [Codename → V-Slice](#codename--v-slice) · [Codename → Psych](#codename--psych) · [Psych → Codename](#psych--codename) · [NightmareVision](#nightmarevision) · [FPS Plus](#fps-plus)
 - [Multieditor](#multieditor) · [PlayTest](#playtest) · [Online server](#online-server)
-- [Building](#building)
+- [汉化说明](#汉化说明) · [Building](#building)
 
 ## Download
 
-Get the latest version from [Releases](https://github.com/BrenninhoTools/V-Converter/releases): `V Converter-Android.apk` for Android and `V Converter-Windows.exe` (installer) for Windows. Each release's changelog lives in [`docs/releases`](docs/releases). Releases are published by the [Release workflow](https://github.com/BrenninhoTools/V-Converter/actions/workflows/release.yml), started by hand with the version to publish.
+Get the latest version from [Releases](https://github.com/YLuzew/V-Converter/releases): `V Converter-Android.apk` for Android and `V Converter-Windows.exe` (installer) for Windows. Each release's changelog lives in [`docs/releases`](docs/releases). Releases are published by the [Release workflow](https://github.com/BrenninhoTools/V-Converter/actions/workflows/release.yml), started by hand with the version to publish. This fork publishes its own builds as artifacts of the [Build workflow](https://github.com/YLuzew/V-Converter/actions/workflows/build.yml).
 
-Every push to `main` is also built by [GitHub Actions](https://github.com/BrenninhoTools/V-Converter/actions/workflows/build.yml). Open the latest successful run and grab one of its artifacts:
+Every push to `main` is also built by [GitHub Actions](https://github.com/YLuzew/V-Converter/actions/workflows/build.yml). Open the latest successful run and grab one of its artifacts:
 
 | Artifact | Platform | What it is |
 | --- | --- | --- |
@@ -440,6 +445,24 @@ or with Docker (`docker build -t v-converter-server server` and `docker run -p 3
 | `ROOM_ASSETS_PER_HOUR` / `MAX_ROOM_ASSET_MB` / `MAX_ROOM_ASSETS_MB` | `600` / `40` / `200` | Files shared in rooms |
 
 Admin calls: `POST /api/announcements` (`{"title", "body", "level": "info"|"warning"|"update", "url", "platforms": ["android"], "expiresAt"}`), `DELETE /api/announcements/:id`, `PATCH /api/mods/:id` (`{"hidden": true}`), `DELETE /api/mods/:id`, `GET /api/reports` and `DELETE /api/reports/:id`. `npm test` runs the server's tests, and the [Server workflow](https://github.com/BrenninhoTools/V-Converter/actions/workflows/server.yml) runs them on every change to `server/`.
+
+## 汉化说明
+
+汉化按一条规矩做：**只动引号里的字**。脚本把 Kotlin 源码里每个双引号字符串取出来，查表命中就换成中文，写回去时重新转义 `\n`、`\"`、`$`。标识符、包名、JSON 键、事件 id、音符类型 id、Psych 默认动画名一律不碰 —— 这些会写进转换后的文件，翻了转换器自己的映射就断。
+
+翻完跑三遍检查：① 剥掉字符串后代码区不许出现中文（防止把变量名一起换了）；② 每个文件的未转义双引号数要和原版一致；③ 含中文的行引号数必须是偶数（否则字符串跨行，Kotlin 编译不过）。
+
+界面上刻意保留英文的：引擎名（Psych Engine / V-Slice / Codename Engine）、难度名（Easy / Normal / Hard）、事件 id、音符类型 id、动画名（`singLEFT` 之类）、Kotlin 与 Compose 的库异常。
+
+### 自己编译
+
+和上游一样，见 [Building](#building)。Android：
+
+```
+./gradlew assembleDebug assembleRelease
+```
+
+不想本地配环境就用 Actions：**Actions → Build → Run workflow**，跑完在那次运行页面最下面下 `V Converter-Android` 这个 artifact。
 
 ## Building
 

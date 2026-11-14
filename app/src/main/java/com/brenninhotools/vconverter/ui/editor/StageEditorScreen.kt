@@ -235,7 +235,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "导出 \${viewModel.target.label}",
+            buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

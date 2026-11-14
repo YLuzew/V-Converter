@@ -82,7 +82,7 @@ abstract class NmvModViewModel(application: Application) : BaseConverterViewMode
                 }
                 accept("${extracted.name} (${extracted.kind.label})", extracted.files, extracted)
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the archive.")
+                status = StatusMessage.Error(e.message ?: "打开失败：the archive.")
             } finally {
                 _progress.value = null
             }
@@ -106,7 +106,7 @@ abstract class NmvModViewModel(application: Application) : BaseConverterViewMode
         title = pack?.title?.takeIf { it.isNotBlank() } ?: scan.root.trimEnd('/').substringAfterLast('/').ifBlank { name.substringBeforeLast('.') }
         description = pack?.description ?: ""
         author = pack?.author ?: ""
-        status = StatusMessage.Info("Found a mod in $name.")
+        status = StatusMessage.Info("找到模组：$name.")
     }
 
     override val canDownload: Boolean get() = mod != null
@@ -140,7 +140,7 @@ abstract class NmvModViewModel(application: Application) : BaseConverterViewMode
                     runMod(writer, true, { _progress.value = it }) { w, p -> runConversion(loaded.files, loaded.scan, w, info, p) }
                 }
                 result = conversion.report
-                status = StatusMessage.Success("Done! Wrote ${conversion.filesWritten} files into ${DocumentIO.folderName(context, modFolder)}.")
+                status = StatusMessage.Success("完成！已写入 ${conversion.filesWritten} files into ${DocumentIO.folderName(context, modFolder)}.")
             } catch (e: Exception) {
                 status = failureMessage(e, "转换中断了。")
             } finally {

@@ -380,6 +380,6 @@ class VSliceModConverter(
             writer.copy("pack.png") { files.open(it) }
             written++
         }
-        onProgress(ModProgress(total, total, "完成"))
+        onProgress(ModProgress(total, total, "Done"))
     }
 }

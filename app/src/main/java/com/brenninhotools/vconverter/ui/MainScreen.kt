@@ -148,7 +148,7 @@ enum class PlayTab(
     override val title: String,
     override val description: String
 ) : AppTab {
-    PLAY("Play", R.drawable.ic_tab_chart, Funkin.Up, "PlayTest", "随便播一首模组的歌、转换结果或谱面编辑器里的谱子，带上它的背景和人物，看看哪里坏了。"),
+    PLAY("Play", R.drawable.ic_tab_chart, Funkin.Up, "PlayTest", "Play any song of a mod, a converter's result or the 谱面编辑器's chart, with its stage and characters, and see what is broken."),
     REPORT("Report", R.drawable.ic_warning, Funkin.Warning, "PlayTest report", "在加载的这首歌的谱子、人物、背景、音频和转换结果里发现的问题。")
 }
 
@@ -409,7 +409,7 @@ fun MainScreen() {
 
             override fun chart(document: com.brenninhotools.vconverter.editor.ChartDocument, audio: List<com.brenninhotools.vconverter.editor.EditorAudio>) {
                 genSong.pause()
-                playtest.state.useChart(document, audio, "Chart Editor · ${document.meta.songName.ifBlank { document.id }}")
+                playtest.state.useChart(document, audio, "谱面编辑器 · ${document.meta.songName.ifBlank { document.id }}")
                 section = Section.PLAYTEST
                 playTab = PlayTab.PLAY
             }

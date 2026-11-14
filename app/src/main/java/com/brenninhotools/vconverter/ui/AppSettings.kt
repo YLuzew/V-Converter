@@ -174,10 +174,10 @@ fun OptionsDialog(settings: AppSettings, onDismiss: () -> Unit) {
                 checked = settings.menuMusic,
                 onChange = settings::updateMenuMusic,
                 accent = Funkin.Down,
-                hint = "Plays freakyMenu while you work. It pauses while the Chart Editor plays a song."
+                hint = "干活时播 freakyMenu。谱面编辑器放歌时会暂停。"
             )
             if (settings.menuMusic) {
-                Text("Music volume: ${(settings.musicVolume * 100).roundToInt()}%", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
+                Text("音乐音量：${(settings.musicVolume * 100).roundToInt()}%", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
                 Slider(
                     value = settings.musicVolume,
                     onValueChange = settings::updateMusicVolume,

@@ -26,7 +26,7 @@ object PlayTestChecks {
         document.timing.forEach { t ->
             if (t.bpm <= 0.0 || t.bpm > 1000.0) issues += PlayIssue(IssueLevel.ERROR, area, "BPM ${t.bpm} at ${time(t.time)} is out of range.")
         }
-        if (document.timing.firstOrNull()?.time?.let { it > 0.0 } == true) issues += PlayIssue(IssueLevel.WARNING, area, "The first BPM change starts at ${time(document.timing.first().time)}, not at 0.")
+        if (document.timing.firstOrNull()?.time?.let { it > 0.0 } == true) issues += PlayIssue(IssueLevel.WARNING, area, "第一个 BPM 变化在 ${time(document.timing.first().time)}, not at 0.")
         document.difficulties.forEach { (name, chart) ->
             if (chart.notes.isEmpty()) {
                 issues += PlayIssue(IssueLevel.WARNING, area, "\"$name\" has no notes.")
@@ -59,9 +59,9 @@ object PlayTestChecks {
         }
         if (document.events.none { it.kind == "FocusCamera" }) issues += PlayIssue(IssueLevel.INFO, area, "没有 FocusCamera 事件：摄像机会一直对着对手。")
         val unknown = document.events.map { it.kind }.filter { it !in knownEvents }.distinct()
-        if (unknown.isNotEmpty()) issues += PlayIssue(IssueLevel.INFO, area, "Events that need a script to do something: ${unknown.joinToString()}.")
+        if (unknown.isNotEmpty()) issues += PlayIssue(IssueLevel.INFO, area, "需要有脚本才会生效的事件：${unknown.joinToString()}.")
         if (audio.isEmpty()) issues += PlayIssue(IssueLevel.WARNING, "Audio", "No audio found (songs/<id>/Inst.ogg): PlayTest runs on a silent clock.")
-        else if (audio.none { it.isInstrumental }) issues += PlayIssue(IssueLevel.WARNING, "Audio", "No Inst file among ${audio.joinToString { it.name }}.")
+        else if (audio.none { it.isInstrumental }) issues += PlayIssue(IssueLevel.WARNING, "Audio", "这里面没有 Inst 文件：${audio.joinToString { it.name }}.")
         return issues
     }
 
@@ -71,11 +71,11 @@ object PlayTestChecks {
 
     fun character(role: CharacterRole, id: String, loaded: LoadedCharacter?): List<PlayIssue> {
         val area = "${role.label} \"$id\""
-        if (loaded == null) return listOf(PlayIssue(IssueLevel.WARNING, area, "No data/characters/$id.json (or it can't be read); a placeholder is drawn."))
+        if (loaded == null) return listOf(PlayIssue(IssueLevel.WARNING, area, "没有 data/characters/$id.json (or it can't be read); a placeholder is drawn."))
         val issues = ArrayList<PlayIssue>()
         val doc = loaded.document
         val atlas = loaded.xml?.let { SpriteAtlas.parse(it) }?.takeIf { it.frames.isNotEmpty() }
-        if (loaded.image == null || atlas == null) issues += PlayIssue(IssueLevel.WARNING, area, "Spritesheet images/${doc.assetPath}.png/.xml not found; a placeholder is drawn.")
+        if (loaded.image == null || atlas == null) issues += PlayIssue(IssueLevel.WARNING, area, "图集 images/${doc.assetPath}.png/.xml not found; a placeholder is drawn.")
         val names = doc.animations.map { it.name }.toSet()
         val dances = "danceLeft" in names && "danceRight" in names
         if ("idle" !in names && !dances) issues += PlayIssue(IssueLevel.WARNING, area, "没有待机动画（或 danceLeft/danceRight）。")
@@ -88,14 +88,14 @@ object PlayTestChecks {
             if (misses.size == 4) issues += PlayIssue(IssueLevel.INFO, area, "没有失误动画；失误时保持演唱姿势。")
         }
         val broken = doc.animations.filter { missingFrames(atlas, it.prefix, it.indices) }.map { it.name }
-        if (broken.isNotEmpty()) issues += PlayIssue(IssueLevel.ERROR, area, "No frames in the spritesheet for ${broken.joinToString()}.")
+        if (broken.isNotEmpty()) issues += PlayIssue(IssueLevel.ERROR, area, "图集里没有这些帧：${broken.joinToString()}.")
         if (loaded.source != "V-Slice") issues += PlayIssue(IssueLevel.INFO, area, "Read as ${loaded.source}.")
         return issues
     }
 
     fun stage(id: String, loaded: LoadedStage?): List<PlayIssue> {
         val area = "Stage \"$id\""
-        if (loaded == null) return listOf(PlayIssue(IssueLevel.WARNING, area, "No data/stages/$id.json (or it can't be read); characters are placed at the default spots."))
+        if (loaded == null) return listOf(PlayIssue(IssueLevel.WARNING, area, "没有 data/stages/$id.json (or it can't be read); characters are placed at the default spots."))
         val issues = ArrayList<PlayIssue>()
         val props = loaded.document.props.filterNot { it.isSolid }
         val missing = props.filter { StageAssets.find(loaded.assets, it.assetPath) == null }.map { it.name }
@@ -103,7 +103,7 @@ object PlayTestChecks {
         val broken = props.filter { p ->
             p.prefix.isNotEmpty() && missingFrames(StageAssets.find(loaded.assets, p.assetPath)?.xml?.let { SpriteAtlas.parse(it) }, p.prefix, emptyList())
         }.map { it.name }
-        if (broken.isNotEmpty()) issues += PlayIssue(IssueLevel.ERROR, area, "No frames for the animation of ${broken.joinToString()}.")
+        if (broken.isNotEmpty()) issues += PlayIssue(IssueLevel.ERROR, area, "没有这些动画的帧：${broken.joinToString()}.")
         return issues
     }
 

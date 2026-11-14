@@ -253,7 +253,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "导出 \${viewModel.target.label}",
+            buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

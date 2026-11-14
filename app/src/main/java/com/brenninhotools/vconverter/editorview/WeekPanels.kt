@@ -93,7 +93,7 @@ fun WeekInfoPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
             WeekCheck("解锁前隐藏", doc.hiddenUntilUnlocked) { v -> state.edit { it.copy(hiddenUntilUnlocked = v) } }
         }
         Text(
-            if (doc.isLocked) "Locked until \"${doc.weekBefore}\" is beaten. V-Slice gets a level script for it (scripts/levels/), Psych keeps it in the week file; Codename has no week locking."
+            if (doc.isLocked) "锁定直到「${doc.weekBefore}\" is beaten. V-Slice gets a level script for it (scripts/levels/), Psych keeps it in the week file; Codename has no week locking."
             else "关掉「初始解锁」再填一个周目名，就能把这个周目锁到那个周目通关为止。",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -128,7 +128,7 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
         }
         if (doc.songs.isEmpty()) Text("还没有歌曲：把这一周的歌曲按播放顺序加到下面。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextValueField("歌曲名", draft, Modifier.weight(1f)) { draft = it }
+            TextValueField("Song name", draft, Modifier.weight(1f)) { draft = it }
             EditorChip("Add song", false) {
                 state.addSong(draft)
                 draft = ""
@@ -212,7 +212,7 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
         if (state.imageFor(prop.assetPath) == null) {
             Text(
                 if (prop.isBase) "基础游戏的精灵没有打包进来，所以显示成方块；它不会被导出（游戏里本来就有）。"
-                else "No image loaded for images/${prop.assetPath}.png yet: use \"Load image…\" with the .png and its .xml.",
+                else "还没有为 images/${prop.assetPath}.png yet: use \"Load image…\" with the .png and its .xml.",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

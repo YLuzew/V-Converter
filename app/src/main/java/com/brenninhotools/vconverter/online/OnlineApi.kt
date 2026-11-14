@@ -58,7 +58,7 @@ class OnlineApi(baseUrl: String, private val timeoutMs: Int = 20_000) {
     private fun failure(response: HttpResponse): Nothing {
         val body = response.body.decodeToString()
         val message = runCatching { JSONObject(body).optString("error") }.getOrNull()?.takeIf { it.isNotBlank() }
-            ?: "The server answered ${response.status}."
+            ?: "服务器返回 ${response.status}."
         throw OnlineException(message, response.status)
     }
 
@@ -198,7 +198,7 @@ class OnlineApi(baseUrl: String, private val timeoutMs: Int = 20_000) {
         "/api/rooms/${encode(code.trim().uppercase())}/assets/" + name.split('/').joinToString("/") { encode(it).replace("+", "%20") }
 
     fun uploadRoomAsset(code: String, name: String, bytes: ByteArray) {
-        send(assetPath(code, name), "PUT", bytes, mapOf("Content-Type" to "application/octet-stream"), "Could not share ${name.substringAfterLast('/')}")
+        send(assetPath(code, name), "PUT", bytes, mapOf("Content-Type" to "application/octet-stream"), "分享失败：${name.substringAfterLast('/')}")
     }
 
     fun downloadRoomAsset(code: String, name: String): ByteArray =

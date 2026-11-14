@@ -153,8 +153,8 @@ object PlayTestLoader {
     fun song(mod: PlayTestMod, ref: PlayTestSongRef): PlayTestSong {
         mod.loose?.let { return it }
         val suffix = if (ref.variation.isEmpty()) "" else "-${ref.variation}"
-        val meta = mod.find("data/songs/${ref.id}/${ref.id}-metadata$suffix.json") ?: throw IllegalArgumentException("No metadata for ${ref.label}.")
-        val chart = mod.find("data/songs/${ref.id}/${ref.id}-chart$suffix.json") ?: throw IllegalArgumentException("No chart file for ${ref.label} (data/songs/${ref.id}/${ref.id}-chart$suffix.json).")
+        val meta = mod.find("data/songs/${ref.id}/${ref.id}-metadata$suffix.json") ?: throw IllegalArgumentException("没有元数据：${ref.label}.")
+        val chart = mod.find("data/songs/${ref.id}/${ref.id}-chart$suffix.json") ?: throw IllegalArgumentException("没有谱子文件：${ref.label} (data/songs/${ref.id}/${ref.id}-chart$suffix.json).")
         val audio = mod.under("songs/${ref.id}").filter { it.first.substringAfterLast('.').lowercase() in setOf("ogg", "mp3", "wav") }
         val loaded = SongLoader.load(listOf(meta, chart) + audio)
         val document = loaded.document

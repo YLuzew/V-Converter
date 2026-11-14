@@ -19,15 +19,15 @@ enum class EditorTool(val title: String, val accent: androidx.compose.ui.graphic
     ),
     STAGE(
         "背景编辑器", Palette.Up,
-        "Open a stage or start from your images. Click a prop or a character to select it and drag it to move it; dragging elsewhere moves the view and the wheel zooms. The arrow keys nudge the selection (Shift for 10), Delete removes a prop, Ctrl+D duplicates, Ctrl+Z / Ctrl+Y undo and redo."
+        "打开背景 or start from your images. Click a prop or a character to select it and drag it to move it; dragging elsewhere moves the view and the wheel zooms. The arrow keys nudge the selection (Shift for 10), Delete removes a prop, Ctrl+D duplicates, Ctrl+Z / Ctrl+Y undo and redo."
     ),
     CHARACTER(
         "人物编辑器", Palette.Left,
-        "Open a character or a spritesheet, then drag the sprite to fix the offsets of each animation. Space plays, the arrow keys move the offset (Shift for 10), W / S pick the animation, Ctrl+Z / Ctrl+Y undo and redo, the mouse wheel zooms."
+        "打开人物 or a spritesheet, then drag the sprite to fix the offsets of each animation. Space plays, the arrow keys move the offset (Shift for 10), W / S pick the animation, Ctrl+Z / Ctrl+Y undo and redo, the mouse wheel zooms."
     ),
     PLAYTEST(
         "PlayTest", Palette.Up,
-        "Play any song of a mod, a converter's result or the Chart Editor's chart with its stage and characters, with botplay, and get a report of what is broken."
+        "Play any song of a mod, a converter's result or the 谱面编辑器's chart with its stage and characters, with botplay, and get a report of what is broken."
     ),
     ONLINE(
         "Online", Palette.Pink,
@@ -58,7 +58,7 @@ class AppState(private val scope: CoroutineScope) {
 
     fun playTestChart(document: com.brenninhotools.vconverter.editor.ChartDocument, audio: List<com.brenninhotools.vconverter.editor.EditorAudio>) {
         if (editor.editor.playing) editor.editor.togglePlay()
-        playtest.state.useChart(document, audio, "Chart Editor · ${document.meta.songName.ifBlank { document.id }}")
+        playtest.state.useChart(document, audio, "谱面编辑器 · ${document.meta.songName.ifBlank { document.id }}")
         tool = EditorTool.PLAYTEST
     }
 
@@ -104,7 +104,7 @@ class AppState(private val scope: CoroutineScope) {
                 val loaded = withContext(Dispatchers.IO) { LoadedMod.open(source, state.direction) { state.progress = it } }
                 state.accept(loaded, source)
             } catch (e: Exception) {
-                state.status = Status.Error(e.message ?: "Could not open ${source.name}.")
+                state.status = Status.Error(e.message ?: "打开失败：${source.name}.")
             } finally {
                 state.progress = null
                 state.busy = false
@@ -138,7 +138,7 @@ class AppState(private val scope: CoroutineScope) {
                     converted ?: throw IllegalStateException("The conversion did not run.")
                 }
                 state.report = result.report
-                state.status = Status.Success("Done! Wrote ${result.filesWritten} files to ${target.absolutePath}")
+                state.status = Status.Success("完成！已写入 ${result.filesWritten} files to ${target.absolutePath}")
                 lastOutput = target
             } catch (e: Exception) {
                 if (zip) target.delete()

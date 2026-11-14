@@ -85,7 +85,7 @@ object CodenameStageParser {
                 else -> nodes += node
             }
         }
-        if (lowMemory > 0) notes += "$lowMemory low-memory-only node(s) were left out (V-Slice always loads the full stage)."
+        if (lowMemory > 0) notes += "$lowMemory low-memory-only node(s) were left out (V-Slice 总是加载整个背景)."
         val beats = mutableListOf<CodenameBeatSprite>()
         val properties = mutableListOf<CodenameProperty>()
         val blends = LinkedHashMap<String, String>()
@@ -144,12 +144,12 @@ object CodenameStageParser {
                 }
                 "ratings", "combo" -> {
                     ratings = node.double("x") to node.double("y")
-                    notes += "The ratings position (x ${node.attr("x") ?: "default"}, y ${node.attr("y") ?: "default"}) is not part of V-Slice stages."
+                    notes += "判定位置（x ${node.attr("x") ?: "default"}, y ${node.attr("y") ?: "default"}) is not part of V-Slice stages."
                 }
                 "use-extension", "extension", "ext" -> node.attr("script")?.let { extensions += (node.attr("folder") ?: "data/scripts/").let { f -> if (f.endsWith("/")) f else "$f/" } + it }
             }
         }
-        if (extraCharacters.isNotEmpty()) warnings += "Extra character slots (${extraCharacters.joinToString()}) have no V-Slice stage equivalent; spawn them from a script."
+        if (extraCharacters.isNotEmpty()) warnings += "额外的人物位（${extraCharacters.joinToString()}) have no V-Slice stage equivalent; spawn them from a script."
         listOf("bf", "gf", "dad").forEach { key -> if (!spots.containsKey(key)) spots[key] = defaults.getValue(key) }
 
         val ordered = mutableListOf<PsychStageObject>()
@@ -166,7 +166,7 @@ object CodenameStageParser {
         listOf("gfGroup", "dadGroup", "boyfriendGroup").forEach { type -> if (ordered.none { it.type == type }) ordered += marker(type) }
 
         if (root.has("startCamPosX") || root.has("startCamPosY")) {
-            notes += "Start camera position (${root.attr("startCamPosX") ?: "-"}, ${root.attr("startCamPosY") ?: "-"}) is not stored in V-Slice stages; the camera starts on the first focus event."
+            notes += "初始摄像机位置（${root.attr("startCamPosX") ?: "-"}, ${root.attr("startCamPosY") ?: "-"}) is not stored in V-Slice stages; the camera starts on the first focus event."
         }
         return CodenameStage(
             id = id,
@@ -346,7 +346,7 @@ object CodenameToVSliceStage {
         base.report.warnings.filterNot { it.contains("Psych hides") || it.contains("pixel stage") }.forEach(report::warn)
         stage.warnings.forEach(report::warn)
         val flips = stage.spots.values.filter { spot -> spot.flip != null && spot.flip != (spot.slot == "bf") }
-        if (flips.isNotEmpty()) report.warn("Flipped character slots (${flips.joinToString { it.slot }}) are not supported by V-Slice stages; flip the character JSON instead.")
+        if (flips.isNotEmpty()) report.warn("翻转的人物位（${flips.joinToString { it.slot }}) are not supported by V-Slice stages; flip the character JSON instead.")
         report.section("Notes", stage.notes + "人物位置按 V-Slice 的脚底锚点重算过；用 V-Converter 转换的人物会和它在 Codename 里的位置对齐。")
         return StageResult(stage.id, json.toString(2), report.build())
     }

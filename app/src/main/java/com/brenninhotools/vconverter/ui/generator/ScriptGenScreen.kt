@@ -83,7 +83,7 @@ fun ScriptGenScreen(viewModel: ScriptGenViewModel, modFolderName: String?, onSav
                     ChoiceChips(CharacterRender.entries, { it.label }, { it == viewModel.render }, { viewModel.render = it }, accent, !busy)
                 }
                 ScriptKind.EVENT -> {
-                    FunkinTextField(viewModel.title, { viewModel.title = it }, "谱面编辑器里显示的标题", accent, enabled = !busy)
+                    FunkinTextField(viewModel.title, { viewModel.title = it }, "Title in the 谱面编辑器", accent, enabled = !busy)
                     FunkinTextField(viewModel.fields, { viewModel.fields = it }, "参数值，例如 intensity:float、label、flash:bool", accent, enabled = !busy)
                 }
                 ScriptKind.NOTE_KIND -> FunkinTextField(viewModel.title, { viewModel.title = it }, "Description", accent, enabled = !busy)
@@ -110,7 +110,7 @@ fun ScriptGenScreen(viewModel: ScriptGenViewModel, modFolderName: String?, onSav
             onConvert = viewModel::generate,
             onSave = onSave,
             modFolderName = modFolderName,
-            title = "生成",
+            title = "Generate",
             buttonText = "生成脚本",
             buttonIcon = R.drawable.ic_magic
         )

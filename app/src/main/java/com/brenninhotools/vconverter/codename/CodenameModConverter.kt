@@ -70,7 +70,7 @@ class CodenameModConverter(
         if (scan.placeholders.isNotEmpty()) report.section("已移除空的占位文件夹", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
         if (scan.ignored.isNotEmpty()) report.section("其他文件已跳过", limited(scan.ignored.map(scan::relative)))
         if (scan.weekList != null) report.warn("V-Slice 不用 Codename 的 weeks.txt 顺序；关卡按自己的顺序排。")
-        if (scan.stateScripts.isNotEmpty()) report.warn("State scripts (data/states/) were skipped; V-Slice modules can hook states with onStateChangeEnd instead: ${scan.stateScripts.joinToString { scan.relative(it) }}.")
+        if (scan.stateScripts.isNotEmpty()) report.warn("状态脚本（data/states/）跳过了；V-Slice 的模块可以改用 onStateChangeEnd 挂钩状态：${scan.stateScripts.joinToString { scan.relative(it) }}.")
         return ModConversionResult(written, report.build())
     }
 
@@ -236,7 +236,7 @@ class CodenameModConverter(
                     .filterNot { id.endsWith("-dead") && it.startsWith("No \"idle\"") }
                     .filterNot { animate && it.startsWith("centercam") }
                     .forEach { report.warn("Character $id: $it") }
-                if (animate) report.warn("Character $id uses an Animate atlas (renderType \"animateatlas\"); its offsets are approximate, so check it in the V-Slice character editor.")
+                if (animate) report.warn("Character $id uses an Animate 图集 (renderType \"animateatlas\"); its offsets are approximate, so check it in the V-Slice character editor.")
                 else if (atlasMissing) report.warn("Character $id: spritesheet XML missing, so its position is approximate.")
                 result.report.sections.filter { it.title == "Game over" }.forEach { report.section("Character $id · game over", it.lines) }
             } catch (e: Exception) {
@@ -357,7 +357,7 @@ class CodenameModConverter(
             written++
         }
         val unhandled = keptEvents.keys.filter { name -> name !in CodenameEvents.implemented && name !in scan.eventScripts.keys }
-        if (unhandled.isNotEmpty()) report.warn("These events are kept in the charts but nothing handles them in V-Slice yet: ${unhandled.joinToString()}.")
+        if (unhandled.isNotEmpty()) report.warn("这些事件留在谱子里，但 V-Slice 里还没有东西处理它们：${unhandled.joinToString()}.")
         report.stat("Scripts", results.size)
     }
 
@@ -366,7 +366,7 @@ class CodenameModConverter(
             writer.copy(target) { files.open(source) }
             written++
         } catch (e: Exception) {
-            report.warn("Could not copy $target: ${e.message}")
+            report.warn("复制失败：$target: ${e.message}")
         }
     }
 
@@ -394,7 +394,7 @@ class CodenameModConverter(
         writer.writeText("_polymod_meta.json", meta.toString(2))
         written++
         done = total
-        onProgress(ModProgress(total, total, "完成"))
+        onProgress(ModProgress(total, total, "Done"))
     }
 
     private fun step(label: String) {

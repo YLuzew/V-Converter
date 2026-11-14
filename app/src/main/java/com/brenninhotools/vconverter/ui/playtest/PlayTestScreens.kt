@@ -144,7 +144,7 @@ fun PlayTestPlayScreen(viewModel: PlayTestViewModel) {
             SectionTitle("Open", accent, 1)
             DropZone(
                 title = "打开模组或歌曲",
-                hint = "选择模组 .zip（V-Slice、Psych 或 Codename）、模组里的若干文件，或者谱子文件连同音频。转换结果和谱面编辑器里也有试玩按钮。",
+                hint = "Pick a mod .zip (V-Slice, Psych or Codename), several files from a mod, or chart files with their audio. Converters' results and the 谱面编辑器 have a PlayTest button too.",
                 accent = accent,
                 icon = R.drawable.ic_tab_chart,
                 enabled = !viewModel.busy && !state.busy,

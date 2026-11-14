@@ -67,7 +67,7 @@ class CodenameToPsychMod(
         report.stat("Files", written)
         if (scan.placeholders.isNotEmpty()) report.section("已移除空的占位文件夹", scan.placeholders.map { (dir, file) -> "$dir/ (only ${file.substringAfterLast('/')})" })
         if (scan.ignored.isNotEmpty()) report.section("其他文件已跳过", limited(scan.ignored.map(scan::relative)))
-        if (scan.stateScripts.isNotEmpty()) report.warn("State scripts (data/states/) were skipped; Psych can only script PlayState: ${scan.stateScripts.joinToString { scan.relative(it) }}.")
+        if (scan.stateScripts.isNotEmpty()) report.warn("State 脚本（data/states/）跳过了；Psych 只能给 PlayState 写脚本：${scan.stateScripts.joinToString { scan.relative(it) }}.")
         if (compat) report.section("Codename 兼容", listOf("${CodenamePsychHelpers.COMPAT_SCRIPT} recreates Codename's camera bop settings (camZoomingInterval, camZoomingStrength, maxCamZoom, defaultHudZoom) for the converted scripts and events."))
         return ModConversionResult(written, report.build())
     }
@@ -171,7 +171,7 @@ class CodenameToPsychMod(
                     count(result.characters["opponent"] ?: "", CharacterSlot.OPPONENT)
                     count(result.characters["girlfriend"] ?: "", CharacterSlot.GIRLFRIEND)
                     result.report.warnings.forEach { report.warn("Song ${song.id}$suffix: $it") }
-                    result.report.sections.filter { it.title != "难度" }.forEach { report.section("Song ${song.id}$suffix · ${it.title}", it.lines) }
+                    result.report.sections.filter { it.title != "Difficulties" }.forEach { report.section("Song ${song.id}$suffix · ${it.title}", it.lines) }
                     val merged = meta.merge(main.meta)
                     val opponent = main.strumLines.firstOrNull { it.isOpponent }
                     val opponentChar = opponent?.characters?.firstOrNull()?.let { characters[it] }
@@ -224,7 +224,7 @@ class CodenameToPsychMod(
                     runCatching { AnimateAtlas.parse(files.readText(animation), spritemaps.map { files.readText(it) }) }.getOrNull()
                 }
                 val result = CodenameToPsychCharacter.convert(character, slot, atlasesFor(character.images), atlas)
-                if (id != sourceId) report.section("Character $sourceId", listOf("Renamed to \"$id\": Psych has the speaker shooting built into that character (it reads data/<song>/picospeaker.json), so the Codename character script was not needed."))
+                if (id != sourceId) report.section("Character $sourceId", listOf("Renamed to \"$id\": Psych has the speaker shooting built into 那个人物 (it reads data/<song>/picospeaker.json), so the Codename character script was not needed."))
                 result.files.forEach { write(it.path, it.text) }
                 result.report.warnings.filterNot { it.startsWith("没有提供图集 XML") && !character.animations.any { a -> a.x != 0.0 } }.forEach { report.warn("Character $id: $it") }
                 result.report.sections.filter { it.title == "Notes" }.forEach { report.section("Character $id", it.lines) }
@@ -308,7 +308,7 @@ class CodenameToPsychMod(
             val result = CodenameToPsychWeek.menuCharacter(character, name)
             result.files.forEach { write(it.path, it.text) }
             result.copies.forEach { copyRelative(it.from, it.to) }
-            result.report.warnings.forEach { report.warn("Week character $name: $it") }
+            result.report.warnings.forEach { report.warn("周目人物 $name: $it") }
         }
         val list = scan.weekList?.let { p -> runCatching { files.readText(p).lines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") } }.getOrNull() } ?: emptyList()
         val loose = scan.songs.filter { s -> s.folder.lowercase() !in inWeeks && s.id !in inWeeks }
@@ -317,7 +317,7 @@ class CodenameToPsychMod(
             val file = CodenameToPsychWeek.freeplayWeek("codename-freeplay", freeplay)
             write(file.path, file.text)
             order += "codename-freeplay"
-            report.section("Freeplay", listOf("Songs outside every week (${freeplay.joinToString { it.name }}) were put in weeks/codename-freeplay.json, hidden from story mode, so they show up in Psych's freeplay."))
+            report.section("Freeplay", listOf("不属于任何周目的歌曲（${freeplay.joinToString { it.name }}) were put in weeks/codename-freeplay.json, hidden from story mode, so they show up in Psych's freeplay."))
         }
         if (list.isNotEmpty() || freeplay.isNotEmpty()) {
             val names = (list.filter { it in order } + order.filter { it !in list }).distinct()
@@ -359,7 +359,7 @@ class CodenameToPsychMod(
             convertScript(path, "custom_notetypes/$psychName.hx", CodenameScriptTarget(CodenameScope.NOTE_TYPE, name), CodenamePsychScriptContext(eventParamCounts = eventCounts))
         }
         val unscripted = noteTypes.filter { it !in CodenameToPsychChart.builtinNoteTypes && it != CodenameToPsychChart.HIDDEN_GF && scan.noteScripts.keys.none { k -> CodenameToPsychChart.noteTypeFor(k) == it } }
-        if (unscripted.isNotEmpty()) report.warn("Note types without a script (${unscripted.joinToString()}) only keep their name in Psych.")
+        if (unscripted.isNotEmpty()) report.warn("没有脚本的音符类型（${unscripted.joinToString()}) only keep their name in Psych.")
     }
 
     private fun convertGlobalScripts(eventCounts: Map<String, Int>) {
@@ -380,7 +380,7 @@ class CodenameToPsychMod(
         val stageExtensions = HashSet<String>()
         writtenPaths.filter { it.startsWith("stages/extensions/") }.forEach { stageExtensions += it.substringAfterLast('/').substringBeforeLast('.') }
         val leftovers = used.filter { it.substringAfterLast('/') !in stageExtensions && !it.substringAfterLast('/').equals("pixel", true) }
-        if (leftovers.isNotEmpty()) report.warn("Library scripts only loaded with importScript (${leftovers.joinToString { "$it.hx" }}) were not converted.")
+        if (leftovers.isNotEmpty()) report.warn("只用 importScript 加载的库脚本（${leftovers.joinToString { "$it.hx" }}) were not converted.")
     }
 
     private fun write(path: String, text: String) {
@@ -388,7 +388,7 @@ class CodenameToPsychMod(
             writer.writeText(path, text)
             if (writtenPaths.add(path)) written++
         } catch (e: Exception) {
-            report.warn("Could not write $path: ${e.message}")
+            report.warn("写入失败：$path: ${e.message}")
         }
     }
 
@@ -397,7 +397,7 @@ class CodenameToPsychMod(
             writer.copy(target) { files.open(source) }
             if (writtenPaths.add(target)) written++
         } catch (e: Exception) {
-            report.warn("Could not copy $target: ${e.message}")
+            report.warn("复制失败：$target: ${e.message}")
         }
     }
 
@@ -420,7 +420,7 @@ class CodenameToPsychMod(
         val description = listOf(info.description, if (info.author.isNotBlank()) "By ${info.author}" else "").filter { it.isNotBlank() }.joinToString("\n")
         write("pack.json", PsychWriters.pack(info.title.ifBlank { "已转换模组" }, description))
         done = total
-        onProgress(ModProgress(total, total, "完成"))
+        onProgress(ModProgress(total, total, "Done"))
     }
 
     private fun step(label: String) {

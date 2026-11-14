@@ -76,7 +76,7 @@ object CodenameToVSliceChart {
             .map { PsychToVSliceChart.normalizeDifficulty(it.key) to it.value }
             .sortedWith(compareBy({ rank(it.first) }, { it.first }))
         ordered.groupBy { it.first }.forEach { (difficulty, group) ->
-            require(group.size == 1) { "The difficulty \"$difficulty\" is assigned to more than one chart." }
+            require(group.size == 1) { "难度「$difficulty\" is assigned to more than one chart." }
         }
         val mainEntry = ordered.firstOrNull { it.first == "normal" } ?: ordered.first()
         val main = mainEntry.second
@@ -210,7 +210,7 @@ object CodenameToVSliceChart {
             songVariations = options.songVariations,
             generatedBy = options.generatedBy
         )
-        if (meta.color.isNotBlank()) report.section("没有带过来", listOf("Freeplay color ${meta.color} and icon \"${meta.icon}\" (V-Slice reads the icon from the character)"))
+        if (meta.color.isNotBlank()) report.section("没有带过来", listOf("自由游玩颜色 ${meta.color} and icon \"${meta.icon}\" (V-Slice reads the icon from the character)"))
         return CodenameChartResult(
             metadata,
             VSliceChart(scrollSpeed, events, notes, options.generatedBy),

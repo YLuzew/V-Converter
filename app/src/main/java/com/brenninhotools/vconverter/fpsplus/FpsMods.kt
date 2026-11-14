@@ -185,7 +185,7 @@ class PsychToFpsWriter(private val target: ModWriter, private val info: ModInfo?
         val parts = convertScript(script)
         if (parts.isEmpty) {
             put("$folder/unconverted/${script.path.substringAfterLast('/')}", script.text)
-            report.warn("${script.path} could not be converted (${parts.issues.firstOrNull()?.message ?: "nothing to run"}); it was kept in $folder/unconverted.")
+            report.warn("${script.path} 没有转换 (${parts.issues.firstOrNull()?.message ?: "nothing to run"}); it was kept in $folder/unconverted.")
             return false
         }
         if (parts.handlesEvents) eventHandlers += className
@@ -353,7 +353,7 @@ class PsychToFpsWriter(private val target: ModWriter, private val info: ModInfo?
             val png = menuImages["$image.png"]
             val xml = menuImages["$image.xml"]
             if (png == null || xml == null) {
-                report.warn("Menu character $id: images/menucharacters/$image.png and .xml are needed for FPS Plus's story menu.")
+                report.warn("菜单人物 $id: images/menucharacters/$image.png and .xml are needed for FPS Plus's story menu.")
                 return@forEach
             }
             putBytes("images/menu/story/characters/$id.png", png)

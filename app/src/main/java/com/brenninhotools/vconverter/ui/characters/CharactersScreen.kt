@@ -90,7 +90,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                         }
                         if (missing.isNotEmpty()) {
                             Text(
-                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate atlas)",
+                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate 图集)",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Funkin.Warning
                             )

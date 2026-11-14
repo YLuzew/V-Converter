@@ -201,6 +201,6 @@ object CodenameChartParser {
     private fun json(raw: String): JSONObject = try {
         JSONObject(raw.trim().removePrefix("﻿"))
     } catch (e: JSONException) {
-        throw CodenameChartException("The file is not valid JSON: ${e.message}", e)
+        throw CodenameChartException("该文件不是有效的 JSON：${e.message}", e)
     }
 }

@@ -128,7 +128,7 @@ class WebSocketClient(private val url: String, private val listener: WebSocketLi
                 when (status) {
                     404 -> "这个房间不存在（或者已经过期）。"
                     409 -> "房间满了。"
-                    else -> "The server refused the live session ($status)."
+                    else -> "服务器拒绝了这次连接（$status)."
                 },
                 status
             )

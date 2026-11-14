@@ -154,7 +154,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
             } catch (e: Exception) {
                 post {
                     connecting = false
-                    status = e.message ?: "Could not create the room."
+                    status = e.message ?: "创建不了 the room."
                 }
             }
         }

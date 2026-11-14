@@ -184,10 +184,10 @@ object VSliceToPsychCharacter {
             exact = basis.exact && placed.missing.isEmpty()
             mainJson = psychJson(id, character, slot, imagePath(mainPath), placed)
             report.stat("Render", "Animate 图集")
-            if (placed.missing.isNotEmpty()) report.warn("These animations match no symbol or frame label in Animation.json: ${placed.missing.joinToString()}.")
+            if (placed.missing.isNotEmpty()) report.warn("这些动画在 Animation.json 里既没有对应符号也没有对应帧标签：${placed.missing.joinToString()}.")
             if (!basis.exact) report.warn("Animation.json 旁边没有 spritemap JSON，所以位置是近似的。")
             notes += "Frame label animations became indices of the main symbol (Psych only plays symbols); symbol names end with \"\\\" where Psych's prefix match would pick the wrong symbol."
-            notes += "Psych loads the atlas from images/${imagePath(mainPath)}/ (Animation.json + spritemap)."
+            notes += "Psych 从 images/ 加载图集${imagePath(mainPath)}/（Animation.json + spritemap）。"
             if (split) {
                 val deathPath = pathOf(death.first())
                 val deathAtlas = allAnimates[atlasKey(deathPath)]
@@ -195,12 +195,12 @@ object VSliceToPsychCharacter {
                 if (deathAtlas != null) {
                     val deadPlaced = placeAtlas(deadCharacter, slot, deadCharacter.animations, deathAtlas, basis)
                     dead = "characters/$id-dead.json" to psychJson("$id-dead", deadCharacter, slot, imagePath(deathPath), deadPlaced).toString(2)
-                    if (deadPlaced.missing.isNotEmpty()) report.warn("Game over animations with no matching symbol: ${deadPlaced.missing.joinToString()}.")
+                    if (deadPlaced.missing.isNotEmpty()) report.warn("没有对应符号的死亡动画：${deadPlaced.missing.joinToString()}.")
                 } else {
                     val deadPlaced = placeSparrow(deadCharacter, slot, deadCharacter.animations, atlases[atlasKey(deathPath)]?.firstFrame?.sourceWidth ?: basis.w0, atlases[atlasKey(deathPath)]?.firstFrame?.sourceHeight ?: basis.h0,
                         Basis(basis.w0, basis.h0, basis.w0, basis.h0, basis.idleX, basis.idleY, false))
                     dead = "characters/$id-dead.json" to psychJson("$id-dead", deadCharacter, slot, imagePath(deathPath), deadPlaced).toString(2)
-                    report.warn("Add the game over atlas (${imagePath(deathPath)}) for an exact game over position.")
+                    report.warn("把死亡动画的图集加上（${imagePath(deathPath)}) for an exact game over position.")
                 }
             }
         } else {
@@ -210,9 +210,9 @@ object VSliceToPsychCharacter {
             mainJson = psychJson(id, character, slot, images.joinToString(","), placeSparrow(character, slot, kept, basis.fw0, basis.fh0, basis))
             report.stat("Render", if (images.size > 1) "Multi-Sparrow" else "Sparrow")
             if (!exact) report.warn("加上 spritesheet XML 才能得到精确的位置和摄像机；没有的话是近似值。")
-            if (isAtlasRender) report.warn("Render type \"${character.renderType}\": add Animation.json + spritemap for this texture atlas to convert its symbols exactly.")
-            else if (character.renderType !in setOf("sparrow", "multisparrow")) report.warn("Render type \"${character.renderType}\" is not a Sparrow sheet; check the animations in Psych's Character Editor.")
-            if (images.size > 1) notes += "Several spritesheets: Psych merges the images listed in \"image\" (${images.joinToString()})."
+            if (isAtlasRender) report.warn("渲染类型「${character.renderType}\": add Animation.json + spritemap for this texture atlas to convert its symbols exactly.")
+            else if (character.renderType !in setOf("sparrow", "multisparrow")) report.warn("渲染类型「${character.renderType}\" is not a Sparrow sheet; check the animations in Psych's 人物编辑器.")
+            if (images.size > 1) notes += "多张图集：Psych 会把 \"image\" 里列的图片合起来（${images.joinToString()})."
             if (split) {
                 val deathPath = pathOf(death.first())
                 val deadFirst = atlases[atlasKey(deathPath)]?.firstFrame
@@ -221,12 +221,12 @@ object VSliceToPsychCharacter {
                 dead = "characters/$id-dead.json" to psychJson("$id-dead", deadCharacter, slot, imagePath(deathPath), deadPlaced).toString(2)
                 if (deadFirst == null && exact) {
                     exact = false
-                    report.warn("Add the game over spritesheet XML (${imagePath(deathPath)}) for an exact game over position.")
+                    report.warn("把死亡动画的图集 XML 也加上（${imagePath(deathPath)}) for an exact game over position.")
                 }
             }
         }
         if (otherAtlas.isNotEmpty()) {
-            report.warn("Psych characters use one texture atlas, so these animations from other atlases were left out: ${otherAtlas.joinToString { "${it.name} (${imagePath(pathOf(it))})" }}.")
+            report.warn("Psych 人物只能用一张贴图集，所以这些来自其他图集的动画没有带过来：${otherAtlas.joinToString { "${it.name} (${imagePath(pathOf(it))})" }}.")
         }
         if (kept.any { it.flipX }) report.warn("单个动画的 flipX 在 Psych 里没有对应物。")
 
@@ -240,16 +240,16 @@ function onCreatePost()
     end
 end
 """.trimStart()
-            notes += "Game over: firstDeath, deathLoop and deathConfirm became the character \"$id-dead\" (characters/$id-dead.json), and characters/$id.lua makes Psych use it when $id is the player."
+            notes += "死亡动画：firstDeath、deathLoop 和 deathConfirm 变成了人物「$id-dead\" (characters/$id-dead.json），以及 characters/$id.lua makes Psych use it when $id is the player."
         }
 
         report.stat("Animations", kept.size + if (split) death.size else 0)
         report.stat("Slot", slot.label)
         report.stat("Accuracy", if (exact) "Exact" else "Approximate")
-        notes += "Health bar color set to the default ${slot.label.lowercase()} color; change it in Psych's Character Editor."
-        notes += "Positions were rebased for the ${slot.label.lowercase()} slot."
+        notes += "血条颜色设为默认的 ${slot.label.lowercase()} color; change it in Psych's 人物编辑器."
+        notes += "位置已重设基准：${slot.label.lowercase()} slot."
         val loops = kept.filter { it.name.endsWith("-hold") }.map { it.name }
-        if (loops.isNotEmpty()) notes += "V-Slice \"-hold\" animations became Psych's \"-loop\": ${loops.joinToString()}."
+        if (loops.isNotEmpty()) notes += "V-Slice 的 \"-hold\" 动画变成了 Psych 的 \"-loop\"：${loops.joinToString()}."
         report.section("Notes", notes)
         return ReverseResult("characters/$id.json", mainJson.toString(2), report.build(), extra)
     }
@@ -359,7 +359,7 @@ object VSliceToPsychStage {
                 } else if (prop.animType == "animateatlas") {
                     report.warn("\"$name\" is an Adobe Animate texture atlas; Psych stage objects cannot load those, so it needs a FlxAnimate sprite made in a script.")
                 } else if (prop.animType != "sparrow") {
-                    report.warn("\"$name\" uses ${prop.animType} frames; check it in Psych's Stage Editor.")
+                    report.warn("\"$name\" uses ${prop.animType} frames; check it in Psych's 背景编辑器.")
                 }
                 if (scaled && !packer) {
                     fixedOffsets++
@@ -456,9 +456,9 @@ object VSliceToPsychStage {
         }
         report.stat("Objects", stage.props.size)
         report.stat("Zoom", stage.cameraZoom.toJsonNumber().toString())
-        if (stage.directory.isNotBlank() && stage.directory != "shared") notes += "V-Slice asset library \"${stage.directory}\": Psych reads the images from the mod's images folder, so copy them there if they came from that library."
+        if (stage.directory.isNotBlank() && stage.directory != "shared") notes += "V-Slice 资源库「${stage.directory}\": Psych reads the images from the mod's images folder, so copy them there if they came from that library."
         if (hideGf) notes += "女友在这个背景上是隐形的，所以 hide_girlfriend 打开了。"
-        notes += "物件、图层顺序、滚动、缩放、透明度、角度、颜色、翻转和动画都带过来了；进一步微调去 Psych 的背景编辑器。"
+        notes += "Props, layer order, scroll, scale, alpha, angle, color, flip and animations were carried over; tweak it further in Psych's 背景编辑器."
         report.section("Notes", notes)
         return ReverseResult("stages/$id.json", root.toString(2), report.build(), extra)
     }
@@ -530,7 +530,7 @@ object VSliceToPsychLevel {
             val info = songs[songId]
             songArray.put(JSONArray().put(info?.name ?: songId).put(info?.icon ?: "face").put(JSONArray(listOf(146, 113, 253))))
             info?.difficulties?.let { allDiffs += it }
-            if (info == null) report.warn("No metadata for \"$songId\"; its freeplay icon is \"face\". Add the song's metadata file for its name and icon.")
+            if (info == null) report.warn("没有元数据：「$songId\"; its freeplay icon is \"face\". Add the song's metadata file for its name and icon.")
         }
         val diffs = allDiffs.toList()
         val custom = diffs.isNotEmpty() && diffs.toSet() != setOf("easy", "normal", "hard")
@@ -548,10 +548,10 @@ object VSliceToPsychLevel {
             .put("difficulties", if (custom) diffs.joinToString(",") { it.replaceFirstChar { c -> c.titlecase() } } else "")
         report.stat("Songs", level.songs.size)
         report.stat("菜单人物", characters.count { it.isNotEmpty() })
-        report.section("Title image", listOf("V-Slice: images/${level.titleAsset}.png", "Psych: images/storymenu/$id.png"))
+        report.section("Title image", listOf("V-Slice：images/${level.titleAsset}.png", "Psych：images/storymenu/$id.png"))
         if (copies.isNotEmpty()) report.section("要复制的菜单人物图片", copies.filter { it.first.endsWith(".png") }.map { "${it.first} → ${it.second}" })
         copies += "images/${level.titleAsset}.png" to "images/storymenu/$id.png"
-        if (!level.background.equals("#F9CF51", ignoreCase = true)) report.warn("Psych week backgrounds are images (images/menubackgrounds/menu_<name>.png); the color ${level.background} was not carried over.")
+        if (!level.background.equals("#F9CF51", ignoreCase = true)) report.warn("Psych week 背景是图片 (images/menubackgrounds/menu_<name>.png); the color ${level.background} was not carried over.")
         return ReverseResult("weeks/$id.json", root.toString(2), report.build(), extra, copies)
     }
 }

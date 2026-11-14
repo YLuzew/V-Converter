@@ -92,14 +92,14 @@ object PsychToCodenameCharacter {
         report.stat("Animations", character.animations.size)
         report.stat("Side", if (player) "player" else if (slot == CharacterSlot.GIRLFRIEND) "girlfriend" else "opponent")
         val notes = mutableListOf<String>()
-        notes += "Offsets were divided by the scale ($scale): Codename scales animation offsets with the sprite, Psych does not."
+        notes += "偏移已经除以缩放（$scale): Codename scales animation offsets with the sprite, Psych does not."
         if (player) notes += "isPlayer=\"true\"：Codename 把它当对手用时会把人物镜像（并交换 singLEFT/singRIGHT）。"
-        if (character.vocalsFile.isNotBlank()) notes += "Vocals file \"${character.vocalsFile}\" becomes the strumline vocals suffix in the converted charts."
+        if (character.vocalsFile.isNotBlank()) notes += "人声音轨「${character.vocalsFile}\" becomes the strumline vocals suffix in the converted charts."
         if (animate) {
             notes += "Animate 图集：centercam=\"true\" 保留 Psych 的居中摄像机。"
             notes += "Psych 的符号名（前缀匹配）已解析成 Codename 的 flixel-animate 需要的精确符号名，偏移里也算上了每个符号的边界。"
         }
-        if (missingSymbols.isNotEmpty()) report.warn("These animations have no matching symbol in Animation.json and will not play: ${missingSymbols.joinToString()}.")
+        if (missingSymbols.isNotEmpty()) report.warn("这些动画在 Animation.json 里没有对应符号，不会播放：${missingSymbols.joinToString()}.")
         report.section("Notes", notes)
         if (slot == CharacterSlot.GIRLFRIEND && id.lowercase().startsWith("gf").not()) report.warn("女友位的摄像机偏移已转换。")
         return CodenamePsychResult(id, listOf(PsychFile("data/characters/$id.xml", xml.toString())), report.build(), copies)
@@ -280,8 +280,8 @@ object PsychToCodenameWeek {
         xml.close("week")
         val copies = listOf(PsychCopy("images/storymenu/$id.png", "images/menus/storymenu/weeks/$id.png"))
         report.stat("Songs", week.songs.size)
-        val notes = mutableListOf("Week image: images/storymenu/$id.png → images/menus/storymenu/weeks/$id.png")
-        if (week.weekBackground.isNotBlank()) notes += "The story menu background \"${week.weekBackground}\" has no Codename equivalent."
+        val notes = mutableListOf("周目图片：images/storymenu/$id.png → images/menus/storymenu/weeks/$id.png")
+        if (week.weekBackground.isNotBlank()) notes += "故事菜单背景「${week.weekBackground}\" has no Codename equivalent."
         if (!week.startUnlocked || week.hiddenUntilUnlocked || week.weekBefore.isNotBlank()) report.warn("周目锁定（weekBefore/startUnlocked）在 Codename 里没有对应物；这个周目始终解锁。")
         if (week.hideFreeplay) notes += "从自由游玩隐藏：它的歌曲没有写进 data/config/freeplaySonglist.txt。"
         report.section("Notes", notes)

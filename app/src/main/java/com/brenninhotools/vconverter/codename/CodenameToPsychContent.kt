@@ -67,14 +67,14 @@ object CodenameToPsychCharacter {
         report.stat("Side", slot.name.lowercase())
         built.notes.warnings.forEach(report::warn)
         built.notes.sections.forEach { report.section(it.title, it.lines) }
-        if (character.extraSheets.isNotEmpty()) report.section("Spritesheets", listOf("Extra sheets were joined into the image field: ${built.character.image}"))
+        if (character.extraSheets.isNotEmpty()) report.section("Spritesheets", listOf("额外的图集已合进 image 字段：${built.character.image}"))
         if (atlases.isEmpty() && !animate) report.warn("没有提供图集 XML，所以镜像偏移和居中摄像机的修正是近似的。")
         if (animate) report.section("Animate 图集", listOf("帧标签动画变成了主符号的序号（Psych 只播符号），偏移里已经算上每个符号的边界。"))
-        if (missingSymbols.isNotEmpty()) report.warn("These animations match no symbol or frame label in Animation.json: ${missingSymbols.joinToString()}.")
+        if (missingSymbols.isNotEmpty()) report.warn("这些动画在 Animation.json 里既没有对应符号也没有对应帧标签：${missingSymbols.joinToString()}.")
         val gameOver = character.gameOverCharacter
         val notes = mutableListOf<String>()
-        if (gameOver != null && gameOver != "bf-dead") notes += "Game over character \"$gameOver\": set \"gameOverChar\": \"$gameOver\" in the charts (V-Converter does this for the songs it converts)."
-        character.interval?.let { if (it != 2) notes += "Codename dance interval $it became danceEveryNumBeats in the script below; Psych reads it from the character's animations (idle every 2 beats, danceLeft/danceRight every beat)." }
+        if (gameOver != null && gameOver != "bf-dead") notes += "死亡人物「$gameOver\": set \"gameOverChar\": \"$gameOver\" in the charts (V-Converter does this for the songs it converts)."
+        character.interval?.let { if (it != 2) notes += "Codename 待机间隔 $it became danceEveryNumBeats in the script below; Psych reads it from the character's animations (idle every 2 beats, danceLeft/danceRight every beat)." }
         report.section("Notes", notes)
         val hooks = character.interval?.takeIf { it != 2 && character.animations.any { a -> a.name == "idle" } }?.let { interval ->
             PsychHooks(callbacks = mapOf("onCreatePost" to listOf("if (self != null) self.danceEveryNumBeats = $interval;")))
@@ -186,8 +186,8 @@ function cneStageDance(beat:Int, countdown:Bool):Void
         val extensions = stage.extensions.filter { !it.substringAfterLast('/').equals("pixel", ignoreCase = true) }
         extensions.forEach { ext -> create += "game.startHScriptsNamed(${HxSource.hxString("stages/extensions/${ext.substringAfterLast('/')}.hx")});" }
         if (pixel) notes += "像素扩展改成了 stageUI \"pixel\"（Psych 自带的像素音符、倒计时和判定）。"
-        if (stage.zoomFactors.isNotEmpty()) report.warn("Sprites with zoomfactor (${stage.zoomFactors.keys.joinToString()}) zoom with the camera in Psych; it has no zoom factor.")
-        if (stage.extraCharacters.isNotEmpty()) report.warn("Extra character slots (${stage.extraCharacters.keys.joinToString()}) have no Psych stage equivalent; their notes cannot be sung in Psych.")
+        if (stage.zoomFactors.isNotEmpty()) report.warn("带 zoomfactor 的精灵（${stage.zoomFactors.keys.joinToString()}) zoom with the camera in Psych; it has no zoom factor.")
+        if (stage.extraCharacters.isNotEmpty()) report.warn("额外的人物位（${stage.extraCharacters.keys.joinToString()}) have no Psych stage equivalent; their notes cannot be sung in Psych.")
         stage.ratings?.let { notes += "判定位置不属于 Psych 的背景配置（在脚本里挪 game.comboGroup）。" }
         stage.warnings.filterNot { it.contains("zoomfactor") || it.contains("额外人物") }.forEach { report.warn(it.replace("V-Slice", "Psych")) }
         notes += stage.notes.map { it.replace("V-Slice 总是加载整个背景", "Psych 用低画质过滤保留它们") }.filterNot { it.contains("初始摄像机") }
@@ -244,10 +244,10 @@ object CodenameToPsychWeek {
         )
         report.stat("Songs", songs.size)
         val notes = mutableListOf<String>()
-        notes += "Week image: images/menus/storymenu/weeks/${week.sprite}.png → images/storymenu/${week.id}.png"
+        notes += "周目图片：images/menus/storymenu/weeks/${week.sprite}.png → images/storymenu/${week.id}.png"
         if (difficulties.isNotEmpty()) notes += "Difficulties: ${difficulties.joinToString()}"
         val hidden = week.songs.filter { it.hidden }
-        if (hidden.isNotEmpty()) report.warn("Songs hidden from freeplay in Codename (${hidden.joinToString { it.name }}) are listed in Psych's freeplay; Psych hides whole weeks only.")
+        if (hidden.isNotEmpty()) report.warn("Codename 里从自由游玩隐藏的歌曲（${hidden.joinToString { it.name }}) are listed in Psych's freeplay; Psych hides whole weeks only.")
         week.songs.mapNotNull { s -> s.variation?.let { "${s.name} plays its \"$it\" variant in Codename; the week now lists the \"${songName(s.name)}\" song." } }.forEach { notes += it }
         report.section("Notes", notes)
         return CodenamePsychResult(week.id, listOf(PsychFile("weeks/${week.id}.json", PsychWriters.week(psych))), report.build(), copies)
@@ -274,8 +274,8 @@ object CodenameToPsychWeek {
             flipX = menu.flipX,
             antialiasing = menu.antialiasing
         )
-        if (idle?.indices?.isNotEmpty() == true || confirm?.indices?.isNotEmpty() == true) report.warn("Menu character $id uses frame indices; Psych menu characters play whole prefixes.")
-        if (confirm != null && (confirm.x != idle?.x || confirm.y != idle?.y)) report.warn("Menu character $id moves its confirm animation; Psych uses one position for both animations.")
+        if (idle?.indices?.isNotEmpty() == true || confirm?.indices?.isNotEmpty() == true) report.warn("菜单人物 $id uses frame indices; Psych menu characters play whole prefixes.")
+        if (confirm != null && (confirm.x != idle?.x || confirm.y != idle?.y)) report.warn("菜单人物 $id moves its confirm animation; Psych uses one position for both animations.")
         val copies = listOf("png", "xml").map { ext -> PsychCopy("images/${menu.sprite}.$ext", "images/menucharacters/$id.$ext") }
         return CodenamePsychResult(id, listOf(PsychFile("images/menucharacters/$id.json", PsychWriters.menuCharacter(psych))), report.build(), copies)
     }

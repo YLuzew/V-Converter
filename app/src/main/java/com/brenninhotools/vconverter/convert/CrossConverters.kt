@@ -145,7 +145,7 @@ class CodenameToPsychChartsConverter : CodenameToPsychConverter() {
         if (compat) outputs += out(CodenamePsychHelpers.COMPAT_SCRIPT, CodenamePsychHelpers.compatScript())
         if (scripted.isNotEmpty()) report.section("Events", scripted.map { "$it → custom_events/$it.hx" })
         val unscripted = customEvents.keys.filter { it !in scripted && it !in CodenameToPsychEvents.scripted }
-        if (unscripted.isNotEmpty()) report.warn("Mod events (${unscripted.joinToString()}) are kept in the charts; convert their data/events/*.hx in the Scripts tab so Psych can run them.")
+        if (unscripted.isNotEmpty()) report.warn("模组事件（${unscripted.joinToString()}) are kept in the charts; convert their data/events/*.hx in the Scripts tab so Psych can run them.")
         report.section("Audio", listOf("Copy songs/<song>/song/Inst.ogg and Voices.ogg to songs/<song>/ in the Psych mod (the whole-mod tab does this for you)."))
         require(outputs.isNotEmpty()) { "Nothing to convert: add a Codename chart (songs/<song>/charts/<difficulty>.json)." }
         return ConvertedOutput(outputs, report.build())
@@ -161,7 +161,7 @@ class CodenameToPsychCharactersConverter : CodenameToPsychConverter() {
 
     override fun classify(file: ImportedFile, text: String): PickedText {
         val id = file.name.substringBeforeLast('.')
-        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
+        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
         if (CodenameCharacterParser.isCharacterXml(text)) {
             val character = CodenameCharacterParser.parse(id, text)
             return PickedText(file.path, file.name, file.path, text, "character", "${character.animations.size} anims", CodenamePsychCharacter.defaultSlot(character))
@@ -413,7 +413,7 @@ class PsychToCodenameChartsConverter : PsychToCodenameConverter() {
             events += result.events.keys
             types += result.noteTypes
             result.report.stats.forEach { report.stat("$id ${it.label}", it.value) }
-            result.report.sections.filter { it.title != "难度" }.forEach { report.section("$id · ${it.title}", it.lines) }
+            result.report.sections.filter { it.title != "Difficulties" }.forEach { report.section("$id · ${it.title}", it.lines) }
             result.report.warnings.forEach { report.warn("$id: $it") }
         }
         events.forEach { name ->
@@ -437,7 +437,7 @@ class PsychToCodenameCharactersConverter : PsychToCodenameConverter() {
     override fun accept(file: ImportedFile) = file.extension == "json"
 
     override fun classify(file: ImportedFile, text: String): PickedText {
-        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
+        if (AnimateAtlases.isAtlasFile(file.name)) return PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
         val id = file.name.substringBeforeLast('.')
         val character = PsychCharacterParser.parse(text)
         return PickedText(file.path, file.name, file.path, text, "character", "${character.animations.size} anims", PsychToCodenameCharacter.defaultSlot(id, character))

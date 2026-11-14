@@ -218,7 +218,7 @@ data class ChartDocument(
     }
 
     companion object {
-        const val GENERATED_BY = "V-Converter Chart Editor"
+        const val GENERATED_BY = "V-Converter 谱面编辑器"
 
         fun blank(id: String, name: String, bpm: Double, difficulties: List<String>): ChartDocument = ChartDocument(
             id = id,

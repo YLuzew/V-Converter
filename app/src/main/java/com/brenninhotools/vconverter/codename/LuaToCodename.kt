@@ -27,7 +27,7 @@ class LuaToCodename(
             "boyfriend", "bf", "dad", "gf", "camGame", "camHUD", "health", "songScore", "misses", "combo", "curBeat", "curStep", "curMeasure",
             "defaultCamZoom", "camFollow", "playerStrums", "cpuStrums", "iconP1", "iconP2", "healthBar", "scoreTxt", "inst", "vocals", "strumLines",
             "stage", "members", "add", "insert", "remove", "scrollSpeed", "accuracy", "camZooming", "curCameraTarget", "events", "paused", "FlxG",
-            "Paths", "Conductor", "选项", "PlayState", "Std", "Math", "StringTools", "Reflect", "Type", "Assets", "FlxSprite", "FunkinSprite",
+            "Paths", "Conductor", "Options", "PlayState", "Std", "Math", "StringTools", "Reflect", "Type", "Assets", "FlxSprite", "FunkinSprite",
             "FlxText", "FlxTween", "FlxEase", "FlxTimer", "FlxColor", "FlxCamera", "Character", "Note", "setVar", "getVar", "removeVar",
             "getProperty", "setProperty", "getPropertyFromGroup", "setPropertyFromGroup", "triggerEvent", "controls", "trace", "disableScript",
             "importScript", "curRating", "gfSpeed", "endSong", "startCountdown", "executeEvent", "SONG", "create", "postCreate", "update",
@@ -237,7 +237,7 @@ class LuaToCodename(
                 "psychDefaults." + name.removePrefix("default").replaceFirstChar { it.lowercaseChar() }
             }
             else -> {
-                issue(line, "Unknown variable '$name' (not defined in this script) became null.")
+                issue(line, "未知变量 '$name' (not defined in this script) became null.")
                 "null"
             }
         }
@@ -386,7 +386,7 @@ class LuaToCodename(
         val converter = PsychHxToCodename(scope, inline = true)
         val converted = converter.convert(code)
         cneHelpers += converter.usedHelpers()
-        converted.issues.forEach { issue(line, "runHaxeCode: ${it.message}") }
+        converted.issues.forEach { issue(line, "runHaxeCode：${it.message}") }
         val tokens = HxSource.tokenize(converted.source)
         val segs = HxSource.segments(tokens)
         val statements = StringBuilder()
@@ -789,7 +789,7 @@ class LuaToCodename(
             "setMisses" -> "misses = Std.int(${arg(0, "0")})"
             "addMisses" -> "misses += Std.int(${arg(0, "0")})"
             "setHits", "addHits" -> {
-                issue(line, "$name() has no Codename equivalent (hits are counted per rating).")
+                issue(line, "$name() 在 Codename 里没有对应物（命中是按各判定分开计数的）。")
                 "null"
             }
             "getSongPosition" -> "Conductor.songPosition"
@@ -799,7 +799,7 @@ class LuaToCodename(
             "startCountdown" -> "startCountdown()"
             "setHealthBarColors" -> "{ healthBar.createFilledBar(${color(a.getOrNull(0))}, ${color(a.getOrNull(1))}); healthBar.updateBar(); }"
             "setTimeBarColors", "setRatingPercent", "setRatingName", "setRatingFC", "updateScoreText" -> {
-                issue(line, "$name() has no Codename equivalent and was removed.")
+                issue(line, "$name() 在 Codename 里没有对应物，删掉了。")
                 "null"
             }
             "playSound" -> {
@@ -1017,7 +1017,7 @@ class LuaToCodename(
         val value = if (set) lit(a, 2, "null") else ""
         fun out(target: String) = if (set) "$target = $value" else target
         if (cls == null || field == null) {
-            issue(line, "${if (set) "set" else "get"}PropertyFromClass with names built at runtime cannot be converted.")
+            issue(line, "${if (set) "set" else "get"}用运行时拼出来的名字调 PropertyFromClass 转不了。")
             return "null"
         }
         return when (cls) {

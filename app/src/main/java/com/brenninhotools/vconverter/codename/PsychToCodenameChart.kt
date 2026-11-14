@@ -256,7 +256,7 @@ object PsychToCodenameChart {
                 needsVoices = main.needsVoices
             )
         )
-        report.section("难度", charts.keys.map { "songs/$folder/charts/$it.json" })
+        report.section("Difficulties", charts.keys.map { "songs/$folder/charts/$it.json" })
         val kept = usedEvents.keys.filter { it !in scriptedEvents }
         if (usedEvents.isNotEmpty()) report.section("Events", usedEvents.map { (name, n) -> "$name ×$n" + when {
             name in scriptedEvents -> " (data/events/$name.hx)"
@@ -264,8 +264,8 @@ object PsychToCodenameChart {
             name in options.customEventNames -> " (converted from custom_events/)"
             else -> ""
         } })
-        if (kept.any { it in stageEvents }) report.warn("Base game stage events (${kept.filter { it in stageEvents }.joinToString()}) only work in Psych's hardcoded stages.")
-        if (main.arrowSkin.isNotBlank()) report.warn("The arrow skin \"${main.arrowSkin}\" is not carried over; Codename note skins are set with scripts (onNoteCreation).")
+        if (kept.any { it in stageEvents }) report.warn("本体自带的背景事件（${kept.filter { it in stageEvents }.joinToString()}) only work in Psych's hardcoded stages.")
+        if (main.arrowSkin.isNotBlank()) report.warn("箭头皮肤「${main.arrowSkin}\" is not carried over; Codename note skins are set with scripts (onNoteCreation).")
         return PsychCodenameChartResult(folder, charts, meta, usedEvents, usedTypes, characters, report.build())
     }
 

@@ -90,7 +90,7 @@ object HxcToPsych {
                 notes += "Line $line: property $name ($get, $set) became " + when {
                     get == "get" && set == "set" -> "calls to get_$name() and set_$name()."
                     get == "get" -> "calls to get_$name()."
-                    set == "set" -> "一个普通变量；赋值要走 set_$name()."
+                    set == "set" -> "a plain variable; assignments call set_$name()."
                     else -> "一个普通变量。"
                 }
             }
@@ -172,19 +172,19 @@ object HxcToPsych {
                 "buildStage" -> if (isStage) {
                     buildBody = rewrite(body, notes)
                     put("onCreate", "", "")
-                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+buildStage\\s*\\(")))}buildStage() 会在 onCreate 开头执行，那时 Psych 已经按背景 JSON 把物件建好了。"
+                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+buildStage\\s*\\(")))}buildStage() runs at the start of onCreate, after Psych has built the stage objects from the stage JSON."
                 } else put(member.name, rewrite(member.params, notes), rewrite(body, notes))
                 "fetchAssetPaths" -> {
                     precache = true
                     var inner = Regex("\\bsuper\\.fetchAssetPaths\\(\\s*\\)").replace(body, "[]")
                     inner = Regex("Array\\s*<\\s*String\\s*>").replace(inner, "Array<Dynamic>")
                     put("precacheAssets", "", rewrite(inner, notes))
-                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+fetchAssetPaths\\s*\\(")))}fetchAssetPaths() 换成了 precacheAssets()，在 onCreate 里调用：里面每个 Paths.image()/Paths.sound() 都会在 Psych 里提前缓存好资源。"
+                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+fetchAssetPaths\\s*\\(")))}fetchAssetPaths() became precacheAssets(), called from onCreate: every Paths.image()/Paths.sound() in it caches the asset in Psych."
                 }
                 "addCharacter" -> if (isStage) {
                     characterHook = true
                     put("addCharacter", "character:Character, charType:String", rewrite(body, notes))
-                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+addCharacter\\s*\\(")))}addCharacter() 在 onCreate 里对 boyfriend、dad、gf 各调一次，因为 Psych 是在背景脚本开始前加人物的。"
+                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+addCharacter\\s*\\(")))}addCharacter() is called from onCreate for boyfriend, dad and gf, since Psych adds the characters before stage scripts start."
                 } else put(member.name, rewrite(member.params, notes), rewrite(body, notes))
                 "onUpdate" -> put("onUpdate", "elapsed:Float", rewriteEvent(body, notes, "onUpdate"))
                 "onBeatHit" -> put("onBeatHit", "", rewriteEvent(body, notes, "onBeatHit"))
@@ -193,7 +193,7 @@ object HxcToPsych {
                 "onCountdownStep" -> put("onCountdownTick", "tick:Dynamic, swagCounter:Int", rewriteEvent(body, notes, "countdown"))
                 "onCountdownEnd" -> {
                     put("onSongStart", "", rewriteEvent(body, notes, "plain"), first = true)
-                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+onCountdownEnd\\s*\\(")))}onCountdownEnd 换到了 onSongStart 的开头，Psych 在倒数结束那一刻就会调它。"
+                    notes += "${at(lineOf(source, Regex("\\bfunction\\s+onCountdownEnd\\s*\\(")))}onCountdownEnd became the start of onSongStart, which Psych calls right when the countdown ends."
                 }
                 "onSongStart" -> put("onSongStart", "", rewriteEvent(body, notes, "plain"))
                 "onSongEnd" -> put("onEndSong", "", rewriteEvent(body, notes, "cancel"))
@@ -201,7 +201,7 @@ object HxcToPsych {
                 "onResume" -> put("onResume", "", rewriteEvent(body, notes, "plain"))
                 "onGameOver" -> put("onGameOver", "", rewriteEvent(body, notes, "cancel"))
                 "onDestroy" -> put("onDestroy", "", rewriteEvent(body, notes, "plain"))
-                "onSongRetry" -> notes += "${at(lineOf(source, Regex("\\bfunction\\s+onSongRetry\\s*\\(")))}onSongRetry 去掉了：Psych 重开时会重新加载歌曲和脚本，所以 onCreate 会再跑一遍。"
+                "onSongRetry" -> notes += "${at(lineOf(source, Regex("\\bfunction\\s+onSongRetry\\s*\\(")))}onSongRetry was dropped: Psych reloads the song and its scripts on restart, so onCreate runs again instead."
                 "onNoteHit" -> {
                     val inner = rewriteEvent(body, notes, "note")
                     put("goodNoteHit", "note:Note", joinBody(guard ?: "", inner))
@@ -228,14 +228,14 @@ object HxcToPsych {
                         }
                         inner = Regex("\\beventValue\\.${Regex.escape(field)}\\b").replace(inner, typed)
                     }
-                    if (schemaFields.size > 2) notes += "Psych 的事件只有两个值；\"${schemaFields[1]}\" are null."
+                    if (schemaFields.size > 2) notes += "Psych events only have two values; fields after \"${schemaFields[1]}\" are null."
                     if (Regex("\\beventValue\\b").containsMatchIn(inner)) {
                         inner = Regex("\\beventValue\\b").replace(inner, "value1")
                         notes += "事件的值对象换成了 value1（Psych 里是字符串）；看一下它是怎么读的。"
                     }
                     put("onEvent", "eventName:String, value1:String, value2:String, strumTime:Float", joinBody("if (eventName != ${quote(targetId)}) return;", inner))
                 }
-                in callbackNames -> notes += "${at(lineOf(source, Regex("\\bfunction\\s+${member.name}\\s*\\(")))}V-Slice 回调 ${member.name} has no Psych equivalent and was dropped."
+                in callbackNames -> notes += "${at(lineOf(source, Regex("\\bfunction\\s+${member.name}\\s*\\(")))}V-Slice callback ${member.name} has no Psych equivalent and was dropped."
                 else -> put(member.name, rewrite(member.params, notes), rewrite(body, notes))
             }
         }
@@ -302,7 +302,7 @@ object HxcToPsych {
             if (name in pruned.tainted) return@forEach
             notes += "${at(lineOf(source, Regex("(?<![\\w.])${Regex.escape(name)}\\b(?!;)"), skipImports = true))}$name is V-Slice only and Psych 1.0 has no such class, so the $count statement(s) using it were left out."
         }
-        if (pruned.tainted.isNotEmpty()) notes += "用到 V-Slice 专属类生成的值的那段代码也删掉了：${pruned.tainted.joinToString()}."
+        if (pruned.tainted.isNotEmpty()) notes += "Code that used values made from V-Slice-only classes was left out too: ${pruned.tainted.joinToString()}."
         out.setLength(0)
         out.append(protectedText)
 
@@ -360,7 +360,7 @@ object HxcToPsych {
             files += PsychScriptFile("custom_events/$id.txt", description + "\n")
         }
         if (kind == HxcKind.MODULE) notes += "V-Slice 里模块在每个状态都会跑；Psych 的全局脚本（scripts/）只在歌曲进行时跑。"
-        if (kind == HxcKind.OTHER) notes += "父类 ${classMatch.groupValues[2]} has no Psych equivalent; the script was placed in scripts/."
+        if (kind == HxcKind.OTHER) notes += "Parent class ${classMatch.groupValues[2]} has no Psych equivalent; the script was placed in scripts/."
         if (Regex("\\bModuleHandler\\b").containsMatchIn(text)) notes += "ModuleHandler 是 V-Slice 专属的。"
         if (Regex("\\bfunkin(Sprite|Sparrow)\\(").containsMatchIn(text)) notes += "FunkinSprite.create/createSparrow 变成了脚本末尾的 funkinSprite()/funkinSparrow() 小工具函数。"
         return HxcResult(kind, className, targetId, files, notes.distinct())

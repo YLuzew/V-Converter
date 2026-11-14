@@ -43,12 +43,12 @@ class CodenameScriptPlanner(modTitle: String = "") {
         val planned = when (target.scope) {
             CodenameScope.GLOBAL -> module(ScriptConverter.keepName(stem), null)
             CodenameScope.SONG -> when {
-                ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "本体的歌曲脚本已经覆盖了「$key\".")
+                ScriptBases.isBaseGameId(ScriptBase.SONG, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "the base game already has a Song script for \"$key\".")
                 !claimed.add("song:$key") -> module(ScriptConverter.pascal(key) + extra + "Module", "song \"$key\" already has a Song script; V-Slice allows one per song.")
                 else -> typed(ScriptBase.SONG, key)
             }
             CodenameScope.STAGE -> when {
-                ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "本体的背景脚本已经覆盖了「$key\".")
+                ScriptBases.isBaseGameId(ScriptBase.STAGE, key) -> module(ScriptConverter.pascal(key) + extra + "Module", "the base game already has a Stage script for \"$key\".")
                 !claimed.add("stage:$key") -> module(ScriptConverter.pascal(key) + extra + "Module", "stage \"$key\" already has a Stage script; V-Slice allows one per stage.")
                 else -> typed(ScriptBase.STAGE, key)
             }

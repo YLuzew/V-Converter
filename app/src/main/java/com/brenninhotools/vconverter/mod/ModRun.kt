@@ -69,7 +69,7 @@ enum class ModCategory(val label: String) {
                 "Stage" -> STAGES.label
                 "Week", "Level" -> WEEKS.label
                 "Script" -> SCRIPTS.label
-                "Done" -> "Finishing"
+                "完成" -> "Finishing"
                 "Extracting", "Reading", "Opening", "Scanning" -> "Reading"
                 else -> if ('/' in label || '.' in label) of(label).label else label
             }
@@ -174,7 +174,7 @@ class ModRun(
             ModProgress(
                 done = if (finished) total else done,
                 total = total,
-                label = if (finished) "Done" else label,
+                label = if (finished) "完成" else label,
                 phase = if (finished) "Finishing" else ModCategory.phase(label),
                 written = written,
                 skipped = failures.size,

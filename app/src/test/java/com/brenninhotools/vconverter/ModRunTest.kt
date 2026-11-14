@@ -64,7 +64,7 @@ class ModRunTest {
         assertTrue(File(out, "_polymod_meta.json").exists())
         assertTrue(result.report.sections.any { section -> section.title == "Files skipped because of errors" && section.lines.any { "pic1.png" in it } })
         val last = updates.last()
-        assertEquals("Done", last.label)
+        assertEquals("完成", last.label)
         assertEquals(1, last.skipped)
         assertTrue((last.counts[ModCategory.IMAGES] ?: 0) >= 2)
         assertTrue((last.counts[ModCategory.AUDIO] ?: 0) >= 1)

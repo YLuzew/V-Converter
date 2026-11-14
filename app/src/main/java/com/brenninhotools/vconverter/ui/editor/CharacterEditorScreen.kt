@@ -132,7 +132,7 @@ class CharacterEditorViewModel(application: Application) : BaseConverterViewMode
                 val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("选图集的 .png 和它的 .xml。")
                 val sheet = files.firstOrNull { it.first.endsWith(".xml", true) } ?: throw IllegalArgumentException("把图集的 .xml 也选上。")
                 val text = sheet.second.toString(Charsets.UTF_8)
-                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is 不是 Sparrow 图集." }
+                require(SpriteAtlas.parse(text).frames.isNotEmpty()) { "${sheet.first.substringAfterLast('/')} is not a Sparrow spritesheet." }
                 val sprite = withContext(Dispatchers.Default) { decode(png.second, text) }
                 editor.sprite = sprite
                 image = png.second
@@ -212,7 +212,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
                 enabled = !busy,
                 onClick = { opener.launch(arrayOf("*/*")) }
             )
-            OutlineButton(viewModel.sheetName?.let { "图集：$it （替换）" } ?: "添加图集（.png + .xml）", accent, onClick = { sheetPicker.launch(arrayOf("*/*")) }, enabled = !busy)
+            OutlineButton(viewModel.sheetName?.let { "Spritesheet: $it (replace)" } ?: "添加图集（.png + .xml）", accent, onClick = { sheetPicker.launch(arrayOf("*/*")) }, enabled = !busy)
             OutlineButton("新建人物", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
@@ -269,7 +269,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "导出 ${viewModel.target.label}",
+            buttonText = "导出 \${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

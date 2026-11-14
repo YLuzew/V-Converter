@@ -54,7 +54,7 @@ fun PlayTestSetupPanel(state: PlayTestState, modifier: Modifier = Modifier, onSt
         }
         val doc = state.document
         if (doc == null) {
-            Text("Open a mod (folder or .zip), a converter's output or chart files, or send a chart from the 谱面编辑器. Psych and Codename mods are converted to V-Slice first, so PlayTest also tests the converter.", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            Text("打开一个模组（文件夹或 .zip）、转换结果、或谱子文件，也可以从谱面编辑器里发一首过来。Psych 和 Codename 模组会先转成 V-Slice，所以试玩同时也测了转换器。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
             return@Column
         }
         Text("${doc.meta.songName.ifBlank { doc.id }} · ${doc.meta.player} vs ${doc.meta.opponent} · stage ${doc.meta.stage}", fontWeight = FontWeight.Bold, fontSize = 14.sp)
@@ -107,9 +107,9 @@ fun PlayTestResultsPanel(state: PlayTestState, modifier: Modifier = Modifier) {
         Text("Max combo ${game.maxCombo} · dropped holds ${game.holdDrops} · lowest health ${fmt("%.0f", game.lowestHealth * 50)}%", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         if (game.offsets.isNotEmpty()) {
             val average = game.offsets.average()
-            Text("平均判定 ${fmt("%.1f", abs(average))} ms ${if (average >= 0) "late" else "early"} over ${game.offsets.size} hit(s)", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            Text("Average timing ${fmt("%.1f", abs(average))} ms ${if (average >= 0) "late" else "early"} over ${game.offsets.size} hit(s)", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         }
-        game.deathTime?.let { Text("血量耗尽于 ${PlayTestState.formatMs(it)}.", fontSize = 13.sp, color = scheme.error) }
+        game.deathTime?.let { Text("Health ran out at ${PlayTestState.formatMs(it)}.", fontSize = 13.sp, color = scheme.error) }
         if (state.botplay) Text("自动游玩开着：这个分数是谱子的，不是你的。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
     }
 }

@@ -112,7 +112,7 @@ object StageGenerator {
             "Next steps",
             listOf(
                 "Use this stage in a song with the id \"$id\".",
-                "Fine-tune positions in V-Slice's 背景编辑器."
+                "Fine-tune positions in V-Slice's Stage Editor."
             )
         )
         return Generated(files, report.build())

@@ -199,7 +199,7 @@ fun AssetPicker(
         }
         if (picked) {
             IconButton(onClick = UiSound.wrap(onClear), enabled = enabled) {
-                Icon(painterResource(R.drawable.ic_close), contentDescription = "移除 $label", tint = Funkin.Muted, modifier = Modifier.size(18.dp))
+                Icon(painterResource(R.drawable.ic_close), contentDescription = "移除 \$label", tint = Funkin.Muted, modifier = Modifier.size(18.dp))
             }
         }
     }

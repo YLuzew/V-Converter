@@ -272,23 +272,12 @@ function opponentNoteHitPre(note:Note)
     }
 
     fun description(name: String, params: List<String> = emptyList()): String = when (name) {
-        "Camera Movement" -> "在 section 中途把摄像机移到某个人物上。
-值 1：dad、bf 或 gf
-值 2：snap 表示瞬间跳过去"
-        "Camera Position" -> "Codename 的摄像机位置。
-值 1：X、Y、是否缓动？、缓动步数
-值 2：缓动曲线、缓动类型、是否为偏移？"
-        "Camera Bop" -> "额外的摄像机律动。
-值 1：幅度（1 = 一次正常律动）"
-        "Camera Zoom" -> "Codename 的摄像机缩放。
-值 1：是否缓动？、缩放、摄像机（camGame/camHUD）、步数
-值 2：缓动曲线、缓动类型、模式（direct/stage）、是否叠加？"
-        "Camera Modulo Change" -> "改变摄像机律动的频率。
-值 1：间隔、强度
-值 2：BEAT/MEASURE/STEP、偏移"
-        "Camera Flash" -> "闪一下摄像机。
-值 1：是否反向？、颜色
-值 2：步数、摄像机（camGame/camHUD）"
+        "Camera Movement" -> "在 section 中途把摄像机移到某个人物上。\n值 1：dad、bf 或 gf\n值 2：snap 表示瞬间跳过去"
+        "Camera Position" -> "Codename 的摄像机位置。\n值 1：X、Y、是否缓动？、缓动步数\n值 2：缓动曲线、缓动类型、是否为偏移？"
+        "Camera Bop" -> "额外的摄像机律动。\n值 1：幅度（1 = 一次正常律动）"
+        "Camera Zoom" -> "Codename 的摄像机缩放。\n值 1：是否缓动？、缩放、摄像机（camGame/camHUD）、步数\n值 2：缓动曲线、缓动类型、模式（direct/stage）、是否叠加？"
+        "Camera Modulo Change" -> "改变摄像机律动的频率。\n值 1：间隔、强度\n值 2：BEAT/MEASURE/STEP、偏移"
+        "Camera Flash" -> "闪一下摄像机。\n值 1：是否反向？、颜色\n值 2：步数、摄像机（camGame/camHUD）"
         "HScript Call" -> "Calls a function in every script.\nValue 1: function name\nValue 2: arguments, split with commas"
         else -> {
             val (v1, v2) = if (params.size <= 2) listOf(params.getOrNull(0)).filterNotNull() to listOf(params.getOrNull(1)).filterNotNull()

@@ -100,6 +100,6 @@ object PsychWeekParser {
     private fun json(raw: String): JSONObject = try {
         JSONObject(raw.trim().removePrefix("﻿"))
     } catch (e: JSONException) {
-        throw PsychWeekException("该文件不是有效的 JSON：${e.message}", e)
+        throw PsychWeekException("The file is not valid JSON: ${e.message}", e)
     }
 }

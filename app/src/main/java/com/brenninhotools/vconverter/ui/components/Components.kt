@@ -242,7 +242,7 @@ fun FileItem(
                 maxLines = 1
             )
             IconButton(onClick = UiSound.wrap(onRemove), enabled = enabled) {
-                Icon(painterResource(R.drawable.ic_close), contentDescription = "移除 $title", tint = Funkin.Muted, modifier = Modifier.size(20.dp))
+                Icon(painterResource(R.drawable.ic_close), contentDescription = "移除 \$title", tint = Funkin.Muted, modifier = Modifier.size(20.dp))
             }
         }
         FlowRow(
@@ -289,7 +289,7 @@ fun FunkinTextField(
 }
 
 @Composable
-fun StatusBanner(status: StatusMessage?, on关闭: () -> Unit) {
+fun StatusBanner(status: StatusMessage?, onDismiss: () -> Unit) {
     AnimatedVisibility(
         visible = status != null,
         enter = fadeIn() + expandVertically(),
@@ -325,7 +325,7 @@ fun StatusBanner(status: StatusMessage?, on关闭: () -> Unit) {
                     .weight(1f)
                     .padding(vertical = 8.dp)
             )
-            IconButton(onClick = UiSound.wrap(on关闭)) {
+            IconButton(onClick = UiSound.wrap(onDismiss)) {
                 Icon(painterResource(R.drawable.ic_close), contentDescription = "关闭", tint = Funkin.Muted, modifier = Modifier.size(18.dp))
             }
         }

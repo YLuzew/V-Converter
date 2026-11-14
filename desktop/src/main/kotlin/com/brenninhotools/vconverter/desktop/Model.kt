@@ -190,7 +190,7 @@ object Workspace {
         Engine.PSYCH -> when (tab) {
             Tab.MOD -> "Pick the mod folder inside Psych's mods directory, or a .zip / .rar / .7z with the mod."
             Tab.CHARTS -> "data/<song>/<song>-<difficulty>.json and events.json."
-            Tab.CHARACTERS -> "characters/*.json" + (if (direction.to == Engine.VSLICE) " with their spritesheet .xml for exact offsets" else "") + ". For Animate 图集 characters add the atlas folder's Animation.json and spritemap*.json."
+            Tab.CHARACTERS -> "characters/*.json" + (if (direction.to == Engine.VSLICE) " with their spritesheet .xml for exact offsets" else "") + ". For Animate atlas characters add the atlas folder's Animation.json and spritemap*.json."
             Tab.STAGES -> "stages/*.json and stages/<stage>.lua when the stage builds its sprites in Lua."
             Tab.WEEKS -> "weeks/*.json and images/menucharacters/*.json."
             Tab.SCRIPTS -> "Lua and HScript files. Archives keep the folders, so scripts/, data/<song>/, stages/, custom_events/ and custom_notetypes/ keep their scope."
@@ -198,7 +198,7 @@ object Workspace {
         Engine.CODENAME -> when (tab) {
             Tab.MOD -> "Pick the mod folder inside Codename's mods directory, or a .zip / .rar / .7z with the mod."
             Tab.CHARTS -> "songs/<song>/charts/*.json with meta.json and events.json."
-            Tab.CHARACTERS -> "data/characters/*.xml with their spritesheet .xml (or Animation.json + spritemap*.json for Animate 图集es)."
+            Tab.CHARACTERS -> "data/characters/*.xml with their spritesheet .xml (or Animation.json + spritemap*.json for Animate atlases)."
             Tab.STAGES -> "data/stages/*.xml (and the stage images for exact positions)."
             Tab.WEEKS -> "data/weeks/weeks/*.xml and data/weeks/characters/*.xml."
             Tab.SCRIPTS -> ".hx scripts, plus stage XMLs and data/events/*.json for context."
@@ -206,7 +206,7 @@ object Workspace {
         Engine.VSLICE -> when (tab) {
             Tab.MOD -> "Pick the mod folder inside V-Slice's mods directory, or a .zip / .rar / .7z with the mod."
             Tab.CHARTS -> "<song>-metadata.json and <song>-chart.json (and variations)."
-            Tab.CHARACTERS -> "data/characters/*.json with their spritesheet .xml (or Animation.json + spritemap*.json for Animate 图集es)."
+            Tab.CHARACTERS -> "data/characters/*.json with their spritesheet .xml (or Animation.json + spritemap*.json for Animate atlases)."
             Tab.STAGES -> "data/stages/*.json."
             Tab.WEEKS -> "data/levels/*.json plus the songs' -metadata.json files."
             Tab.SCRIPTS -> ".hxc scripts."
@@ -278,7 +278,7 @@ class LoadedMod(
         private fun build(name: String, files: ModFiles, archive: ExtractedArchive?, direction: Direction): LoadedMod = when (direction.from) {
             Engine.PSYCH -> {
                 val scan = ModScanner.scan(files)
-                require(!scan.isEmpty) { "在 $name. Expected folders like data, songs, characters, stages, weeks or images." }
+                require(!scan.isEmpty) { "No Psych Engine mod content was found in $name. Expected folders like data, songs, characters, stages, weeks or images." }
                 LoadedMod(
                     name, scan.root,
                     listOf("Songs" to scan.songs.size, "Characters" to scan.characters.size, "Stages" to scan.stages.size, "Weeks" to scan.weeks.size, "Scripts" to scan.scripts.size, "Assets" to scan.assets.size),
@@ -294,7 +294,7 @@ class LoadedMod(
             }
             Engine.CODENAME -> {
                 val scan = CodenameModScanner.scan(files)
-                require(!scan.isEmpty) { "在 $name. Expected data/config/modpack.ini or folders like songs/<song>/charts, data/characters, data/stages or data/weeks." }
+                require(!scan.isEmpty) { "No Codename Engine mod content was found in $name. Expected data/config/modpack.ini or folders like songs/<song>/charts, data/characters, data/stages or data/weeks." }
                 LoadedMod(
                     name, scan.root,
                     listOf("Songs" to scan.songs.size, "Characters" to scan.characters.size, "Stages" to scan.stages.size, "Weeks" to scan.weeks.size, "Scripts" to scan.scriptCount, "Assets" to scan.assets.size),
@@ -310,7 +310,7 @@ class LoadedMod(
             }
             Engine.VSLICE -> {
                 val scan = VSliceModScanner.scan(files)
-                require(!scan.isEmpty) { "在 $name. Expected _polymod_meta.json or folders like data/songs, data/characters, data/stages or data/levels." }
+                require(!scan.isEmpty) { "No V-Slice mod content was found in $name. Expected _polymod_meta.json or folders like data/songs, data/characters, data/stages or data/levels." }
                 LoadedMod(
                     name, scan.root,
                     listOf("Songs" to scan.songs.size, "Characters" to scan.characters.size, "Stages" to scan.stages.size, "Levels" to scan.levels.size, "Scripts" to scan.scripts.size, "Assets" to scan.assets.size),
@@ -382,7 +382,7 @@ class ModTabState(val direction: Direction) {
         description = loaded.info?.description ?: ""
         author = loaded.info?.author ?: ""
         report = null
-        status = Status.Info("找到模组：${loaded.name}.")
+        status = Status.Info("Found a mod in ${loaded.name}.")
     }
 
     fun info() = ModInfo(title.trim(), description.trim(), author.trim())
@@ -548,7 +548,7 @@ class FileTabState(val converter: FileConverter) {
     }
 
     fun convert() {
-        require(items.isNotEmpty()) { "至少添加一个 ${converter.engine} ${converter.noun}." }
+        require(items.isNotEmpty()) { "Add at least one ${converter.engine} ${converter.noun}." }
         val result = if (isCharts) {
             val run = ChartWorkbench.run(converter, items, tweaks)
             after = run.after

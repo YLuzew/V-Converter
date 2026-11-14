@@ -74,7 +74,7 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
                     if (version.page.isNotBlank()) EditorChip("发布页", false) { onOpenLink(version.page) }
                 }
             }
-            version.latest != null -> Text("已是最新版本（${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            version.latest != null -> Text("You have the latest version (${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         }
         state.announcements.forEach { a ->
             Column(

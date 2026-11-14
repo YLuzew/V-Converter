@@ -200,7 +200,7 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 }
             }
             draft != null -> {
-                EditorSectionTitle("添加事件于 ${formatTime(draft)}")
+                EditorSectionTitle("Add event at ${formatTime(draft)}")
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     EventTemplates.all.forEach { template -> EditorChip(template.title, false) { state.addEvent(template.kind, template.defaults()) } }
                 }
@@ -302,7 +302,7 @@ fun TimingPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
         }
         val playhead = state.document.conductor.floorSnap(state.position, 4)
         if (timing.none { abs(it.time - playhead) < 0.5 }) {
-            Text("新变化会吸附到拍点：${formatTime(playhead)}.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("New changes snap to the beat at ${formatTime(playhead)}.", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -319,7 +319,7 @@ fun SongInfoPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
             if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
         }
         TextValueField("变体（留空 = 默认）", state.document.variation, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(variation = v.trim().lowercase()) } }
-        TextValueField("Song name", meta.songName, Modifier.fillMaxWidth()) { v -> update { it.copy(songName = v) } }
+        TextValueField("歌曲名", meta.songName, Modifier.fillMaxWidth()) { v -> update { it.copy(songName = v) } }
         TextValueField("Artist", meta.artist, Modifier.fillMaxWidth()) { v -> update { it.copy(artist = v) } }
         TextValueField("Charter", meta.charter, Modifier.fillMaxWidth()) { v -> update { it.copy(charter = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {

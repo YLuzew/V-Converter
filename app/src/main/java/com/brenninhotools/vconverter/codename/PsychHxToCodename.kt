@@ -176,7 +176,7 @@ class PsychHxToCodename(
             val path = seg.head.filter { it.kind != HxKind.SPACE }.drop(1).takeWhile { !it.isPunct(";") }.joinToString("") { it.text }
             when {
                 path in droppedImports -> Unit
-                path.startsWith("shaders.") -> issue(seg.line, "Psych 的着色器类导入 '$path' was dropped; Codename shaders use CustomShader('name').")
+                path.startsWith("shaders.") -> issue(seg.line, "Psych shader class import '$path' was dropped; Codename shaders use CustomShader('name').")
                 path.startsWith("psychlua.") || path.startsWith("backend.") || path.startsWith("states.") || path.startsWith("substates.") || path.startsWith("objects.") ->
                     issue(seg.line, "Import '$path' is Psych-only and was dropped.")
                 path.isNotEmpty() -> imports += path
@@ -483,7 +483,7 @@ class PsychHxToCodename(
                 }
                 (t.text == "FlxRuntimeShader" || t.text == "ErrorHandledRuntimeShader") && callNext && p?.isIdent("new") == true -> {
                     val close = HxSource.matching(tokens, n1)
-                    issue(t.line, "new ${t.text}(source) 换成了空的 CustomShader；Codename 是按名字加载着色器的（shaders/<name>.frag），写法是 new CustomShader(\"name\")。")
+                    issue(t.line, "new ${t.text}(source) became an empty CustomShader; Codename loads shaders by name (shaders/<name>.frag) with new CustomShader(\"name\").")
                     sb.append("CustomShader(\"\")")
                     i = close + 1
                 }
@@ -514,7 +514,7 @@ class PsychHxToCodename(
                     i = close + 1
                 }
                 t.text in setOf("createGlobalCallback", "createCallback") && callNext -> {
-                    issue(t.line, "${t.text}() 是注册 Lua 回调的；Codename 没有 Lua，所以删掉了。")
+                    issue(t.line, "${t.text}() registers Lua callbacks; Codename has no Lua, so it was removed.")
                     sb.append("null")
                     i = HxSource.matching(tokens, n1) + 1
                 }
@@ -587,7 +587,7 @@ class PsychHxToCodename(
                 "createRuntimeShader" -> "new CustomShader(${a(0)})"
                 "moveCamera" -> "PlayState.instance.curCameraTarget = (${a(0)}) ? 0 : 1"
                 "moveCameraSection", "moveCameraToGirlfriend" -> {
-                    issue(line, "game.$name() 是跟着 Psych 的 section 走的；改成设置 curCameraTarget。")
+                    issue(line, "game.$name() follows Psych sections; set curCameraTarget instead.")
                     "null"
                 }
                 "addTextToDebug" -> "trace(${a(0)})"
@@ -597,11 +597,11 @@ class PsychHxToCodename(
                     "PlayState.instance.openSubState(new VideoCutscene(Paths.video(${a(0)}), function() {}))"
                 }
                 "reloadHealthBarColors", "updateScore", "doScoreBop", "clearNotesBefore", "setSongTime", "KillNotes", "popUpScore", "cachePopUpScore" -> {
-                    issue(line, "game.$name() 只有 Psych 才有，删掉了。")
+                    issue(line, "game.$name() is Psych-only and was removed.")
                     "null"
                 }
                 "addCharacterToList", "startCharacterScripts", "startLuasNamed", "startHScriptsNamed", "initHScript", "startDialogue", "openChartEditor" -> {
-                    issue(line, "game.$name() 只有 Psych 才有，删掉了。")
+                    issue(line, "game.$name() is Psych-only and was removed.")
                     "null"
                 }
                 else -> "PlayState.instance.${fieldMap[name] ?: name}(${args.joinToString(", ")})"

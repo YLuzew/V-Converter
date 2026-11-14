@@ -194,7 +194,7 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
             NumberField("预览缩放", state.stageZoom.toDouble(), Modifier.weight(1f)) { v -> if (v > 0) state.stageZoom = v.toFloat() }
         }
         Text(
-            "摄像机对焦点 = 人物中心 + 摄像机 X/Y + 背景给 ${doc.slot.label.lowercase()} side (${trim(doc.slot.cameraBaseX)}, ${trim(doc.slot.cameraBaseY)}), like V-Slice. The dashed frame is what a 1280×720 game camera sees at the preview zoom.",
+            "The camera point is the character's center plus Camera X/Y, plus the stage's default offset for the ${doc.slot.label.lowercase()} side (${trim(doc.slot.cameraBaseX)}, ${trim(doc.slot.cameraBaseY)}), like V-Slice. The dashed frame is what a 1280×720 game camera sees at the preview zoom.",
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

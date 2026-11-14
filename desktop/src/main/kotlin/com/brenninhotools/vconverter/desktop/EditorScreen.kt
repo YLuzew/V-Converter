@@ -268,7 +268,7 @@ fun EditorScreen(state: AppState) {
         )
         if (showNew) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(2f)) { Field(model.newName, { model.newName = it }, "Song name", accent, !model.busy) }
+                Column(Modifier.weight(2f)) { Field(model.newName, { model.newName = it }, "歌曲名", accent, !model.busy) }
                 Column(Modifier.weight(1f)) { Field(model.newBpm, { model.newBpm = it }, "BPM", accent, !model.busy) }
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

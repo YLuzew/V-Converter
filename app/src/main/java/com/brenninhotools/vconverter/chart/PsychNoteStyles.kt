@@ -55,14 +55,14 @@ object PsychNoteStyles {
             var found = 0
             directions.forEachIndexed { i, dir ->
                 val list = JSONArray()
-                (1..2).map { "音符水花 ${colors[i]} $it" }.filter { splashAtlas.hasPrefix(it) }.forEach { list.put(JSONObject().put("prefix", it)) }
+                (1..2).map { "note splash ${colors[i]} $it" }.filter { splashAtlas.hasPrefix(it) }.forEach { list.put(JSONObject().put("prefix", it)) }
                 found += list.length()
                 data.put("${dir}Splashes", list)
             }
             if (found > 0) {
                 val splashPath = splashSkin.trim().replace('\\', '/').removePrefix("images/").removeSuffix(".png")
                 assets.put("noteSplash", JSONObject().put("assetPath", splashPath).put("alpha", 0.6).put("data", data))
-                notes += "音符打击特效来自 images/$splashPath."
+                notes += "Note splashes come from images/$splashPath."
             }
         }
         if (notesAtlas == null) notes += "没有拿到图集 XML，所以按 Psych 的默认动画名处理了（purple0…、arrowLEFT、left press、left confirm）。"

@@ -84,7 +84,7 @@ class ReverseCharactersConverter : FileConverter() {
     override fun accept(file: ImportedFile) = (file.extension == "json" && (file.isUnder("characters") || AnimateAtlases.isAtlasFile(file.name))) || (file.extension == "xml" && file.isUnder("images"))
 
     override fun classify(file: ImportedFile, text: String): PickedText = when {
-        AnimateAtlases.isAtlasFile(file.name) -> PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
+        AnimateAtlases.isAtlasFile(file.name) -> PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
         else -> classifySheet(file, text)
     }
 

@@ -96,7 +96,7 @@ class ModConverter(
             report.section("其他文件已跳过", limited(scan.ignored.map(scan::relative)))
         }
         if (scan.otherRoots.isNotEmpty()) {
-            report.warn("压缩包里不止一个模组。只转换了「${scan.root.ifEmpty { "/" }}\" was converted; also found: ${scan.otherRoots.joinToString()}.")
+            report.warn("The archive has more than one mod. Only \"${scan.root.ifEmpty { "/" }}\" was converted; also found: ${scan.otherRoots.joinToString()}.")
         }
         if (scan.weekList != null) {
             report.warn("V-Slice 不用 Psych 的 weekList.txt 顺序；关卡按自己的顺序排。")
@@ -187,14 +187,14 @@ class ModConverter(
         val key = skin.trim().lowercase() + "|" + splash.trim().lowercase() + "|" + strumline
         return noteStyles.getOrPut(key) {
             val notes = sheet(skin)
-            if (notes == null) report.warn("音符皮肤 images/$skin.xml was not found; ${label.ifBlank { "its songs" }} keep the default note style.")
+            if (notes == null) report.warn("Note skin images/$skin.xml was not found; ${label.ifBlank { "its songs" }} keep the default note style.")
             val style = notes?.let { PsychNoteStyles.build(skin, it, splash.takeIf { s -> s.isNotBlank() }, splash.takeIf { s -> s.isNotBlank() }?.let(::sheet), strumline) }
             if (notes != null && style == null) report.warn("images/$skin.xml has no Psych note animations (purple0…), so it was not turned into a note style.")
             style?.let {
                 val id = if (strumline) it.id else it.id + "-notes"
                 writer.writeText("data/notestyles/$id.json", it.json)
                 written++
-                report.section("Note style $id", listOf("由这些图片生成：images/$skin.") + it.notes)
+                report.section("Note style $id", listOf("Made from images/$skin.") + it.notes)
                 id
             }
         }
@@ -205,7 +205,7 @@ class ModConverter(
         val animation = pathIndex["${folder}animation.json"] ?: return null
         val spritemaps = pathIndex.filterKeys { it.startsWith(folder) && !it.substring(folder.length).contains('/') && AnimateAtlases.isAtlasFile(it.substringAfterLast('/')) }.values.filter { it != animation }.sortedBy { it.lowercase() }
         return runCatching { AnimateAtlas.parse(files.readText(animation), spritemaps.map { files.readText(it) }) }
-            .onFailure { report.warn("Animate 图集 images/$image could not be read: ${it.message}") }
+            .onFailure { report.warn("Animate atlas images/$image could not be read: ${it.message}") }
             .getOrNull()
     }
 
@@ -237,7 +237,7 @@ class ModConverter(
                         songName = main.name,
                         extraEvents = extraEvents,
                         customStageIds = stageIds,
-                        noteStyle = noteStyleFor(main.arrowSkin, main.splashSkin, label = "歌曲 ${scanned.id}"),
+                        noteStyle = noteStyleFor(main.arrowSkin, main.splashSkin, label = "歌曲 \${scanned.id}"),
                         pixelStages = pixelStages,
                         playerVocals = listOf(playerKey).takeIf { "voices-${playerKey.lowercase()}" in audioNames },
                         opponentVocals = listOf(opponentKey).takeIf { "voices-${opponentKey.lowercase()}" in audioNames }
@@ -253,7 +253,7 @@ class ModConverter(
                         val target = "songs/${scanned.id}/${file.substringBeforeLast('.')}-${variation.variation}.${file.substringAfterLast('.')}"
                         runCatching { writer.copy(target) { files.open(path) } }
                             .onSuccess { written++ }
-                            .onFailure { report.warn("复制失败：$target: ${it.message}") }
+                            .onFailure { report.warn("Could not copy $target: ${it.message}") }
                     }
                 }
                 keptPsychEvents += conversion.report.keptPsychEvents
@@ -310,7 +310,7 @@ class ModConverter(
             }
         }
         if (approximate > 0) {
-            report.warn("$approximate character(s) are missing their spritesheet XML or Animate 图集 files, so their positions are approximate.")
+            report.warn("$approximate character(s) are missing their spritesheet XML or Animate atlas files, so their positions are approximate.")
         }
     }
 
@@ -366,7 +366,7 @@ class ModConverter(
         val textured = sources.filter { "/custom_notetypes/" in "/" + it.path.lowercase() }.mapNotNull { source ->
             val texture = PsychNoteStyles.textureIn(source.text) ?: return@mapNotNull null
             val typeName = source.path.substringAfterLast('/').substringBeforeLast('.')
-            val style = noteStyleFor(texture, strumline = false, label = "音符类型 $typeName") ?: return@mapNotNull null
+            val style = noteStyleFor(texture, strumline = false, label = "音符类型 \$typeName") ?: return@mapNotNull null
             Triple(typeName, texture, style)
         }
         val noteStyles = textured.associate { (typeName, _, style) -> PsychToVSliceChart.noteKindFor(typeName) to style }
@@ -390,7 +390,7 @@ class ModConverter(
                 written++
                 path
             }
-            report.section("Note type $typeName", listOf("它的贴图 images/$texture became note style \"$style\", applied by $path."))
+            report.section("Note type $typeName", listOf("Its texture images/$texture became note style \"$style\", applied by $path."))
         }
         report.stat("Scripts", bundle.converted)
         bundle.report.sections.forEach { report.section("Script · ${it.title}", it.lines) }
@@ -407,7 +407,7 @@ class ModConverter(
                 writer.copy(target) { files.open(path) }
                 written++
             } catch (e: Exception) {
-                report.warn("复制失败：$target: ${e.message}")
+                report.warn("Could not copy $target: ${e.message}")
             }
         }
         scan.packIcon?.let { icon ->
@@ -433,7 +433,7 @@ class ModConverter(
         writer.writeText("_polymod_meta.json", meta.toString(2))
         written++
         done = total
-        onProgress(ModProgress(total, total, "Done"))
+        onProgress(ModProgress(total, total, "完成"))
     }
 
     private fun step(label: String) {

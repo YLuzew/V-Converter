@@ -45,7 +45,7 @@ object PsychCharacterParser {
         val root = try {
             JSONObject(raw.trim().removePrefix("﻿"))
         } catch (e: JSONException) {
-            throw PsychCharacterException("该文件不是有效的 JSON：${e.message}", e)
+            throw PsychCharacterException("The file is not valid JSON: ${e.message}", e)
         }
         val animArray = root.value("animations") as? JSONArray
         if (animArray == null || root.value("image") == null) {

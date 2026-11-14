@@ -98,7 +98,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 version = v
                 announcements = list
             } catch (e: Exception) {
-                newsError = e.message ?: "连不上服务器."
+                newsError = e.message ?: "Could not reach the server."
             } finally {
                 newsLoading = false
             }
@@ -143,7 +143,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 message = e.message ?: "The download failed."
                 false
             }
-            if (ok) message = "已下载 ${mod.fileName}。"
+            if (ok) message = "已下载 \${mod.fileName}。"
             downloading = null
             onDone(ok)
         }

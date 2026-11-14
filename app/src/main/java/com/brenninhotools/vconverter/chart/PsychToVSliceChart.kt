@@ -88,7 +88,7 @@ object PsychToVSliceChart {
         val normalized = sources.map { it.copy(difficulty = normalizeDifficulty(it.difficulty)) }
         normalized.groupBy { it.difficulty }.forEach { (difficulty, group) ->
             require(difficulty.isNotEmpty()) { "每个谱子都需要一个难度名。" }
-            require(group.size == 1) { "难度「$difficulty\" is assigned to more than one chart." }
+            require(group.size == 1) { "The difficulty \"$difficulty\" is assigned to more than one chart." }
         }
 
         val ordered = normalized.sortedWith(compareBy({ difficultyRank(it.difficulty) }, { it.difficulty }))

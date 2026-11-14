@@ -10,7 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import com.brenninhotools.vconverter.R
-import com.brenninhotools.vconverter.generator.生成d
+import com.brenninhotools.vconverter.generator.Generated
 import com.brenninhotools.vconverter.generator.ModGenerator
 import com.brenninhotools.vconverter.generator.ModSpec
 import com.brenninhotools.vconverter.generator.PickedAsset
@@ -37,7 +37,7 @@ class ModGenViewModel(application: Application) : GeneratorViewModel(application
 
     override fun zipPrefix(): String = ZipModWriter.folderName(title)
 
-    override fun build(): 生成d = ModGenerator.generate(ModSpec(title, description, author, version.trim(), homepage, license, icon, starterModule))
+    override fun build(): Generated = ModGenerator.generate(ModSpec(title, description, author, version.trim(), homepage, license, icon, starterModule))
 
     fun pickIcon(uri: android.net.Uri) = pick(uri, setOf("png")) { icon = it }
 }

@@ -71,7 +71,7 @@ class PsychChartsConverter : PsychToVSliceConverter() {
             val style = main.arrowSkin.takeIf { PsychNoteStyles.isCustom(it) }?.let { PsychNoteStyles.build(it, null) }
             if (style != null) {
                 outputs += out("data/notestyles/${style.id}.json", style.json)
-                report.section(if (songs.size > 1) "$id · Note style ${style.id}" else "Note style ${style.id}", listOf("由谱子的 arrowSkin「${main.arrowSkin}\".") + style.notes)
+                report.section(if (songs.size > 1) "$id · Note style ${style.id}" else "Note style ${style.id}", listOf("Made from the chart's arrowSkin \"${main.arrowSkin}\".") + style.notes)
             }
             val conversion = PsychToVSliceChart.convert(sources, ConversionOptions(songName = main.name.ifBlank { id }, extraEvents = events, keepPsychEvents = keepEvents, noteStyle = style?.id))
             conversion.files(id).forEach { (name, text) -> outputs += out("data/songs/$id/$name", text) }
@@ -115,7 +115,7 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
             return PickedText(file.path, file.name, file.path, text, "atlas", "${atlas.frames.size} frames")
         }
         if (AnimateAtlases.isAtlasFile(file.name)) {
-            return PickedText(file.path, file.name, file.path, text, "animate", "Animate 图集 · ${AnimateAtlases.key(file.path)}")
+            return PickedText(file.path, file.name, file.path, text, "animate", "Animate atlas · ${AnimateAtlases.key(file.path)}")
         }
         val character = PsychCharacterParser.parse(text)
         val id = psychId(stem)
@@ -132,7 +132,7 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
         fun deadFor(id: String, slot: CharacterSlot): String? =
             listOf("$id-dead", "bf-dead").firstOrNull { it != id && it in parsed && slot == CharacterSlot.PLAYER && !id.endsWith("-dead") }
         val merged = items.filter { it.kind == "character" }.mapNotNull { deadFor(psychId(stem(it)), it.slot ?: CharacterSlot.OPPONENT) }.toSet()
-        if (merged.isNotEmpty()) report.section("死亡动画人物", listOf("合进了用到它的玩家人物（V-Slice 把死亡动画放在玩家人物身上）：${merged.joinToString()}."))
+        if (merged.isNotEmpty()) report.section("死亡动画人物", listOf("Merged into the players that use them (V-Slice keeps game over animations in the player character): ${merged.joinToString()}."))
         val outputs = items.filter { it.kind == "character" && psychId(stem(it)) !in merged }.map { item ->
             val id = psychId(stem(item))
             val character = parsed.getValue(id)
@@ -144,7 +144,7 @@ class PsychCharactersConverter : PsychToVSliceConverter() {
             converted.report.sections.forEach { report.section("$id · ${it.title}", it.lines) }
             converted.report.warnings.forEach { report.warn("$id: $it") }
             val missing = character.atlasImages.ifEmpty { listOf(character.image) }.filter { PsychToVSliceCharacter.atlasKey(it) !in atlases && PsychToVSliceCharacter.atlasKey(it) !in animates }
-            if (missing.isNotEmpty()) report.warn("$id: add the spritesheet XML (${missing.joinToString()}), or Animation.json + spritemap for Animate 图集es, for exact offsets.")
+            if (missing.isNotEmpty()) report.warn("$id: add the spritesheet XML (${missing.joinToString()}), or Animation.json + spritemap for Animate atlases, for exact offsets.")
             out("data/characters/$id.json", converted.json)
         }
         return ConvertedOutput(outputs, report.build())

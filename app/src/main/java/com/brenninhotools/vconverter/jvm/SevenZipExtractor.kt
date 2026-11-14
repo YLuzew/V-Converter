@@ -45,7 +45,7 @@ object SevenZipExtractor {
                 try {
                     inArchive.extract(indices.toIntArray(), false, callback)
                 } catch (e: SevenZipException) {
-                    throw IOException(callback.failure ?: "解压失败：${e.message}", e)
+                    throw IOException(callback.failure ?: "Extraction failed: ${e.message}", e)
                 } finally {
                     callback.closeCurrent()
                 }

@@ -71,7 +71,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
         private set
     var newName by mutableStateOf("")
     var newBpm by mutableStateOf("120")
-    var new难度 by mutableStateOf(setOf("easy", "normal", "hard"))
+    var newDifficulties by mutableStateOf(setOf("easy", "normal", "hard"))
     private var exportedRevision = -1
 
     init {
@@ -99,12 +99,12 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
             status = StatusMessage.Error("BPM 必须是大于 0 的数字。")
             return
         }
-        if (new难度.isEmpty()) {
+        if (newDifficulties.isEmpty()) {
             status = StatusMessage.Error("至少选一个难度。")
             return
         }
         val name = newName.trim().ifEmpty { "New Song" }
-        editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in new难度 }))
+        editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in newDifficulties }))
         source = "New song"
         invalidate()
         status = StatusMessage.Info("Started $name at ${newBpm.trim()} BPM.")
@@ -260,8 +260,8 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
                 ChoiceChips(
                     options = viewModel.difficultyOptions,
                     label = { it.replaceFirstChar { c -> c.uppercase() } },
-                    isSelected = { it in viewModel.new难度 },
-                    onClick = { d -> viewModel.new难度 = if (d in viewModel.new难度) viewModel.new难度 - d else viewModel.new难度 + d },
+                    isSelected = { it in viewModel.newDifficulties },
+                    onClick = { d -> viewModel.newDifficulties = if (d in viewModel.newDifficulties) viewModel.newDifficulties - d else viewModel.newDifficulties + d },
                     accent = accent,
                     enabled = !busy
                 )
@@ -328,7 +328,7 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             onSave = onSave,
             modFolderName = modFolderName,
             title = "Export",
-            buttonText = "导出 ${viewModel.target.label}",
+            buttonText = "导出 \${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )
     }

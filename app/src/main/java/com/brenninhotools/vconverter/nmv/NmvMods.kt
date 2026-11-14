@@ -69,7 +69,7 @@ class NmvToMod(
             writer.writeText("pack.json", pack.toString(2))
             written++
         }
-        onProgress(ModProgress(total, total, "Done"))
+        onProgress(ModProgress(total, total, "完成"))
         report.stat("Songs", scan.songs.size)
         report.stat("Characters", scan.characters.size)
         report.stat("Stages", scan.stages.size)
@@ -115,7 +115,7 @@ object ToNmvMod {
             val rel = com.brenninhotools.vconverter.mod.PsychLayout.normalize(path.removePrefix(root))
             if (rel.isNotEmpty()) nmv.copy(rel) { files.open(path) }
         }
-        progress(ModProgress(inside.size, inside.size, "Done"))
+        progress(ModProgress(inside.size, inside.size, "完成"))
         return result(nmv, null, listOf("Songs" to scan.songs.size, "Characters" to scan.characters.size, "Stages" to scan.stages.size, "Weeks" to scan.weeks.size))
     }
 

@@ -150,7 +150,7 @@ object CodenameToPsychChart {
             }
             if (speaker.isNotEmpty() && files.none { it.path.endsWith("/picospeaker.json") }) {
                 files += picoSpeaker(id, name, timeline, speaker)
-                report.section("Pico speaker", listOf("对话者扫弦线改成了 data/$id/picospeaker.json，Psych 的 pico-speaker 人物会读它来做射击动画。"))
+                report.section("Pico speaker", listOf("The speaker strumline became data/$id/picospeaker.json, which Psych's pico-speaker character reads for its shooting animations."))
             }
             if (roles.any { it.mode == Mode.HIDDEN_GF } && notes.any { it.type == HIDDEN_GF }) {
                 report.section("$difficulty · girlfriend notes", listOf("Notes of the hidden girlfriend strumline use the \"$HIDDEN_GF\" note type (custom_notetypes/$HIDDEN_GF.hx): invisible, and only the girlfriend sings them."))
@@ -354,12 +354,12 @@ object CodenameToPsychChart {
             unknown.forEach { (event, n) -> report.section("没有定义的事件", listOf("$event ×$n (values passed as text)")) }
         }
 
-        report.section("Difficulties", difficulties.map { d -> "data/$id/$id${if (d.equals("normal", true)) "" else "-" + SongPath.format(d)}.json" })
+        report.section("难度", difficulties.map { d -> "data/$id/$id${if (d.equals("normal", true)) "" else "-" + SongPath.format(d)}.json" })
         if (difficulties.any { it.lowercase() !in listOf("easy", "normal", "hard") }) {
             report.warn("Psych 默认只列 Easy、Normal、Hard，除非周目里设了 \"difficulties\"；周目转换器会补上其余的。")
         }
         if (customEvents.isNotEmpty()) report.section("用到的自定义事件", customEvents.keys.map { "custom_events/$it.hx" })
-        if (name != displayName && displayName.isNotBlank()) report.warn("Psych 是按文件夹找歌的，所以「$displayName\" is named \"$name\" in the chart.")
+        if (name != displayName && displayName.isNotBlank()) report.warn("Psych finds songs by folder, so \"$displayName\" is named \"$name\" in the chart.")
         return CodenamePsychSong(id, name, files, difficulties.map { it.lowercase() }, customEvents, usedTypes, characters, report.build())
     }
 

@@ -122,7 +122,7 @@ object CharacterGenerator {
         report.stat("Files", files.size)
         val required = listOf("idle", "singLEFT", "singDOWN", "singUP", "singRIGHT")
         val missing = required.filter { it !in names && !(it == "idle" && dances) }
-        if (missing.isNotEmpty()) report.warn("缺这些常用动画：${missing.joinToString()}.")
+        if (missing.isNotEmpty()) report.warn("Missing common animations: ${missing.joinToString()}.")
         if (spec.image == null) report.section("Spritesheet to add", listOf("images/$assetPath.png", "images/$assetPath.xml"))
         report.section("Health icon", listOf("images/icons/icon-${spec.healthIcon.trim().ifEmpty { id }}.png (300×150, two frames)"))
         return Generated(files, report.build())

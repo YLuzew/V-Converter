@@ -298,7 +298,7 @@ class CodenameToPsychScript(
             }
         }
 
-        declaredFunctions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename 回调 $it() 在 Psych 里不会跑：${unsupportedCallbacks.getValue(it)}") }
+        declaredFunctions.filter { it in unsupportedCallbacks }.forEach { issue(0, "Codename callback $it() never runs in Psych: ${unsupportedCallbacks.getValue(it)}") }
 
         segs.filter { it.kind == "import" }.forEach { seg ->
             val path = seg.head.filter { it.kind != HxKind.SPACE }.drop(1).takeWhile { !it.isPunct(";") }.joinToString("") { it.text }
@@ -307,7 +307,7 @@ class CodenameToPsychScript(
                 importMap.containsKey(path) -> imports += importMap.getValue(path)
                 path.startsWith("funkin.backend.scripting") -> Unit
                 path.startsWith("funkin.") -> issue(seg.line, "Import '$path' is Codename-only and was dropped.")
-                path.endsWith(".*") -> issue(seg.line, "通配符导入 '$path' is not supported by Psych's HScript and was dropped.")
+                path.endsWith(".*") -> issue(seg.line, "Wildcard import '$path' is not supported by Psych's HScript and was dropped.")
                 path.isNotEmpty() -> imports += path
             }
         }
@@ -896,7 +896,7 @@ class CodenameToPsychScript(
                     sb.append("Paths.").append(pathsRenames.getValue(member))
                     i = n2 + 1
                 }
-                t.text == "Options" && member != null -> {
+                t.text == "选项" && member != null -> {
                     val mapped = options[member]
                     if (mapped == null) issue(t.line, "Options.$member has no Psych equivalent and became null.")
                     sb.append(mapped ?: "null")

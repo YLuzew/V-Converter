@@ -71,10 +71,10 @@ object PsychToVSliceLevel {
         report.stat("Props", props.length())
 
         if (missingCharacters.isNotEmpty()) {
-            report.warn("没有对应的菜单人物数据：${missingCharacters.joinToString { "\"$it\"" }}. Add images/menucharacters/<name>.json to convert them; they were left out.")
+            report.warn("No menu character data for ${missingCharacters.joinToString { "\"$it\"" }}. Add images/menucharacters/<name>.json to convert them; they were left out.")
         }
         if (week.difficulties.isNotEmpty()) {
-            report.warn("Psych 的周目难度（${week.difficulties.joinToString()}) are not stored in V-Slice levels; each song's metadata lists its difficulties.")
+            report.warn("Psych week difficulties (${week.difficulties.joinToString()}) are not stored in V-Slice levels; each song's metadata lists its difficulties.")
         }
         val locked = week.weekBefore.isNotBlank() && !week.startUnlocked
         val extra = mutableListOf<Pair<String, String>>()
@@ -82,9 +82,9 @@ object PsychToVSliceLevel {
             val className = levelClass(source.id)
             extra += "scripts/levels/$className.hxc" to levelScript(className, source.id, week, locked)
             report.section(
-                "关卡脚本（scripts/levels/$className.hxc)",
+                "Level script (scripts/levels/$className.hxc)",
                 listOfNotNull(
-                    if (locked) "通关后解锁：「${week.weekBefore}\", like Psych's weekBefore" else null,
+                    if (locked) "Unlocks after beating \"${week.weekBefore}\", like Psych's weekBefore" else null,
                     if (locked && week.hiddenUntilUnlocked) "解锁前在故事菜单里隐藏" else null,
                     if (locked) "它锁着的时候歌曲不会进自由游玩，和 Psych 里一样" else null,
                     if (week.hideFreeplay) "它的歌曲从自由游玩中隐藏，但故事模式里还能玩" else null
@@ -98,7 +98,7 @@ object PsychToVSliceLevel {
             )
         )
         report.section(
-            "自由游玩图标s & colors (V-Slice shows the opponent's images/freeplay/icons/<character>pixel.png and has no per-song color)",
+            "Freeplay icons & colors (V-Slice shows the opponent's images/freeplay/icons/<character>pixel.png and has no per-song color)",
             week.songs.map { song ->
                 fmt("%s → icon %s, #%02X%02X%02X", SongPath.format(song.name), song.icon.ifBlank { "face" }, song.color[0], song.color[1], song.color[2])
             }

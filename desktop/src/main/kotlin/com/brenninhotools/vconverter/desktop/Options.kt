@@ -113,16 +113,16 @@ fun OptionsButton() {
                 .soundClickable { open = !open },
             contentAlignment = Alignment.Center
         ) {
-            Icon(OverlayIcons.Gear, contentDescription = "Options", tint = Palette.Text, modifier = Modifier.size(20.dp))
+            Icon(OverlayIcons.Gear, contentDescription = "选项", tint = Palette.Text, modifier = Modifier.size(20.dp))
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             Column(Modifier.widthIn(min = 280.dp).padding(horizontal = 14.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("OPTIONS", style = MaterialTheme.typography.titleMedium, color = Palette.Text)
-                OptionToggle("FPS Counter", "Shows \"FPS:\" in the top-right corner.", AppSettings.fpsCounter, AppSettings::updateFpsCounter)
-                OptionToggle("UI Sounds", "Plays scrollMenu when you click tabs and buttons.", AppSettings.uiSounds, AppSettings::updateUiSounds)
-                OptionToggle("Menu Music", "Plays freakyMenu while you work. It pauses while an editor plays a song.", AppSettings.menuMusic, AppSettings::updateMenuMusic)
-                com.brenninhotools.vconverter.editorview.TextValueField("Online server address", AppSettings.serverUrl, Modifier.widthIn(min = 260.dp)) { AppSettings.updateServerUrl(it) }
-                OptionToggle("Send Error Reports", "Sends conversion errors and crashes (message, app version and platform) to the online server.", AppSettings.errorReports, AppSettings::updateErrorReports)
+                OptionToggle("FPS 计数", "在右上角显示「FPS:」。", AppSettings.fpsCounter, AppSettings::updateFpsCounter)
+                OptionToggle("界面音效", "Plays scrollMenu when you click tabs and buttons.", AppSettings.uiSounds, AppSettings::updateUiSounds)
+                OptionToggle("菜单音乐", "Plays freakyMenu while you work. It pauses while an editor plays a song.", AppSettings.menuMusic, AppSettings::updateMenuMusic)
+                com.brenninhotools.vconverter.editorview.TextValueField("在线服务器地址", AppSettings.serverUrl, Modifier.widthIn(min = 260.dp)) { AppSettings.updateServerUrl(it) }
+                OptionToggle("发送错误报告", "把转换错误和崩溃（消息、应用版本、平台）发到在线服务器。", AppSettings.errorReports, AppSettings::updateErrorReports)
                 if (AppSettings.menuMusic) {
                     Text("Music volume: ${(AppSettings.musicVolume * 100).roundToInt()}%", style = MaterialTheme.typography.bodySmall, color = Palette.Muted)
                     Slider(

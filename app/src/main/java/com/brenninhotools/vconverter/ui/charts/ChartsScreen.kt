@@ -166,7 +166,7 @@ fun ChartsScreen(viewModel: ChartsViewModel, modFolderName: String?, onSave: () 
             onConvert = viewModel::convert,
             onSave = onSave,
             modFolderName = modFolderName,
-            buttonText = "转换为 ${viewModel.target.title}"
+            buttonText = "转换为 \${viewModel.target.title}"
         )
     }
 }
@@ -334,10 +334,10 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
     val tweaks = viewModel.tweaks
     val sample = viewModel.before.firstOrNull()
     FunkinCard {
-        SectionTitle("Options", accent, 3)
+        SectionTitle("选项", accent, 3)
         Text("留空就保持谱子原来的设置。", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted)
         if (ChartField.SONG_NAME in fields) {
-            FunkinTextField(tweaks.songName, { v -> viewModel.updateTweaks { it.copy(songName = v) } }, "Song name", accent, enabled = !busy)
+            FunkinTextField(tweaks.songName, { v -> viewModel.updateTweaks { it.copy(songName = v) } }, "歌曲名", accent, enabled = !busy)
         }
         if (ChartField.ARTIST in fields) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {

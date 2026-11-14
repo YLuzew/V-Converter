@@ -49,15 +49,15 @@ fun ModGenScreen(viewModel: ModGenViewModel, modFolderName: String?, onSave: () 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
             SectionTitle("模组信息", accent, 1)
-            FunkinTextField(viewModel.title, { viewModel.title = it }, "Title", accent, enabled = !busy)
-            FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
+            FunkinTextField(viewModel.title, { viewModel.title = it }, "标题", accent, enabled = !busy)
+            FunkinTextField(viewModel.description, { viewModel.description = it }, "描述", accent, enabled = !busy)
             FunkinTextField(viewModel.author, { viewModel.author = it }, "作者（逗号分隔）", accent, enabled = !busy)
             FunkinTextField(viewModel.version, { viewModel.version = it }, "模组版本", accent, enabled = !busy)
             FunkinTextField(viewModel.homepage, { viewModel.homepage = it }, "主页（可选）", accent, enabled = !busy)
             FunkinTextField(viewModel.license, { viewModel.license = it }, "许可证（可选）", accent, enabled = !busy)
         }
         FunkinCard {
-            SectionTitle("Extras", accent, 2)
+            SectionTitle("其他", accent, 2)
             AssetPicker(
                 label = "模组图标（.png，150×150）",
                 fileName = viewModel.icon?.name,

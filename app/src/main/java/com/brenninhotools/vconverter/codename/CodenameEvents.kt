@@ -48,7 +48,7 @@ object CodenameEvents {
             EventParam("ease", "Tween Ease", ParamType.ENUM, "linear", easeNames),
             EventParam("easeDir", "Tween Type", ParamType.ENUM, "In", listOf("In", "Out", "InOut")),
             EventParam("mode", "Mode", ParamType.ENUM, "direct", listOf("direct", "stage")),
-            EventParam("multiplicative", "Multiplicative?", ParamType.BOOL, false)
+            EventParam("multiplicative", "叠加？", ParamType.BOOL, false)
         )),
         EventDefinition("Camera Flash", listOf(
             EventParam("reversed", "Reversed?", ParamType.BOOL, false),

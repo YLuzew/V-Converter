@@ -133,7 +133,7 @@ fun highlight(code: String): AnnotatedString = buildAnnotatedString {
 private data class PreparedCode(val body: AnnotatedString, val gutter: String, val total: Int, val shown: Int)
 
 @Composable
-fun CodeView(code: String, title: String = "Preview", accent: Color = Funkin.Down) {
+fun CodeView(code: String, title: String = "预览", accent: Color = Funkin.Down) {
     val clipboard = LocalClipboardManager.current
     var expanded by rememberSaveable(code.length, code.hashCode()) { mutableStateOf(false) }
     var copied by remember { mutableStateOf(false) }
@@ -192,12 +192,12 @@ fun CodeView(code: String, title: String = "Preview", accent: Color = Funkin.Dow
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                Text(if (copied) "COPIED" else "COPY", style = MaterialTheme.typography.labelSmall, color = if (copied) Funkin.Up else accent)
+                Text(if (copied) "已复制" else "复制", style = MaterialTheme.typography.labelSmall, color = if (copied) Funkin.Up else accent)
             }
         }
         val ready = prepared
         if (ready == null) {
-            Text("Loading…", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted, modifier = Modifier.padding(14.dp))
+            Text("加载中…", style = MaterialTheme.typography.bodySmall, color = Funkin.Muted, modifier = Modifier.padding(14.dp))
         } else Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(vertical = 10.dp)) {
             Text(
                 ready.gutter,
@@ -232,7 +232,7 @@ fun CodeView(code: String, title: String = "Preview", accent: Color = Funkin.Dow
                     when {
                         !expanded && total > EXPANDED_LINES -> "SHOW FIRST $EXPANDED_LINES LINES"
                         !expanded -> "SHOW ALL $total LINES"
-                        else -> "SHOW LESS"
+                        else -> "收起"
                     },
                     style = MaterialTheme.typography.labelSmall,
                     color = accent

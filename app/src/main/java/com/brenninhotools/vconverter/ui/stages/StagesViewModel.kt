@@ -111,7 +111,7 @@ class StagesViewModel(application: Application) : BaseConverterViewModel(applica
                         props?.notes?.let { if (it.isNotEmpty()) combined.section("$id · Lua stage", it) }
                         if (!item.fromJson) combined.warn("$id: no stage .json was added; default character positions were used.")
                         val converted = PsychToVSliceStage.convert(StageSource(id, stage, atlas = lookup))
-                        converted.report.stats.firstOrNull { it.label == "Props" }?.let { combined.stat("$id props", it.value) }
+                        converted.report.stats.firstOrNull { it.label == "物件" }?.let { combined.stat("$id props", it.value) }
                         converted.report.sections.forEach { combined.section("$id · ${it.title}", it.lines) }
                         converted.report.warnings.forEach { combined.warn("$id: $it") }
                         OutputFile(listOf("data", "stages"), "$id.json", converted.json)

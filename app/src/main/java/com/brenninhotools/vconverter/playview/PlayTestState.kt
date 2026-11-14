@@ -153,7 +153,7 @@ class PlayTestState(private val scope: CoroutineScope, private val platform: Pla
                 selected = null
                 if (opened.songs.isEmpty()) error = "No songs found in $label." else load(opened, opened.songs.first())
             } catch (e: Exception) {
-                error = e.message ?: "Could not open the files."
+                error = e.message ?: "打不开这些文件。"
             } finally {
                 busy = false
             }
@@ -249,7 +249,7 @@ class PlayTestState(private val scope: CoroutineScope, private val platform: Pla
         runIssues = emptyList()
         scope.launch {
             val created = withContext(Dispatchers.Default) { runCatching { platform.player(current.audio) }.getOrNull() }
-            if (current.audio.isNotEmpty() && created == null) runIssues = runIssues + PlayIssue(IssueLevel.WARNING, "Audio", "The audio could not be played; PlayTest uses a silent clock.")
+            if (current.audio.isNotEmpty() && created == null) runIssues = runIssues + PlayIssue(IssueLevel.WARNING, "音频", "音频播不出来；试玩改用静音计时。")
             val notes = current.document.notes(difficulty)
             val game = PlayTestEngine(notes, botplay)
             val begin = startAt.coerceAtLeast(0.0)
@@ -352,15 +352,15 @@ class PlayTestState(private val scope: CoroutineScope, private val platform: Pla
                 }
                 is PlayEvent.Miss -> {
                     sing(CharacterRole.PLAYER, event.note.lane, t, 0.0, true)
-                    added += Popup("MISS", t, event.note.lane)
+                    added += Popup("失误", t, event.note.lane)
                 }
                 is PlayEvent.OpponentHit -> {
                     lastConfirm[event.note.lane] = t
                     sing(CharacterRole.OPPONENT, event.note.lane, t, event.note.length, false)
                 }
-                is PlayEvent.HoldDropped -> added += Popup("DROP", t, event.note.lane)
+                is PlayEvent.HoldDropped -> added += Popup("漏音", t, event.note.lane)
                 is PlayEvent.HoldFinished -> Unit
-                is PlayEvent.Died -> runIssues = runIssues + PlayIssue(IssueLevel.INFO, "Gameplay", "Health ran out at ${formatMs(event.time)} (PlayTest keeps going).")
+                is PlayEvent.Died -> runIssues = runIssues + PlayIssue(IssueLevel.INFO, "游戏画面", "Health ran out at ${formatMs(event.time)} (PlayTest keeps going).")
             }
         }
         if (added.isNotEmpty()) popups = (popups + added).takeLast(6)
@@ -406,7 +406,7 @@ class PlayTestState(private val scope: CoroutineScope, private val platform: Pla
         if (offsets.size >= 8) {
             val average = offsets.average()
             if (kotlin.math.abs(average) > 25) {
-                runIssues = runIssues + PlayIssue(IssueLevel.INFO, "Gameplay", "Hits were on average ${fmt("%.0f", kotlin.math.abs(average))} ms ${if (average > 0) "late" else "early"}: check the song offset or your device latency.")
+                runIssues = runIssues + PlayIssue(IssueLevel.INFO, "游戏画面", "Hits were on average ${fmt("%.0f", kotlin.math.abs(average))} ms ${if (average > 0) "late" else "early"}: check the song offset or your device latency.")
             }
         }
     }

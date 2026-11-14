@@ -202,7 +202,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Character", accent, 1)
+            SectionTitle("人物", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
                 title = "打开人物",
@@ -216,7 +216,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             OutlineButton("新建人物", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
-            SectionTitle("Preview", accent, 2)
+            SectionTitle("预览", accent, 2)
             CharacterToolbar(editor)
             DragModeBar(editor)
             CharacterPreview(
@@ -230,7 +230,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             )
         }
         FunkinCard {
-            SectionTitle("Animations", accent, 3)
+            SectionTitle("动画", accent, 3)
             AnimationListPanel(editor)
             AnimationPanel(editor)
         }
@@ -268,7 +268,7 @@ fun CharacterEditorScreen(viewModel: CharacterEditorViewModel, modFolderName: St
             onConvert = viewModel::export,
             onSave = onSave,
             modFolderName = modFolderName,
-            title = "Export",
+            title = "导出",
             buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )

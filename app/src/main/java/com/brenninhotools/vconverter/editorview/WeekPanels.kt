@@ -47,12 +47,12 @@ private fun swatch(raw: String): Color {
 @Composable
 fun WeekToolbar(state: WeekEditorState, modifier: Modifier = Modifier) {
     FlowRow(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorChip("Undo", false) { if (state.canUndo) state.undo() }
-        EditorChip("Redo", false) { if (state.canRedo) state.redo() }
-        EditorChip(if (state.playing) "Pause" else "Play", state.playing) { state.playing = !state.playing }
-        EditorChip("Confirm", false) { state.confirm() }
-        EditorChip("◀ Difficulty", false) { state.changeDifficulty(-1) }
-        EditorChip("Difficulty ▶", false) { state.changeDifficulty(1) }
+        EditorChip("撤销", false) { if (state.canUndo) state.undo() }
+        EditorChip("重做", false) { if (state.canRedo) state.redo() }
+        EditorChip(if (state.playing) "暂停" else "播放", state.playing) { state.playing = !state.playing }
+        EditorChip("确认", false) { state.confirm() }
+        EditorChip("◀ 难度", false) { state.changeDifficulty(-1) }
+        EditorChip("难度 ▶", false) { state.changeDifficulty(1) }
     }
 }
 
@@ -60,9 +60,9 @@ fun WeekToolbar(state: WeekEditorState, modifier: Modifier = Modifier) {
 fun WeekInfoPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
     val doc = state.document
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Week")
+        EditorSectionTitle("周目")
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Week id", doc.id, Modifier.weight(1f)) { v ->
+            TextValueField("周目 id", doc.id, Modifier.weight(1f)) { v ->
                 val clean = v.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
                 if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
             }
@@ -86,7 +86,7 @@ fun WeekInfoPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
             WeekCheck("在故事模式中显示", doc.visible) { v -> state.edit { it.copy(visible = v) } }
             WeekCheck("从自由游玩中隐藏歌曲", doc.hideFreeplay) { v -> state.edit { it.copy(hideFreeplay = v) } }
         }
-        EditorSectionTitle("Unlocking")
+        EditorSectionTitle("解锁")
         TextValueField("前置周目（weekBefore）", doc.weekBefore, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(weekBefore = v.trim()) } }
         Row {
             WeekCheck("初始解锁", doc.startUnlocked) { v -> state.edit { it.copy(startUnlocked = v) } }
@@ -153,9 +153,9 @@ fun WeekSongsPanel(state: WeekEditorState, modifier: Modifier = Modifier) {
                 }
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                EditorChip("Move up", false) { state.moveSong(index, -1) }
+                EditorChip("上移", false) { state.moveSong(index, -1) }
                 EditorChip("下移", false) { state.moveSong(index, 1) }
-                EditorChip("Remove", false) { state.removeSong(index) }
+                EditorChip("移除", false) { state.removeSong(index) }
             }
             Text("图标和颜色供 Psych 的自由游玩使用；V-Slice 读歌曲自己的元数据。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
         }
@@ -187,9 +187,9 @@ fun WeekPropsPanel(state: WeekEditorState, modifier: Modifier = Modifier, onLoad
         }
         val prop = doc.prop(slot)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            EditorChip("None", prop == null) { state.edit { it.withProp(slot, null) } }
+            EditorChip("无", prop == null) { state.edit { it.withProp(slot, null) } }
             EditorChip("Base ${slot.key}", prop?.isBase == true) { state.edit { it.withProp(slot, WeekProp.base(slot)) } }
-            EditorChip("Custom", prop != null && !prop.isBase) {
+            EditorChip("自定义", prop != null && !prop.isBase) {
                 if (prop == null || prop.isBase) {
                     val base = prop ?: WeekProp.base(slot)
                     state.edit { it.withProp(slot, WeekProp("storymenu/props/${it.id}-${slot.key}", offsetX = base.offsetX, offsetY = base.offsetY)) }
@@ -230,7 +230,7 @@ private fun PropFields(state: WeekEditorState, slot: WeekSlot, prop: WeekProp) {
     if (prefixes.isNotEmpty()) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             ChoiceField("待机动画", idle, prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix(it.idleName, v) } }
-            ChoiceField("确认动画", confirm, listOf("" to "None") + prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
+            ChoiceField("确认动画", confirm, listOf("" to "无") + prefixes.map { it to it }, Modifier.weight(1f)) { v -> update { it.withPrefix("confirm", v) } }
         }
     } else {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -241,12 +241,12 @@ private fun PropFields(state: WeekEditorState, slot: WeekSlot, prop: WeekProp) {
     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
         NumberField("偏移 X", prop.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
         NumberField("偏移 Y", prop.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
-        NumberField("Scale", prop.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
+        NumberField("缩放", prop.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
     }
     Row(verticalAlignment = Alignment.CenterVertically) {
         NumberField("待机间隔（拍）", prop.danceEvery, Modifier.weight(1f)) { v -> if (v >= 0) update { it.copy(danceEvery = v) } }
-        WeekCheck("Pixel", prop.isPixel) { v -> update { it.copy(isPixel = v) } }
-        WeekCheck("Flip X", prop.flipX) { v -> update { it.copy(flipX = v) } }
+        WeekCheck("像素", prop.isPixel) { v -> update { it.copy(isPixel = v) } }
+        WeekCheck("水平翻转", prop.flipX) { v -> update { it.copy(flipX = v) } }
     }
     if (confirm.isNotEmpty()) {
         Text("点预览上方的「确认」来播放确认动画。", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)

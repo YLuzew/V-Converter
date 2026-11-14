@@ -141,7 +141,7 @@ fun PlayTestPlayScreen(viewModel: PlayTestViewModel) {
     val opener = rememberLauncherForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { viewModel.open(it) }
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Open", accent, 1)
+            SectionTitle("打开", accent, 1)
             DropZone(
                 title = "打开模组或歌曲",
                 hint = "选择模组 .zip（V-Slice、Psych 或 Codename）、模组里的若干文件，或者谱子文件连同音频。转换结果和谱面编辑器里也有试玩按钮。",
@@ -153,7 +153,7 @@ fun PlayTestPlayScreen(viewModel: PlayTestViewModel) {
             com.brenninhotools.vconverter.ui.components.StatusBanner(viewModel.status, viewModel::dismissStatus)
         }
         FunkinCard {
-            SectionTitle("PlayTest", accent, 2)
+            SectionTitle("试玩", accent, 2)
             PlayTestSetupPanel(state)
             if (state.phase == PlayPhase.RESULTS) PlayTestResultsPanel(state)
         }

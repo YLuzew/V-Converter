@@ -118,33 +118,33 @@ fun nmvDescription(direction: Direction, tab: Tab): String {
 
 private fun hint(direction: Direction, tab: Tab): String = when (direction.from) {
     Engine.NMV -> when (tab) {
-        Tab.CHARTS -> "Pick songs/<song>/charts/<difficulty>.json and events.json. Keep the songs/<song>/charts folders (or use an archive) so the song is known."
-        Tab.CHARACTERS -> "Pick data/characters/*.json."
-        Tab.STAGES -> "Pick data/stages/<stage>/data.json and script.hx (or an archive with the stage folders)."
-        Tab.WEEKS -> "Pick data/weeks/*.json and images/menus/story/characters/*.json."
-        else -> "Pick .hx scripts. Archives keep the folders, so songs/<song>/, data/scripts/, data/stages/, data/events/ and data/notetypes/ keep their scope."
+        Tab.CHARTS -> "挑 songs/<song>/charts/<难度>.json 和 events.json。保留 songs/<song>/charts 的文件夹结构（或者用压缩包），才能认出是哪首歌。"
+        Tab.CHARACTERS -> "挑 data/characters/*.json。"
+        Tab.STAGES -> "挑 data/stages/<背景>/data.json 和 script.hx（或者带背景文件夹的压缩包）。"
+        Tab.WEEKS -> "挑 data/weeks/*.json 和 images/menus/story/characters/*.json。"
+        else -> "挑 .hx 脚本。压缩包会保留目录，所以 songs/<song>/、data/scripts/、data/stages/、data/events/ 和 data/notetypes/ 各自的作用域不会丢。"
     }
     Engine.FPSPLUS -> ""
     Engine.PSYCH -> when (tab) {
-        Tab.CHARTS -> "Pick data/<song>/<song>-<difficulty>.json and events.json."
-        Tab.CHARACTERS -> "Pick characters/*.json (and their .lua/.hx scripts)."
-        Tab.STAGES -> "Pick stages/*.json and stages/<stage>.lua or .hx."
+        Tab.CHARTS -> "挑 data/<song>/<song>-<难度>.json 和 events.json。"
+        Tab.CHARACTERS -> "挑 characters/*.json（连同它们的 .lua/.hx 脚本）。"
+        Tab.STAGES -> "挑 stages/*.json 和 stages/<背景>.lua 或 .hx。"
         Tab.WEEKS -> "选择 weeks/*.json 和 images/menucharacters/*.json。"
-        else -> "Pick .lua and .hx scripts. Archives keep the folders, so scripts/, data/<song>/, stages/, custom_events/ and custom_notetypes/ keep their scope."
+        else -> "挑 .lua 和 .hx 脚本。压缩包会保留目录，所以 scripts/、data/<song>/、stages/、custom_events/ 和 custom_notetypes/ 各自的作用域不会丢。"
     }
     Engine.CODENAME -> when (tab) {
-        Tab.CHARTS -> "Pick songs/<song>/charts/*.json with meta.json and events.json."
-        Tab.CHARACTERS -> "Pick data/characters/*.xml with their spritesheet .xml."
-        Tab.STAGES -> "Pick data/stages/*.xml."
-        Tab.WEEKS -> "Pick data/weeks/weeks/*.xml and data/weeks/characters/*.xml."
-        else -> "Pick .hx scripts, plus stage XMLs and data/events/*.json for context."
+        Tab.CHARTS -> "挑 songs/<song>/charts/*.json，连同 meta.json 和 events.json。"
+        Tab.CHARACTERS -> "挑 data/characters/*.xml 和对应的图集 .xml。"
+        Tab.STAGES -> "挑 data/stages/*.xml。"
+        Tab.WEEKS -> "挑 data/weeks/weeks/*.xml 和 data/weeks/characters/*.xml。"
+        else -> "挑 .hx 脚本，再补上背景 XML 和 data/events/*.json 作为上下文。"
     }
     Engine.VSLICE -> when (tab) {
-        Tab.CHARTS -> "Pick <song>-metadata.json and <song>-chart.json (and variations)."
-        Tab.CHARACTERS -> "Pick data/characters/*.json with their spritesheet .xml."
-        Tab.STAGES -> "Pick data/stages/*.json."
-        Tab.WEEKS -> "Pick data/levels/*.json plus the songs' -metadata.json files."
-        else -> "Pick .hxc scripts."
+        Tab.CHARTS -> "挑 <song>-metadata.json 和 <song>-chart.json（连同变体）。"
+        Tab.CHARACTERS -> "挑 data/characters/*.json 和对应的图集 .xml。"
+        Tab.STAGES -> "挑 data/stages/*.json。"
+        Tab.WEEKS -> "挑 data/levels/*.json，再加上歌曲的 -metadata.json。"
+        else -> "挑 .hxc 脚本。"
     }
 }
 
@@ -155,58 +155,58 @@ fun NmvTabScreen(models: NmvModels, direction: Direction, tab: Tab, folderName: 
         Tab.MOD -> when (direction) {
             Direction.PSYCH_TO_NMV -> ModScreen(
                 models.fromPsych, folderName, save,
-                intro = "Convert a whole Psych Engine mod to NightmareVision: charts, characters, stages, weeks, Lua scripts (as HScript), HScript, events, note types, images and audio.",
-                infoNote = "Written to meta.json. pack.png becomes images/pack.png.",
-                convertNote = "Download the converted mod as a .zip (unzip it into NightmareVision's content folder), or write it straight into an empty mod folder."
+                intro = "把整个 Psych Engine 模组转成 NightmareVision：谱面、人物、背景、周目、Lua 脚本（转成 HScript）、HScript、事件、音符类型、图片和音频。",
+                infoNote = "写进 meta.json。pack.png 会变成 images/pack.png。",
+                convertNote = "把转换好的模组下载成 .zip（解压到 NightmareVision 的 content 文件夹），或者直接写进一个空的模组文件夹。"
             )
             Direction.CODENAME_TO_NMV -> CodenameModScreen(
                 models.fromCodename, folderName, save,
-                intro = "Convert a whole Codename Engine mod to NightmareVision: songs, characters, stages, weeks, HScript scripts, events, note types, images and audio.",
-                infoNote = "Written to meta.json (read from data/config/modpack.ini). icon.png becomes images/pack.png.",
-                convertNote = "Download the converted mod as a .zip (unzip it into NightmareVision's content folder), or write it straight into an empty mod folder."
+                intro = "把整个 Codename Engine 模组转成 NightmareVision：歌曲、人物、背景、周目、HScript 脚本、事件、音符类型、图片和音频。",
+                infoNote = "写进 meta.json（来源是 data/config/modpack.ini）。icon.png 会变成 images/pack.png。",
+                convertNote = "把转换好的模组下载成 .zip（解压到 NightmareVision 的 content 文件夹），或者直接写进一个空的模组文件夹。"
             )
             Direction.PSYCH_TO_FPSPLUS -> ModScreen(
                 models.psychToFps, folderName, save,
-                intro = "Convert a whole Psych Engine mod to FPS Plus: charts, characters and stages as .hxc classes, weeks, Freeplay, Lua and HScript scripts, events, note types, icons, images and audio.",
-                infoNote = "Written to meta.json with the uid and api_version FPS Plus needs. pack.png becomes icon.png.",
-                convertNote = "Download the converted mod as a .zip (unzip it into FPS Plus's mods folder), or write it straight into an empty mod folder."
+                intro = "把整个 Psych Engine 模组转成 FPS Plus：谱面、人物和背景转成 .hxc 类，周目、自由游玩、Lua 和 HScript 脚本、事件、音符类型、图标、图片和音频。",
+                infoNote = "写进 meta.json，带上 FPS Plus 需要的 uid 和 api_version。pack.png 会变成 icon.png。",
+                convertNote = "把转换好的模组下载成 .zip（解压到 FPS Plus 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
             )
             Direction.CODENAME_TO_FPSPLUS -> CodenameModScreen(
                 models.codenameToFps, folderName, save,
-                intro = "Convert a whole Codename Engine mod to FPS Plus: songs, characters and stages as .hxc classes, weeks, scripts, events, images and audio.",
-                infoNote = "Written to meta.json (read from data/config/modpack.ini) with the uid and api_version FPS Plus needs.",
-                convertNote = "Download the converted mod as a .zip (unzip it into FPS Plus's mods folder), or write it straight into an empty mod folder."
+                intro = "把整个 Codename Engine 模组转成 FPS Plus：歌曲、人物和背景转成 .hxc 类，周目、脚本、事件、图片和音频。",
+                infoNote = "写进 meta.json（来源是 data/config/modpack.ini），带上 FPS Plus 需要的 uid 和 api_version。",
+                convertNote = "把转换好的模组下载成 .zip（解压到 FPS Plus 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
             )
             Direction.VSLICE_TO_FPSPLUS -> ReverseModScreen(
                 models.vsliceToFps, folderName, save,
-                intro = "Convert a whole V-Slice mod to FPS Plus: songs, characters and stages as .hxc classes, levels as weeks, scripts, images and audio.",
-                convertNote = "Download the converted mod as a .zip (unzip it into FPS Plus's mods folder), or write it straight into an empty mod folder."
+                intro = "把整个 V-Slice 模组转成 FPS Plus：歌曲、人物和背景转成 .hxc 类，关卡转成周目，脚本、图片和音频。",
+                convertNote = "把转换好的模组下载成 .zip（解压到 FPS Plus 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
             )
             Direction.VSLICE_TO_NMV -> ReverseModScreen(
                 models.fromVSlice, folderName, save,
-                intro = "Convert a whole V-Slice mod to NightmareVision: songs (variations become their own songs), characters, stages, levels, .hxc scripts, images and audio.",
-                convertNote = "Download the converted mod as a .zip (unzip it into NightmareVision's content folder), or write it straight into an empty mod folder."
+                intro = "把整个 V-Slice 模组转成 NightmareVision：歌曲（变体各自成歌）、人物、背景、关卡、.hxc 脚本、图片和音频。",
+                convertNote = "把转换好的模组下载成 .zip（解压到 NightmareVision 的 content 文件夹），或者直接写进一个空的模组文件夹。"
             )
             else -> {
                 val target = direction.to.title
                 val note = when (direction.to) {
-                    Engine.FPSPLUS -> "Written to meta.json with the uid and api_version FPS Plus needs."
-                    Engine.VSLICE -> "Written to _polymod_meta.json (read from meta.json)."
-                    Engine.CODENAME -> "Written to data/config/modpack.ini (read from meta.json)."
-                    else -> "Written to pack.json (read from meta.json). The meta.json icon becomes pack.png."
+                    Engine.FPSPLUS -> "写进 meta.json，带上 FPS Plus 需要的 uid 和 api_version。"
+                    Engine.VSLICE -> "写进 _polymod_meta.json（来源是 meta.json）。"
+                    Engine.CODENAME -> "写进 data/config/modpack.ini（来源是 meta.json）。"
+                    else -> "写进 pack.json（来源是 meta.json）。meta.json 里的图标会变成 pack.png。"
                 }
                 NmvModScreen(
                     models.mod(direction) as NmvModViewModel, folderName, save,
                     intro = "Convert a whole NightmareVision mod to $target: nmv2 charts, characters, stages with stageObjects, weeks, HScript, events, note types, images and audio.",
                     infoNote = note,
-                    convertNote = "Download the converted mod as a .zip, or write it straight into an empty mod folder."
+                    convertNote = "把转换好的模组下载成 .zip，或者直接写进一个空的模组文件夹。"
                 )
             }
         }
-        Tab.CHARTS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Down, "Charts", "Add charts", hint(direction, tab), R.drawable.ic_tab_chart, folderName, save, buttonText = button)
-        Tab.CHARACTERS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Left, "Characters", "Add characters", hint(direction, tab), R.drawable.ic_tab_character, folderName, save, buttonText = button)
-        Tab.STAGES -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Up, "Stages", "Add stages", hint(direction, tab), R.drawable.ic_tab_stage, folderName, save, buttonText = button)
-        Tab.WEEKS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Right, "Weeks", "Add weeks", hint(direction, tab), R.drawable.ic_tab_week, folderName, save, buttonText = button)
-        Tab.SCRIPTS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Lavender, "Scripts", "Add scripts", hint(direction, tab), R.drawable.ic_tab_script, folderName, save, buttonText = button)
+        Tab.CHARTS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Down, "谱子", "加谱面", hint(direction, tab), R.drawable.ic_tab_chart, folderName, save, buttonText = button)
+        Tab.CHARACTERS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Left, "人物", "加人物", hint(direction, tab), R.drawable.ic_tab_character, folderName, save, buttonText = button)
+        Tab.STAGES -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Up, "背景", "加背景", hint(direction, tab), R.drawable.ic_tab_stage, folderName, save, buttonText = button)
+        Tab.WEEKS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Right, "周目", "加周目", hint(direction, tab), R.drawable.ic_tab_week, folderName, save, buttonText = button)
+        Tab.SCRIPTS -> ReverseScreen(models.files.getValue(direction to tab), Funkin.Lavender, "脚本", "加脚本", hint(direction, tab), R.drawable.ic_tab_script, folderName, save, buttonText = button)
     }
 }

@@ -163,7 +163,7 @@ class ModConverter(
                 ids += id
                 result.report.warnings.forEach { report.warn("Stage $id: $it") }
                 result.report.sections.filter { it.title == "Notes" || it.title == "跳过的物件" }.forEach { section ->
-                    val lines = section.lines.filterNot { it.startsWith("Character positions use") || it.startsWith("Layers keep") }
+                    val lines = section.lines.filterNot { it.startsWith("人物位置用的是 ") || it.startsWith("Layers keep") }
                     if (lines.isNotEmpty()) report.section("Stage $id · ${section.title}", lines)
                 }
             } catch (e: Exception) {

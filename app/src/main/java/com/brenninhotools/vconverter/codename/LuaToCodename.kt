@@ -984,7 +984,7 @@ class LuaToCodename(
                 val fn = str(a, 0)
                 val list = (a.getOrNull(1) as? Expr.Table)?.fields?.filterIsInstance<TableField.Positional>()?.map { expr(it.value) }
                 if (fn != null) "$fn(${list?.joinToString(", ") ?: ""})" else {
-                    issue(line, "runHaxeFunction() with a function name built at runtime cannot be converted.")
+                    issue(line, "runHaxeFunction() 的函数名是运行时拼出来的，没法转换。")
                     "null"
                 }
             }

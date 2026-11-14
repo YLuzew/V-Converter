@@ -78,7 +78,7 @@ class OnlineState(private val scope: CoroutineScope) {
             try {
                 rooms = withContext(ioDispatcher) { Online.api().publicRooms(kind) }
             } catch (e: Exception) {
-                roomsError = e.message ?: "Could not load the rooms."
+                roomsError = e.message ?: "加载不了房间列表。"
             } finally {
                 roomsLoading = false
             }
@@ -118,7 +118,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 page = result
                 pageNumber = result.page
             } catch (ex: Exception) {
-                error = ex.message ?: "Could not load the mods."
+                error = ex.message ?: "加载不了模组列表。"
             } finally {
                 loading = false
             }
@@ -140,7 +140,7 @@ class OnlineState(private val scope: CoroutineScope) {
                     true
                 }
             } catch (e: Exception) {
-                message = e.message ?: "The download failed."
+                message = e.message ?: "下载失败。"
                 false
             }
             if (ok) message = "已下载 ${mod.fileName}。"
@@ -153,7 +153,7 @@ class OnlineState(private val scope: CoroutineScope) {
         val chosen = file
         when {
             !configured -> uploadError = "先在选项里填服务器地址。"
-            chosen == null -> uploadError = "Pick the mod .zip first."
+            chosen == null -> uploadError = "先挑模组的 .zip。"
             title.isBlank() -> uploadError = "给模组起个标题。"
             uploading -> return
             else -> {
@@ -172,7 +172,7 @@ class OnlineState(private val scope: CoroutineScope) {
                         tags = ""
                         search()
                     } catch (e: Exception) {
-                        uploadError = e.message ?: "The upload failed."
+                        uploadError = e.message ?: "上传失败。"
                     } finally {
                         uploading = false
                     }
@@ -190,7 +190,7 @@ class OnlineState(private val scope: CoroutineScope) {
                 uploadError = "Removed \"${mod.mod.title}\" from the gallery."
                 search()
             } catch (e: Exception) {
-                uploadError = e.message ?: "Could not remove the mod."
+                uploadError = e.message ?: "删不掉这个模组。"
             }
         }
     }

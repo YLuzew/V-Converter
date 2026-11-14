@@ -99,7 +99,7 @@ fun ChartsScreen(viewModel: ChartsViewModel, modFolderName: String?, onSave: () 
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Charts", accent, 1)
+            SectionTitle("谱子", accent, 1)
             DropZone(
                 title = dropTitle(viewModel.source),
                 hint = dropHint(viewModel.source, viewModel.target),
@@ -110,7 +110,7 @@ fun ChartsScreen(viewModel: ChartsViewModel, modFolderName: String?, onSave: () 
             )
             val groups = viewModel.files.withIndex().groupBy { viewModel.songOf(it.value) }
             groups.forEach { (song, entries) ->
-                if (song.isNotEmpty()) SongHeader(song.ifEmpty { "Other files" }, entries.count { it.value.kind == "chart" }, accent)
+                if (song.isNotEmpty()) SongHeader(song.ifEmpty { "其它文件" }, entries.count { it.value.kind == "chart" }, accent)
                 entries.forEach { (index, item) ->
                     val difficulty = viewModel.difficultyOf(item)
                     val preview = viewModel.before.firstOrNull { difficulty != null && it.difficulty == difficulty && viewModel.songOf(item).let { s -> s.isEmpty() || it.song == s } }
@@ -137,7 +137,7 @@ fun ChartsScreen(viewModel: ChartsViewModel, modFolderName: String?, onSave: () 
                                     text = it
                                     if (it.isNotBlank()) viewModel.setDifficulty(index, it)
                                 },
-                                label = "Difficulty",
+                                label = "难度",
                                 accent = accent,
                                 enabled = !busy
                             )
@@ -185,7 +185,7 @@ private fun SongHeader(song: String, charts: Int, accent: Color) {
 @Composable
 private fun PreviewCard(viewModel: ChartsViewModel, accent: Color) {
     FunkinCard {
-        SectionTitle("Preview", accent, 2)
+        SectionTitle("预览", accent, 2)
         if (viewModel.after.isNotEmpty()) {
             Segmented(
                 options = listOf("${viewModel.source.title} (before)", "${viewModel.target.title} (after)"),
@@ -217,7 +217,7 @@ private fun PreviewCard(viewModel: ChartsViewModel, accent: Color) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Chip(if (viewModel.zoomed) "Fit" else "Zoom", viewModel.zoomed, accent) { viewModel.zoomed = !viewModel.zoomed }
+            Chip(if (viewModel.zoomed) "适应" else "缩放", viewModel.zoomed, accent) { viewModel.zoomed = !viewModel.zoomed }
         }
         ChartStrip(current, FunkinStripColors, pixelsPerSecond = if (viewModel.zoomed) 70f else null)
         Legend(current)
@@ -252,8 +252,8 @@ private fun Legend(preview: ChartPreview) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
         LegendDot(FunkinStripColors.opponent, "Opponent${if (preview.opponent.isNotBlank()) " · ${preview.opponent}" else ""}")
         LegendDot(FunkinStripColors.player, "Player${if (preview.player.isNotBlank()) " · ${preview.player}" else ""}")
-        if (preview.otherNotes > 0 || preview.focus.any { it.side == 2 }) LegendDot(FunkinStripColors.girlfriend, "Girlfriend")
-        LegendDot(FunkinStripColors.event, "Events")
+        if (preview.otherNotes > 0 || preview.focus.any { it.side == 2 }) LegendDot(FunkinStripColors.girlfriend, "女友")
+        LegendDot(FunkinStripColors.event, "事件")
     }
 }
 
@@ -273,18 +273,18 @@ private fun StatsGrid(preview: ChartPreview, accent: Color) {
     val stats = listOf(
         "玩家音符" to preview.playerNotes.toString(),
         "对手音符" to preview.opponentNotes.toString(),
-        "Holds" to preview.holdNotes.toString(),
+        "长条" to preview.holdNotes.toString(),
         "峰值 NPS" to formatBpm(preview.peakNps),
-        "Length" to formatDuration(preview.length),
+        "长度" to formatDuration(preview.length),
         "BPM" to if (low == high) formatBpm(low) else "${formatBpm(low)}–${formatBpm(high)}",
-        "Time sig." to preview.signatures.joinToString(" · ") { "$it/4" },
-        "Events" to preview.events.size.toString(),
-        "Speed" to formatBpm(preview.speed)
+        "拍号" to preview.signatures.joinToString(" · ") { "$it/4" },
+        "事件" to preview.events.size.toString(),
+        "速度" to formatBpm(preview.speed)
     ) + listOfNotNull(
         if (preview.otherNotes > 0) "女友音符" to preview.otherNotes.toString() else null,
         if (preview.duplicates > 0) "叠在一起的重复音符" to preview.duplicates.toString() else null,
-        if (preview.offset != 0.0) "Offset" to "${formatBpm(preview.offset)} ms" else null,
-        if (preview.stage.isNotBlank()) "Stage" to preview.stage else null
+        if (preview.offset != 0.0) "偏移" to "${formatBpm(preview.offset)} ms" else null,
+        if (preview.stage.isNotBlank()) "背景" to preview.stage else null
     )
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         stats.forEach { (label, value) ->
@@ -303,8 +303,8 @@ private fun CompareRow(before: ChartPreview, after: ChartPreview) {
     val checks = listOf(
         "玩家音符" to (before.playerNotes to after.playerNotes),
         "对手音符" to (before.opponentNotes to after.opponentNotes),
-        "Holds" to (before.holdNotes to after.holdNotes),
-        "BPM changes" to (before.timing.size to after.timing.size)
+        "长条" to (before.holdNotes to after.holdNotes),
+        "BPM 变化" to (before.timing.size to after.timing.size)
     )
     val differences = checks.filter { it.second.first != it.second.second }
     val shape = RoundedCornerShape(14.dp)
@@ -341,27 +341,27 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
         }
         if (ChartField.ARTIST in fields) {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FunkinTextField(tweaks.artist, { v -> viewModel.updateTweaks { it.copy(artist = v) } }, "Artist", accent, Modifier.weight(1f), enabled = !busy)
-                FunkinTextField(tweaks.charter, { v -> viewModel.updateTweaks { it.copy(charter = v) } }, "Charter", accent, Modifier.weight(1f), enabled = !busy)
+                FunkinTextField(tweaks.artist, { v -> viewModel.updateTweaks { it.copy(artist = v) } }, "作曲", accent, Modifier.weight(1f), enabled = !busy)
+                FunkinTextField(tweaks.charter, { v -> viewModel.updateTweaks { it.copy(charter = v) } }, "谱师", accent, Modifier.weight(1f), enabled = !busy)
             }
         }
         if (ChartField.CHARACTERS in fields) {
-            FieldLabel("Characters")
+            FieldLabel("人物")
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FunkinTextField(tweaks.player, { v -> viewModel.updateTweaks { it.copy(player = v.trim()) } }, "Player", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.player)
-                FunkinTextField(tweaks.opponent, { v -> viewModel.updateTweaks { it.copy(opponent = v.trim()) } }, "Opponent", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.opponent)
+                FunkinTextField(tweaks.player, { v -> viewModel.updateTweaks { it.copy(player = v.trim()) } }, "玩家", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.player)
+                FunkinTextField(tweaks.opponent, { v -> viewModel.updateTweaks { it.copy(opponent = v.trim()) } }, "对手", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.opponent)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FunkinTextField(tweaks.girlfriend, { v -> viewModel.updateTweaks { it.copy(girlfriend = v.trim()) } }, "Girlfriend", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.girlfriend)
+                FunkinTextField(tweaks.girlfriend, { v -> viewModel.updateTweaks { it.copy(girlfriend = v.trim()) } }, "女友", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.girlfriend)
                 if (ChartField.STAGE in fields) {
-                    FunkinTextField(tweaks.stage, { v -> viewModel.updateTweaks { it.copy(stage = v.trim()) } }, "Stage", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.stage)
+                    FunkinTextField(tweaks.stage, { v -> viewModel.updateTweaks { it.copy(stage = v.trim()) } }, "背景", accent, Modifier.weight(1f), enabled = !busy, placeholder = sample?.stage)
                 }
             }
         }
         if (ChartField.NOTE_STYLE in fields) {
-            FieldLabel("Note style")
+            FieldLabel("音符样式")
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                listOf("" to "Auto", "funkin" to "Funkin", "pixel" to "Pixel").forEach { (value, label) ->
+                listOf("" to "自动", "funkin" to "Funkin", "pixel" to "像素").forEach { (value, label) ->
                     Chip(label, tweaks.noteStyle == value, accent, !busy) { viewModel.updateTweaks { it.copy(noteStyle = value) } }
                 }
             }
@@ -406,9 +406,9 @@ private fun OptionsCard(viewModel: ChartsViewModel, accent: Color, busy: Boolean
 }
 
 private fun kindLabel(kind: String): String = when (kind) {
-    "metadata" -> "Metadata"
-    "chart" -> "Chart"
-    "events" -> "Events"
+    "metadata" -> "元数据"
+    "chart" -> "谱子"
+    "events" -> "事件"
     "definition" -> "事件参数"
     else -> kind
 }

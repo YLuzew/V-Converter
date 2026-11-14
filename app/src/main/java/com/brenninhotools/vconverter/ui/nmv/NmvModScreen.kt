@@ -49,7 +49,7 @@ fun NmvModScreen(
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("NightmareVision mod", accent, 1)
+            SectionTitle("NightmareVision 模组", accent, 1)
             Text(
                 intro,
                 style = MaterialTheme.typography.bodySmall,
@@ -81,12 +81,12 @@ fun NmvModScreen(
                 ReportView(
                     Report(
                         stats = listOf(
-                            ReportStat("Songs", scan.songs.size.toString()),
-                            ReportStat("Characters", scan.characters.size.toString()),
-                            ReportStat("Stages", scan.stages.size.toString()),
-                            ReportStat("Weeks", scan.weeks.size.toString()),
-                            ReportStat("Assets", scan.assets.toString()),
-                            ReportStat("Scripts", scan.scripts.toString())
+                            ReportStat("歌曲", scan.songs.size.toString()),
+                            ReportStat("人物", scan.characters.size.toString()),
+                            ReportStat("背景", scan.stages.size.toString()),
+                            ReportStat("周目", scan.weeks.size.toString()),
+                            ReportStat("资源", scan.assets.toString()),
+                            ReportStat("脚本", scan.scripts.toString())
                         )
                     ),
                     accent
@@ -108,9 +108,9 @@ fun NmvModScreen(
         if (viewModel.mod != null) {
             FunkinCard {
                 SectionTitle("模组信息", accent, 2)
-                FunkinTextField(viewModel.title, { viewModel.title = it }, "Title", accent, enabled = !busy)
-                FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
-                FunkinTextField(viewModel.author, { viewModel.author = it }, "Author", accent, enabled = !busy)
+                FunkinTextField(viewModel.title, { viewModel.title = it }, "标题", accent, enabled = !busy)
+                FunkinTextField(viewModel.description, { viewModel.description = it }, "描述", accent, enabled = !busy)
+                FunkinTextField(viewModel.author, { viewModel.author = it }, "作者", accent, enabled = !busy)
                 Text(
                     infoNote,
                     style = MaterialTheme.typography.bodySmall,
@@ -120,7 +120,7 @@ fun NmvModScreen(
         }
 
         FunkinCard(accent = if (viewModel.result != null) accent else null) {
-            SectionTitle("Convert", accent, 3)
+            SectionTitle("转换", accent, 3)
             Text(
                 convertNote,
                 style = MaterialTheme.typography.bodySmall,

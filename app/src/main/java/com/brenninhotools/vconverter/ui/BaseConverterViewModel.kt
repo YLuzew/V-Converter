@@ -71,7 +71,7 @@ abstract class BaseConverterViewModel(application: Application) : AndroidViewMod
     protected open fun zipPrefix(): String = ""
 
     protected open fun writeDownload(writer: ModWriter) {
-        val result = output ?: throw IllegalStateException("Convert something first.")
+        val result = output ?: throw IllegalStateException("先转换点东西。")
         result.files.forEach { it.writeTo(writer) }
     }
 
@@ -153,7 +153,7 @@ abstract class BaseConverterViewModel(application: Application) : AndroidViewMod
     }
 
     protected fun failureMessage(e: Exception, fallback: String): StatusMessage =
-        if (e is ModCancelledException) StatusMessage.Info("Conversion cancelled. Nothing else was written.") else StatusMessage.Error(e.message ?: fallback)
+        if (e is ModCancelledException) StatusMessage.Info("转换已取消，没有写入其它文件。") else StatusMessage.Error(e.message ?: fallback)
 
     protected fun runTask(block: suspend () -> Unit) {
         if (busy) return

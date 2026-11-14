@@ -54,7 +54,7 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
     LaunchedEffect(state.configured) { if (state.configured && state.version == null) state.refreshNews() }
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        EditorSectionTitle("News")
+        EditorSectionTitle("新闻")
         if (!state.configured) {
             NotConfigured()
             return@Column
@@ -70,7 +70,7 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
                 Text("You have ${version.current}.", color = scheme.onPrimary, fontSize = 13.sp)
                 if (version.notes.isNotBlank()) Text(version.notes.take(600), color = scheme.onPrimary, fontSize = 12.sp, maxLines = 12, overflow = TextOverflow.Ellipsis)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    if (version.url.isNotBlank()) EditorChip("Download", false) { onOpenLink(version.url) }
+                    if (version.url.isNotBlank()) EditorChip("下载", false) { onOpenLink(version.url) }
                     if (version.page.isNotBlank()) EditorChip("发布页", false) { onOpenLink(version.page) }
                 }
             }
@@ -88,7 +88,7 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
         }
         if (state.announcements.isEmpty() && version != null) Text("目前没有公告。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         state.newsError?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
-        EditorChip(if (state.newsLoading) "Checking…" else "重新检查", false) { state.refreshNews() }
+        EditorChip(if (state.newsLoading) "检查中…" else "重新检查", false) { state.refreshNews() }
     }
 }
 
@@ -98,21 +98,21 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
     LaunchedEffect(state.configured) { if (state.configured && state.page == null) state.search() }
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        EditorSectionTitle("Mod gallery")
+        EditorSectionTitle("模组画廊")
         if (!state.configured) {
             NotConfigured()
             return@Column
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             TextValueField("搜索模组", state.query, Modifier.weight(1f)) { state.query = it }
-            EditorChip(if (state.loading) "Searching…" else "Search", false) { state.search() }
+            EditorChip(if (state.loading) "搜索中…" else "搜索", false) { state.search() }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            EditorChip("All engines", state.engine == null) { state.engine = null; state.search() }
+            EditorChip("全部引擎", state.engine == null) { state.engine = null; state.search() }
             ModEngine.entries.forEach { e -> EditorChip(e.label, state.engine == e) { state.engine = e; state.search() } }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            listOf("new" to "Newest", "downloads" to "Most downloaded", "title" to "A–Z").forEach { (key, label) ->
+            listOf("new" to "最新", "downloads" to "下载最多", "title" to "A–Z").forEach { (key, label) ->
                 EditorChip(label, state.sort == key) { state.sort = key; state.search() }
             }
         }
@@ -143,7 +143,7 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
                     if (state.downloading == mod.id) {
                         LinearProgressIndicator(progress = { state.progress }, modifier = Modifier.fillMaxWidth())
                     } else {
-                        EditorChip("Download", false) { onDownload(mod) }
+                        EditorChip("下载", false) { onDownload(mod) }
                     }
                 }
             }
@@ -173,16 +173,16 @@ fun ModSharePanel(state: OnlineState, onPickFile: () -> Unit, modifier: Modifier
             Text(state.file?.let { "${it.first} · ${size(it.second.size.toLong())}" } ?: "没有选择文件", fontSize = 13.sp, modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
             EditorChip("选择 .zip", false, onPickFile)
         }
-        TextValueField("Title", state.title, Modifier.fillMaxWidth()) { state.title = it }
-        TextValueField("Description", state.description, Modifier.fillMaxWidth()) { state.description = it }
+        TextValueField("标题", state.title, Modifier.fillMaxWidth()) { state.title = it }
+        TextValueField("描述", state.description, Modifier.fillMaxWidth()) { state.description = it }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Author", state.author, Modifier.weight(1f)) { state.author = it }
+            TextValueField("作者", state.author, Modifier.weight(1f)) { state.author = it }
             TextValueField("标签（逗号分隔）", state.tags, Modifier.weight(1f)) { state.tags = it }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             ModEngine.entries.forEach { e -> EditorChip(e.label, state.uploadEngine == e) { state.uploadEngine = e } }
         }
-        EditorChip(if (state.uploading) "Uploading…" else "Upload", false) { state.upload() }
+        EditorChip(if (state.uploading) "上传中…" else "上传", false) { state.upload() }
         state.uploadError?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
         state.uploaded?.let { done ->
             Column(
@@ -216,9 +216,9 @@ fun PublicRoomsPanel(state: OnlineState, onJoin: (RoomInfo) -> Unit, modifier: M
         }
         Text("这里是别人在编辑器的多人编辑卡里勾了「公开列出我的房间」后开的房间。加入会打开对应的编辑器，并加载房间的工作内容和文件。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            EditorChip("All editors", state.roomKind == null) { state.roomKind = null; state.refreshRooms() }
+            EditorChip("全部编辑器", state.roomKind == null) { state.roomKind = null; state.refreshRooms() }
             roomKinds.forEach { (key, label) -> EditorChip(label, state.roomKind == key) { state.roomKind = key; state.refreshRooms() } }
-            EditorChip(if (state.roomsLoading) "Refreshing…" else "Refresh", false) { state.refreshRooms() }
+            EditorChip(if (state.roomsLoading) "刷新中…" else "刷新", false) { state.refreshRooms() }
         }
         state.roomsError?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
         val rooms = state.rooms
@@ -243,7 +243,7 @@ fun PublicRoomsPanel(state: OnlineState, onJoin: (RoomInfo) -> Unit, modifier: M
                     )
                     if (room.peers.isNotEmpty()) Text(room.peers.joinToString { it.name }, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                EditorChip("Join", false) { onJoin(room) }
+                EditorChip("加入", false) { onJoin(room) }
             }
         }
     }

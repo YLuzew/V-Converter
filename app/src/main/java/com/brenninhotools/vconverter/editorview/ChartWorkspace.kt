@@ -55,13 +55,13 @@ object EditorIcons {
             .addPath(PathParser().parsePathString(path).toNodes(), fill = SolidColor(Color.White))
             .build()
 
-    val Play by lazy { icon("Play", "M8,5v14l11,-7z") }
-    val Pause by lazy { icon("Pause", "M6,5h4v14h-4zM14,5h4v14h-4z") }
+    val Play by lazy { icon("播放", "M8,5v14l11,-7z") }
+    val Pause by lazy { icon("暂停", "M6,5h4v14h-4zM14,5h4v14h-4z") }
     val ToStart by lazy { icon("ToStart", "M6,6h2v12h-2zM9.5,12l8.5,6V6z") }
     val Back by lazy { icon("Back", "M11,18V6l-8.5,6 8.5,6zM11.5,12l8.5,6V6l-8.5,6z") }
     val Forward by lazy { icon("Forward", "M4,18l8.5,-6L4,6v12zM13,6v12l8.5,-6L13,6z") }
-    val Undo by lazy { icon("Undo", "M12.5,8c-2.65,0 -5.05,0.99 -6.9,2.6L2,7v9h9l-3.62,-3.62c1.39,-1.16 3.16,-1.88 5.12,-1.88 3.54,0 6.55,2.31 7.6,5.5l2.37,-0.78C21.08,11.03 17.15,8 12.5,8z") }
-    val Redo by lazy { icon("Redo", "M18.4,10.6C16.55,8.99 14.15,8 11.5,8c-4.65,0 -8.58,3.03 -9.96,7.22L3.9,16c1.05,-3.19 4.05,-5.5 7.6,-5.5 1.95,0 3.73,0.72 5.12,1.88L13,16h9V7l-3.6,3.6z") }
+    val Undo by lazy { icon("撤销", "M12.5,8c-2.65,0 -5.05,0.99 -6.9,2.6L2,7v9h9l-3.62,-3.62c1.39,-1.16 3.16,-1.88 5.12,-1.88 3.54,0 6.55,2.31 7.6,5.5l2.37,-0.78C21.08,11.03 17.15,8 12.5,8z") }
+    val Redo by lazy { icon("重做", "M18.4,10.6C16.55,8.99 14.15,8 11.5,8c-4.65,0 -8.58,3.03 -9.96,7.22L3.9,16c1.05,-3.19 4.05,-5.5 7.6,-5.5 1.95,0 3.73,0.72 5.12,1.88L13,16h9V7l-3.6,3.6z") }
     val ZoomIn by lazy { icon("ZoomIn", "M15.5,14h-0.79l-0.28,-0.27C15.41,12.59 16,11.11 16,9.5 16,5.91 13.09,3 9.5,3S3,5.91 3,9.5 5.91,16 9.5,16c1.61,0 3.09,-0.59 4.23,-1.57l0.27,0.28v0.79l5,4.99L20.49,19l-4.99,-5zM9.5,14C7.01,14 5,11.99 5,9.5S7.01,5 9.5,5 14,7.01 14,9.5 11.99,14 9.5,14zM12,10h-2v2H9v-2H7V9h2V7h1v2h2v1z") }
     val ZoomOut by lazy { icon("ZoomOut", "M15.5,14h-0.79l-0.28,-0.27C15.41,12.59 16,11.11 16,9.5 16,5.91 13.09,3 9.5,3S3,5.91 3,9.5 5.91,16 9.5,16c1.61,0 3.09,-0.59 4.23,-1.57l0.27,0.28v0.79l5,4.99L20.49,19l-4.99,-5zM9.5,14C7.01,14 5,11.99 5,9.5S7.01,5 9.5,5 14,7.01 14,9.5 11.99,14 9.5,14zM7,9h5v1H7z") }
     val Sound by lazy { icon("Sound", "M3,9v6h4l5,5V4L7,9H3zM16.5,12c0,-1.77 -1.02,-3.29 -2.5,-4.03v8.05c1.48,-0.73 2.5,-2.25 2.5,-4.02zM14,3.23v2.06c2.89,0.86 5,3.54 5,6.71s-2.11,5.85 -5,6.71v2.06c4.01,-0.91 7,-4.49 7,-8.77s-2.99,-7.86 -7,-8.77z") }
@@ -126,15 +126,15 @@ fun ChartToolbar(state: ChartEditorState, modifier: Modifier = Modifier) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             ToolButton(EditorIcons.ToStart, "回到开头") { state.seek(0.0) }
             ToolButton(EditorIcons.Back, "上一个小节") { state.jumpMeasure(-1) }
-            ToolButton(if (state.playing) EditorIcons.Pause else EditorIcons.Play, if (state.playing) "Pause" else "Play", active = state.playing) { state.togglePlay() }
+            ToolButton(if (state.playing) EditorIcons.Pause else EditorIcons.Play, if (state.playing) "暂停" else "播放", active = state.playing) { state.togglePlay() }
             ToolButton(EditorIcons.Forward, "下一个小节") { state.jumpMeasure(1) }
-            ToolButton(EditorIcons.Undo, "Undo", enabled = state.canUndo) { state.undo() }
-            ToolButton(EditorIcons.Redo, "Redo", enabled = state.canRedo) { state.redo() }
+            ToolButton(EditorIcons.Undo, "撤销", enabled = state.canUndo) { state.undo() }
+            ToolButton(EditorIcons.Redo, "重做", enabled = state.canRedo) { state.redo() }
             ToolButton(EditorIcons.ZoomOut, "缩小") { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.25f) }
-            ToolButton(EditorIcons.ZoomIn, "Zoom in") { state.zoom = (state.zoom * 1.25f).coerceAtMost(6f) }
-            ToolButton(if (state.hitsounds) EditorIcons.Sound else EditorIcons.Mute, "Hitsounds", active = state.hitsounds) { state.hitsounds = !state.hitsounds }
-            CompactChoice("Snap", state.snap, state.snaps.map { it to "1/$it" }) { state.snap = it }
-            CompactChoice("Difficulty", state.difficulty, state.document.difficultyNames.map { it to it }) {
+            ToolButton(EditorIcons.ZoomIn, "放大") { state.zoom = (state.zoom * 1.25f).coerceAtMost(6f) }
+            ToolButton(if (state.hitsounds) EditorIcons.Sound else EditorIcons.Mute, "音效", active = state.hitsounds) { state.hitsounds = !state.hitsounds }
+            CompactChoice("吸附", state.snap, state.snaps.map { it to "1/$it" }) { state.snap = it }
+            CompactChoice("难度", state.difficulty, state.document.difficultyNames.map { it to it }) {
                 state.difficulty = it
                 state.clearSelection()
             }
@@ -190,7 +190,7 @@ fun ChartMiniMap(state: ChartEditorState, modifier: Modifier = Modifier) {
     }
 }
 
-private enum class ChartPanel(val label: String) { SELECTION("Selection"), DIFFICULTY("Difficulty"), TIMING("Timing"), SONG("Song") }
+private enum class ChartPanel(val label: String) { SELECTION("选择"), DIFFICULTY("难度"), TIMING("时机"), SONG("歌曲") }
 
 @Composable
 fun ChartEditorWorkspace(

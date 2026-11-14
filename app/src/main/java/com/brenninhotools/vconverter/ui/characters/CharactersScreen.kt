@@ -34,7 +34,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Characters", accent, 1)
+            SectionTitle("人物", accent, 1)
             DropZone(
                 title = "添加人物与图集",
                 hint = "选择 Psych 人物 .json 和对应的精灵图集 .xml（images/characters）；Animate 图集人物再加 Animation.json + spritemap1.json。这样位置能精确到像素。也可以直接选 .zip/.rar/.7z。",
@@ -62,7 +62,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                         else if (missing.isEmpty()) Tag("找到图集", Funkin.Up) else Tag("Missing ${missing.size} sheet(s)", Funkin.Warning)
                         Tag("${item.character.animations.size} anims", Funkin.Muted)
                         Tag("Scale ${item.character.scale}", Funkin.Muted)
-                        if (item.character.atlasImages.size > 1) Tag("Multi-atlas", accent)
+                        if (item.character.atlasImages.size > 1) Tag("多图集", accent)
                     }
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -90,7 +90,7 @@ fun CharactersScreen(viewModel: CharactersViewModel, modFolderName: String?, onS
                         }
                         if (missing.isNotEmpty()) {
                             Text(
-                                "Needs: " + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate atlas)",
+                                "需要：" + missing.joinToString { it.substringAfterLast('/') + ".xml" } + " (or its Animation.json + spritemap for an Animate atlas)",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Funkin.Warning
                             )

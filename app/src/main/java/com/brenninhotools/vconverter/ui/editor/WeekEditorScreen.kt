@@ -54,7 +54,7 @@ import kotlinx.coroutines.withContext
 enum class WeekImageRole { PROP, TITLE, BACKGROUND }
 
 class WeekEditorViewModel(application: Application) : BaseConverterViewModel(application) {
-    val editor = WeekEditorState(WeekDocument("new-week", "New Week"))
+    val editor = WeekEditorState(WeekDocument("new-week", "新建周目"))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(com.brenninhotools.vconverter.editorview.WeekLiveAdapter(editor) { asset -> decode(asset) }) { block -> android.os.Handler(android.os.Looper.getMainLooper()).post(block) }
     var target by mutableStateOf(ExportTarget.VSLICE)
         private set
@@ -111,7 +111,7 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
         runTask {
             try {
                 val files = readAll(uris)
-                val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("Pick a .png (with its .xml for an animated character).")
+                val png = files.firstOrNull { it.first.endsWith(".png", true) } ?: throw IllegalArgumentException("挑一张 .png（要动画人物就再带上它的 .xml）。")
                 val xml = files.firstOrNull { it.first.endsWith(".xml", true) }?.second?.toString(Charsets.UTF_8)?.takeIf { SpriteAtlas.parse(it).frames.isNotEmpty() }
                 val stem = png.first.substringAfterLast('/').substringBeforeLast('.')
                 val doc = editor.document
@@ -140,13 +140,13 @@ class WeekEditorViewModel(application: Application) : BaseConverterViewModel(app
                 invalidate()
                 status = null
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not load the image.")
+                status = StatusMessage.Error(e.message ?: "加载不了这张图片。")
             }
         }
     }
 
     fun createNew() {
-        editor.load(WeekDocument("new-week", "New Week"), emptyMap(), emptyMap())
+        editor.load(WeekDocument("new-week", "新建周目"), emptyMap(), emptyMap())
         source = "新建一个周目"
         invalidate()
         status = StatusMessage.Info("已新建周目，菜单人物用的是本体默认值。加上歌曲和标题图片就能用。")
@@ -187,7 +187,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Week", accent, 1)
+            SectionTitle("周目", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
                 title = "打开周目",
@@ -200,7 +200,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             OutlineButton("新建周目", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
-            SectionTitle("Story menu", accent, 2)
+            SectionTitle("故事菜单", accent, 2)
             WeekToolbar(editor)
             WeekPreview(
                 editor,
@@ -213,7 +213,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             WeekPropsPanel(editor, onLoadImage = { slot -> pick(WeekImageRole.PROP, slot) })
         }
         FunkinCard {
-            SectionTitle("Songs", accent, 3)
+            SectionTitle("歌曲", accent, 3)
             WeekSongsPanel(editor)
         }
         FunkinCard {
@@ -252,7 +252,7 @@ fun WeekEditorScreen(viewModel: WeekEditorViewModel, modFolderName: String?, onS
             onConvert = viewModel::export,
             onSave = onSave,
             modFolderName = modFolderName,
-            title = "Export",
+            title = "导出",
             buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )

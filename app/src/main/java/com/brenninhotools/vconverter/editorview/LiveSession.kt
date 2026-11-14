@@ -130,7 +130,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
         }
     }
 
-    private fun displayName(): String = name.trim().ifEmpty { "Player" }
+    private fun displayName(): String = name.trim().ifEmpty { "玩家" }
 
     fun host() {
         if (connecting || connected) return
@@ -154,7 +154,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
             } catch (e: Exception) {
                 post {
                     connecting = false
-                    status = e.message ?: "Could not create the room."
+                    status = e.message ?: "开不了这个房间。"
                 }
             }
         }
@@ -168,7 +168,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
         }
         val clean = room.trim().uppercase()
         if (clean.length < 4) {
-            status = "Type the room code first."
+            status = "先填房间码。"
             return
         }
         code = clean
@@ -238,7 +238,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
                 peers = emptyList()
                 cursors = emptyMap()
                 session = null
-                status = if (wasConnected) reason else reason.ifBlank { "Could not join the room." }
+                status = if (wasConnected) reason else reason.ifBlank { "加入不了这个房间。" }
             }
         })
         session = live
@@ -253,7 +253,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
         connecting = false
         peers = emptyList()
         cursors = emptyMap()
-        status = "Left the room."
+        status = "已离开房间。"
     }
 
     fun cursor(time: Double, difficulty: String) {
@@ -272,18 +272,18 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
     var message by remember { mutableStateOf("") }
     LaunchedEffect(cursor, live.connected) { if (cursor != null) live.cursor(cursor.first, cursor.second) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Multieditor")
+        EditorSectionTitle("多人编辑")
         if (!live.connected) {
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 TextValueField("你的名字", live.name, Modifier.weight(1f)) { live.name = it }
-                TextValueField("Room code", live.code, Modifier.weight(1f)) { live.code = it.uppercase() }
+                TextValueField("房间码", live.code, Modifier.weight(1f)) { live.code = it.uppercase() }
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(checked = live.publicRoom, onCheckedChange = { live.publicRoom = it })
                 Text("公开我的房间（任何人都能从在线 → 房间进来）", fontSize = 13.sp)
             }
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                EditorChip(if (live.connecting) "Connecting…" else "开一个房间", false) { live.host() }
+                EditorChip(if (live.connecting) "连接中…" else "开一个房间", false) { live.host() }
                 EditorChip("加入房间", false) { live.join() }
             }
             Text(
@@ -295,17 +295,17 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 SelectionContainer { Text("Room ${live.code}", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.primary) }
                 if (live.publicRoom) Text("public", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                EditorChip("Leave", false) { live.leave() }
+                EditorChip("离开", false) { live.leave() }
             }
-            Text(if (live.peers.isEmpty()) "还没有别人进来。" else "With: " + live.peers.joinToString { it.name }, fontSize = 13.sp)
+            Text(if (live.peers.isEmpty()) "还没有别人进来。" else "成员：" + live.peers.joinToString { it.name }, fontSize = 13.sp)
             if (live.files > 0) Text("${live.files} shared file(s)", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             live.cursors.values.forEach { c ->
                 Text("${c.name} · ${formatTime(c.time)} · ${c.difficulty}", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             live.chat.takeLast(6).forEach { Text(it, fontSize = 12.sp) }
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                TextValueField("Message", message, Modifier.weight(1f)) { message = it }
-                EditorChip("Send", false) {
+                TextValueField("消息", message, Modifier.weight(1f)) { message = it }
+                EditorChip("发送", false) {
                     live.say(message)
                     message = ""
                 }

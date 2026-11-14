@@ -24,7 +24,7 @@ fun StagesScreen(viewModel: StagesViewModel, modFolderName: String?, onSave: () 
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Stages", accent, 1)
+            SectionTitle("背景", accent, 1)
             DropZone(
                 title = "添加 Psych 背景",
                 hint = "从 stages 文件夹选背景 .json；如果背景是在脚本里生成精灵的，再选它的 .lua：那些精灵会变成 V-Slice 物件。把带动画精灵的 .xml（images/…）也加上，缩放动画的偏移才准确。压缩包（.zip/.rar/.7z）也可以。",
@@ -41,15 +41,15 @@ fun StagesScreen(viewModel: StagesViewModel, modFolderName: String?, onSave: () 
                     enabled = !busy,
                     onRemove = { viewModel.remove(index) },
                     tags = {
-                        if (item.lua != null) Tag("Lua sprites", Funkin.Down)
-                        if (!item.fromJson) Tag("No JSON", Funkin.Warning)
+                        if (item.lua != null) Tag("Lua 精灵", Funkin.Down)
+                        if (!item.fromJson) Tag("没有 JSON", Funkin.Warning)
                         if (objects != null) {
                             Tag("${objects.count { it.type in setOf("square", "sprite", "animatedSprite") }} sprites", accent)
                         } else if (item.lua == null) {
                             Tag("脚本背景", Funkin.Warning)
                         }
                         Tag("Zoom ${item.stage.defaultZoom}", Funkin.Muted)
-                        if (item.stage.isPixelStage) Tag("Pixel", Funkin.Left)
+                        if (item.stage.isPixelStage) Tag("像素", Funkin.Left)
                         val sheets = viewModel.atlases.keys.map { it.substringAfterLast('/') }.toSet()
                         val animated = objects?.filter { it.type == "animatedSprite" }?.map { it.image.substringAfterLast('/').lowercase() }?.distinct() ?: emptyList()
                         if (animated.isNotEmpty()) Tag("${animated.count { it in sheets }}/${animated.size} spritesheets", if (animated.all { it in sheets }) Funkin.Up else Funkin.Muted)

@@ -218,8 +218,8 @@ private fun DrawScope.drawTexts(state: WeekEditorState, doc: WeekDocument, m: Me
     drawText(diff, topLeft = Offset(m.x(1060.0) - diff.size.width / 2f, m.y(484.0)))
 
     val notes = listOfNotNull(
-        if (!doc.visible) "Hidden from story mode" else null,
-        if (doc.hideFreeplay) "Songs hidden from freeplay" else null,
+        if (!doc.visible) "从故事模式隐藏" else null,
+        if (doc.hideFreeplay) "从自由游玩隐藏歌曲" else null,
         if (doc.isLocked && doc.hiddenUntilUnlocked) "解锁前隐藏" else null
     )
     if (notes.isNotEmpty()) {

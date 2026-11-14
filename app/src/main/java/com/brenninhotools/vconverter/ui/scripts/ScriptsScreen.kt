@@ -38,7 +38,7 @@ fun ScriptsScreen(viewModel: ScriptsViewModel, modFolderName: String?, onSave: (
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Scripts", accent, 1)
+            SectionTitle("脚本", accent, 1)
             DropZone(
                 title = "添加 Psych 脚本",
                 hint = "选择 .lua 或 .hx 文件，或者包含模组 data、stages、scripts、custom_events 和 custom_notetypes 文件夹的压缩包。每个脚本会变成一个 V-Slice 模块。",
@@ -62,7 +62,7 @@ fun ScriptsScreen(viewModel: ScriptsViewModel, modFolderName: String?, onSave: (
                     }
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Runs in", style = MaterialTheme.typography.labelSmall, color = Funkin.Muted)
+                        Text("作用于", style = MaterialTheme.typography.labelSmall, color = Funkin.Muted)
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalArrangement = Arrangement.spacedBy(6.dp)

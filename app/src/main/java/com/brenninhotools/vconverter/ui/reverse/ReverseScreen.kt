@@ -86,17 +86,17 @@ fun ReverseScreen(
 }
 
 private fun kindLabel(kind: String): String = when (kind) {
-    "metadata" -> "Metadata"
-    "chart" -> "Chart"
-    "atlas" -> "Spritesheet"
+    "metadata" -> "元数据"
+    "chart" -> "谱子"
+    "atlas" -> "图集"
     "animate" -> "Animate 图集"
-    "character" -> "Character"
-    "stage" -> "Stage"
-    "level" -> "Level"
-    "script" -> "Script"
-    "events" -> "Events"
-    "event" -> "Event"
-    "image" -> "Image"
+    "character" -> "人物"
+    "stage" -> "背景"
+    "level" -> "关卡"
+    "script" -> "脚本"
+    "events" -> "事件"
+    "event" -> "事件"
+    "image" -> "图片"
     "menu" -> "菜单人物"
     else -> kind
 }

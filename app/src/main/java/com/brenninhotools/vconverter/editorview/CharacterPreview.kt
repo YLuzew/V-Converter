@@ -195,7 +195,7 @@ fun CharacterPreview(state: CharacterEditorState, modifier: Modifier = Modifier,
             val anim = state.animation
             val count = state.framesOf(anim).size
             val info = buildString {
-                append(anim?.name ?: "No animation")
+                append(anim?.name ?: "没有动画")
                 if (anim != null) {
                     append("  ·  frame ${if (count == 0) 0 else state.frame + 1}/$count")
                     append("  ·  offset ${trim(anim.offsetX)}, ${trim(anim.offsetY)}")

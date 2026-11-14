@@ -325,7 +325,7 @@ class LuaToNmv(skipLines: Set<Int> = emptySet()) : LuaTranspiler(skipLines) {
                 val fn = (args.getOrNull(0) as? Expr.Str)?.value
                 val list = (args.getOrNull(1) as? Expr.Table)?.fields?.filterIsInstance<TableField.Positional>()?.map { expr(it.value) }
                 if (fn != null) "$fn(${list?.joinToString(", ") ?: ""})" else {
-                    issue(line, "runHaxeFunction() with a function name built at runtime cannot be converted.")
+                    issue(line, "runHaxeFunction() 的函数名是运行时拼出来的，没法转换。")
                     "null"
                 }
             }

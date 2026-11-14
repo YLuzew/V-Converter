@@ -120,7 +120,7 @@ class CharactersViewModel(application: Application) : BaseConverterViewModel(app
                     val combined = ReportBuilder()
                     val files = snapshot.map { (item, id) ->
                         val converted = PsychToVSliceCharacter.convert(CharacterSource(id, item.character, item.slot, sheets, animate = animated[PsychToVSliceCharacter.atlasKey(item.character.image)]))
-                        converted.report.stats.firstOrNull { it.label == "Accuracy" }?.let { combined.stat(id, it.value) }
+                        converted.report.stats.firstOrNull { it.label == "准确度" }?.let { combined.stat(id, it.value) }
                         converted.report.sections.forEach { combined.section("$id · ${it.title}", it.lines) }
                         converted.report.warnings.forEach { combined.warn("$id: $it") }
                         OutputFile(listOf("data", "characters"), "$id.json", converted.json)

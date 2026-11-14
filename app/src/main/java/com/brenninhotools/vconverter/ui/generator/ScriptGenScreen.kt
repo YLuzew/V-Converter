@@ -51,7 +51,7 @@ class ScriptGenViewModel(application: Application) : GeneratorViewModel(applicat
             render = render,
             title = title,
             fields = ScriptGenerator.parseFields(fields),
-            priority = whole(priority, "Priority")
+            priority = whole(priority, "优先级")
         )
     )
 
@@ -79,21 +79,21 @@ fun ScriptGenScreen(viewModel: ScriptGenViewModel, modFolderName: String?, onSav
             when (kind) {
                 ScriptKind.MODULE -> NumberField(viewModel.priority, { viewModel.priority = it }, "优先级（数字小的先执行）", accent, enabled = !busy, decimal = false)
                 ScriptKind.CHARACTER -> {
-                    FieldLabel("Render type")
+                    FieldLabel("渲染类型")
                     ChoiceChips(CharacterRender.entries, { it.label }, { it == viewModel.render }, { viewModel.render = it }, accent, !busy)
                 }
                 ScriptKind.EVENT -> {
                     FunkinTextField(viewModel.title, { viewModel.title = it }, "谱面编辑器里显示的标题", accent, enabled = !busy)
                     FunkinTextField(viewModel.fields, { viewModel.fields = it }, "参数值，例如 intensity:float、label、flash:bool", accent, enabled = !busy)
                 }
-                ScriptKind.NOTE_KIND -> FunkinTextField(viewModel.title, { viewModel.title = it }, "Description", accent, enabled = !busy)
+                ScriptKind.NOTE_KIND -> FunkinTextField(viewModel.title, { viewModel.title = it }, "描述", accent, enabled = !busy)
                 else -> Unit
             }
         }
         val available = ScriptGenerator.callbacksFor(kind)
         if (available.isNotEmpty()) {
             FunkinCard {
-                SectionTitle("Callbacks", accent, 2)
+                SectionTitle("回调", accent, 2)
                 ChoiceChips(available, { it.label }, { it in viewModel.callbacks }, viewModel::toggle, accent, !busy)
                 Text(
                     "每个都会变成一个已自动调用 super 的覆写。",

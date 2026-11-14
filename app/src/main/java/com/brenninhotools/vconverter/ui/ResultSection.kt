@@ -27,7 +27,7 @@ fun ConvertSection(
     onConvert: () -> Unit,
     onSave: () -> Unit,
     modFolderName: String?,
-    title: String = "Convert",
+    title: String = "转换",
     buttonText: String = "转换为 V-Slice",
     @DrawableRes buttonIcon: Int = R.drawable.ic_swap
 ) {
@@ -49,7 +49,7 @@ fun ConvertSection(
                 val code = output.files
                     .filter { it.bytes == null && it.name.substringAfterLast('.').lowercase() in CODE_EXTENSIONS }
                     .map { it.relativePath to it.content }
-                    .ifEmpty { listOfNotNull(output.preview?.let { "Preview" to it }) }
+                    .ifEmpty { listOfNotNull(output.preview?.let { "预览" to it }) }
                 CodeFiles(code, accent)
                 OutputFiles(output.files.map { it.relativePath }, accent)
                 SaveActions(viewModel, accent, modFolderName, onSave)

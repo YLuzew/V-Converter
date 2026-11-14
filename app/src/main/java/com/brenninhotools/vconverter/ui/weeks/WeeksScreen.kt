@@ -26,7 +26,7 @@ fun WeeksScreen(viewModel: WeeksViewModel, modFolderName: String?, onSave: () ->
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Weeks", accent, 1)
+            SectionTitle("周目", accent, 1)
             DropZone(
                 title = "添加周目与菜单人物",
                 hint = "选择 weeks 文件夹里的周目 .json，和 images/menucharacters 里的菜单人物 .json，或者包含它们的 .zip/.rar/.7z。",
@@ -52,8 +52,8 @@ fun WeeksScreen(viewModel: WeeksViewModel, modFolderName: String?, onSave: () ->
                     tags = {
                         Tag("${item.week.songs.size} songs", accent)
                         item.week.storyName.takeIf { it.isNotBlank() }?.let { Tag(it, Funkin.Muted) }
-                        if (missing.isEmpty()) Tag("Menu chars ready", Funkin.Up) else Tag("Missing ${missing.size} menu char(s)", Funkin.Warning)
-                        if (item.week.hideStoryMode) Tag("Hidden", Funkin.Muted)
+                        if (missing.isEmpty()) Tag("菜单人物已就绪", Funkin.Up) else Tag("Missing ${missing.size} menu char(s)", Funkin.Warning)
+                        if (item.week.hideStoryMode) Tag("隐藏", Funkin.Muted)
                     }
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -65,7 +65,7 @@ fun WeeksScreen(viewModel: WeeksViewModel, modFolderName: String?, onSave: () ->
                         )
                         if (missing.isNotEmpty()) {
                             Text(
-                                "Needs: " + missing.joinToString { "menucharacters/$it.json" },
+                                "需要：" + missing.joinToString { "menucharacters/$it.json" },
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Funkin.Warning
                             )

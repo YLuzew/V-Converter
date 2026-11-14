@@ -137,7 +137,7 @@ fun DifficultyPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
     var error by remember { mutableStateOf<String?>(null) }
     val document = state.document
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Difficulty")
+        EditorSectionTitle("难度")
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             document.difficultyNames.forEach { diff ->
                 EditorChip("$diff (${document.notes(diff).size})", diff == state.difficulty) {
@@ -149,9 +149,9 @@ fun DifficultyPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
         NumberField("滚动速度", document.difficulties[state.difficulty]?.speed ?: 1.0, Modifier.fillMaxWidth()) { speed ->
             if (speed > 0) state.edit { it.withSpeed(state.difficulty, speed) }
         }
-        OutlinedTextField(value = name, onValueChange = { name = it; error = null }, label = { Text("New difficulty") }, singleLine = true, modifier = Modifier.fillMaxWidth().typingField())
+        OutlinedTextField(value = name, onValueChange = { name = it; error = null }, label = { Text("新难度") }, singleLine = true, modifier = Modifier.fillMaxWidth().typingField())
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            EditorChip("Add empty", false) {
+            EditorChip("加空难度", false) {
                 runCatching { state.edit { it.addDifficulty(name) } }.onSuccess { name = "" }.onFailure { error = it.message }
             }
             EditorChip("Copy ${state.difficulty}", false) {
@@ -176,17 +176,17 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
         when {
             note != null -> {
-                EditorSectionTitle("Note")
+                EditorSectionTitle("音符")
                 Text(
                     "${if (note.isPlayer) "Player" else "Opponent"} ${directionNames[note.direction]} at ${formatTime(note.time)}" +
                         if (note.length > 0) " · hold ${trim((note.length).roundLong().toDouble())} ms" else "",
                     fontSize = 13.sp
                 )
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    EditorChip("Hold -", false) { state.changeHold(-1) }
-                    EditorChip("Hold +", false) { state.changeHold(1) }
-                    EditorChip("Delete", false) { state.deleteSelection() }
-                    EditorChip("Deselect", false) { state.clearSelection() }
+                    EditorChip("长条 -", false) { state.changeHold(-1) }
+                    EditorChip("长条 +", false) { state.changeHold(1) }
+                    EditorChip("删除", false) { state.deleteSelection() }
+                    EditorChip("取消选择", false) { state.clearSelection() }
                 }
                 TextValueField("音符类型（alt、hurt…）", note.kind, Modifier.fillMaxWidth()) { state.setKind(it) }
             }
@@ -195,8 +195,8 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 Text("At ${formatTime(event.time)}", fontSize = 13.sp)
                 EventValueEditor(event) { state.updateEvent(it) }
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    EditorChip("Delete", false) { state.deleteSelection() }
-                    EditorChip("Deselect", false) { state.clearSelection() }
+                    EditorChip("删除", false) { state.deleteSelection() }
+                    EditorChip("取消选择", false) { state.clearSelection() }
                 }
             }
             draft != null -> {
@@ -207,15 +207,15 @@ fun SelectionPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 var kind by remember { mutableStateOf("") }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     OutlinedTextField(value = kind, onValueChange = { kind = it }, label = { Text("自定义事件类型") }, singleLine = true, modifier = Modifier.weight(1f).typingField())
-                    TextButton(onClick = { if (kind.isNotBlank()) state.addEvent(kind.trim(), JSONObject()) }) { Text("Add") }
+                    TextButton(onClick = { if (kind.isNotBlank()) state.addEvent(kind.trim(), JSONObject()) }) { Text("添加") }
                 }
-                EditorChip("Cancel", false) { state.clearSelection() }
+                EditorChip("取消", false) { state.clearSelection() }
             }
             else -> {
-                EditorSectionTitle("Editing")
+                EditorSectionTitle("编辑")
                 Text(
-                    "Tap a lane to place a note, tap it again to select, and tap a selected note to delete it. " +
-                        "The lane on the right holds events. Drag or use the mouse wheel to scroll, or tap the mini-map to jump.",
+                    "点一条轨道放音符，再点一下选中，点选中的音符就删掉。 " +
+                        "最右边那条轨道放事件。拖动或用滚轮滚动，点迷你地图可以跳。",
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -273,7 +273,7 @@ private fun RawValueField(event: EditorEvent, onValue: (Any?) -> Unit) {
             invalid = parsed == null
             if (parsed != null) onValue(parsed)
         },
-        label = { Text("Value (JSON, number or text)") },
+        label = { Text("值（JSON、数字或文本）") },
         isError = invalid,
         modifier = Modifier.fillMaxWidth().typingField()
     )
@@ -290,7 +290,7 @@ fun TimingPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
                 NumberField("BPM", change.bpm, Modifier.weight(1f)) { bpm ->
                     if (bpm > 0) state.edit { doc -> doc.withTiming(doc.timing.mapIndexed { i, t -> if (i == index) t.copy(bpm = bpm) else t }) }
                 }
-                NumberField("Beats", change.numerator.toDouble(), Modifier.width(80.dp)) { n ->
+                NumberField("拍数", change.numerator.toDouble(), Modifier.width(80.dp)) { n ->
                     val beats = n.toInt()
                     if (beats in 1..32) state.edit { doc -> doc.withTiming(doc.timing.mapIndexed { i, t -> if (i == index) t.copy(numerator = beats) else t }) }
                 }
@@ -313,25 +313,25 @@ fun SongInfoPanel(state: ChartEditorState, modifier: Modifier = Modifier) {
     fun update(change: (com.brenninhotools.vconverter.editor.EditorMeta) -> com.brenninhotools.vconverter.editor.EditorMeta) =
         state.edit { it.copy(meta = change(it.meta)) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Song")
-        TextValueField("Song id", state.document.id, Modifier.fillMaxWidth()) { id ->
+        EditorSectionTitle("歌曲")
+        TextValueField("歌曲 id", state.document.id, Modifier.fillMaxWidth()) { id ->
             val clean = id.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
             if (clean.isNotEmpty()) state.edit { it.copy(id = clean) }
         }
         TextValueField("变体（留空 = 默认）", state.document.variation, Modifier.fillMaxWidth()) { v -> state.edit { it.copy(variation = v.trim().lowercase()) } }
         TextValueField("歌曲名", meta.songName, Modifier.fillMaxWidth()) { v -> update { it.copy(songName = v) } }
-        TextValueField("Artist", meta.artist, Modifier.fillMaxWidth()) { v -> update { it.copy(artist = v) } }
-        TextValueField("Charter", meta.charter, Modifier.fillMaxWidth()) { v -> update { it.copy(charter = v) } }
+        TextValueField("作曲", meta.artist, Modifier.fillMaxWidth()) { v -> update { it.copy(artist = v) } }
+        TextValueField("谱师", meta.charter, Modifier.fillMaxWidth()) { v -> update { it.copy(charter = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Player", meta.player, Modifier.weight(1f)) { v -> update { it.copy(player = v) } }
-            TextValueField("Opponent", meta.opponent, Modifier.weight(1f)) { v -> update { it.copy(opponent = v) } }
+            TextValueField("玩家", meta.player, Modifier.weight(1f)) { v -> update { it.copy(player = v) } }
+            TextValueField("对手", meta.opponent, Modifier.weight(1f)) { v -> update { it.copy(opponent = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Girlfriend", meta.girlfriend, Modifier.weight(1f)) { v -> update { it.copy(girlfriend = v) } }
-            TextValueField("Stage", meta.stage, Modifier.weight(1f)) { v -> update { it.copy(stage = v) } }
+            TextValueField("女友", meta.girlfriend, Modifier.weight(1f)) { v -> update { it.copy(girlfriend = v) } }
+            TextValueField("背景", meta.stage, Modifier.weight(1f)) { v -> update { it.copy(stage = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            TextValueField("Note style", meta.noteStyle, Modifier.weight(1f)) { v -> update { it.copy(noteStyle = v) } }
+            TextValueField("音符样式", meta.noteStyle, Modifier.weight(1f)) { v -> update { it.copy(noteStyle = v) } }
             NumberField("偏移（毫秒）", meta.offset, Modifier.weight(1f)) { v -> update { it.copy(offset = v) } }
         }
     }

@@ -33,7 +33,7 @@ fun ReverseModScreen(
     viewModel: ReverseModViewModel,
     modFolderName: String?,
     onConvert: () -> Unit,
-    intro: String = "Convert a whole V-Slice mod back to Psych Engine: songs (variations become their own songs), characters, stages, levels, .hxc scripts, images and audio.",
+    intro: String = "把整个 V-Slice 模组转回 Psych Engine：歌曲（变体各自成歌）、人物、背景、关卡、.hxc 脚本、图片和音频。",
     convertNote: String = "把转换好的模组下载成 .zip（解压到 Psych Engine 的 mods 文件夹里），或者直接写进一个空的模组文件夹。"
 ) {
     val accent = Funkin.Pink
@@ -48,7 +48,7 @@ fun ReverseModScreen(
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("V-Slice mod", accent, 1)
+            SectionTitle("V-Slice 模组", accent, 1)
             Text(
                 intro,
                 style = MaterialTheme.typography.bodySmall,
@@ -87,12 +87,12 @@ fun ReverseModScreen(
                 ReportView(
                     Report(
                         stats = listOf(
-                            ReportStat("Songs", scan.songs.size.toString()),
-                            ReportStat("Characters", scan.characters.size.toString()),
-                            ReportStat("Stages", scan.stages.size.toString()),
-                            ReportStat("Levels", scan.levels.size.toString()),
-                            ReportStat("Assets", scan.assets.size.toString()),
-                            ReportStat("Scripts", scan.scripts.size.toString())
+                            ReportStat("歌曲", scan.songs.size.toString()),
+                            ReportStat("人物", scan.characters.size.toString()),
+                            ReportStat("背景", scan.stages.size.toString()),
+                            ReportStat("关卡", scan.levels.size.toString()),
+                            ReportStat("资源", scan.assets.size.toString()),
+                            ReportStat("脚本", scan.scripts.size.toString())
                         )
                     ),
                     accent
@@ -114,9 +114,9 @@ fun ReverseModScreen(
         if (viewModel.mod != null) {
             FunkinCard {
                 SectionTitle("模组信息", accent, 2)
-                FunkinTextField(viewModel.title, { viewModel.title = it }, "Title", accent, enabled = !busy)
-                FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
-                FunkinTextField(viewModel.author, { viewModel.author = it }, "Author", accent, enabled = !busy)
+                FunkinTextField(viewModel.title, { viewModel.title = it }, "标题", accent, enabled = !busy)
+                FunkinTextField(viewModel.description, { viewModel.description = it }, "描述", accent, enabled = !busy)
+                FunkinTextField(viewModel.author, { viewModel.author = it }, "作者", accent, enabled = !busy)
                 Text(
                     "已写入 pack.json。_polymod_icon.png 会成为 pack.png。",
                     style = MaterialTheme.typography.bodySmall,
@@ -126,7 +126,7 @@ fun ReverseModScreen(
         }
 
         FunkinCard(accent = if (viewModel.result != null) accent else null) {
-            SectionTitle("Convert", accent, 3)
+            SectionTitle("转换", accent, 3)
             Text(
                 convertNote,
                 style = MaterialTheme.typography.bodySmall,

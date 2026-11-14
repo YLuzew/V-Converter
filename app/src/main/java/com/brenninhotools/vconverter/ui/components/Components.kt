@@ -368,7 +368,7 @@ fun ReportView(report: Report, accent: Color) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(painterResource(R.drawable.ic_warning), contentDescription = null, tint = Funkin.Warning, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("HEADS UP", style = MaterialTheme.typography.labelMedium, color = Funkin.Warning)
+                    Text("注意", style = MaterialTheme.typography.labelMedium, color = Funkin.Warning)
                 }
                 report.warnings.forEach { warning ->
                     Text("• $warning", style = MaterialTheme.typography.bodySmall, color = Funkin.Text)
@@ -432,7 +432,7 @@ fun Collapsible(
             Text(count.toString(), style = MaterialTheme.typography.labelMedium, color = accent)
             Icon(
                 painterResource(R.drawable.ic_expand),
-                contentDescription = if (open) "Collapse" else "Expand",
+                contentDescription = if (open) "收起" else "展开",
                 tint = Funkin.Muted,
                 modifier = Modifier
                     .padding(start = 4.dp)

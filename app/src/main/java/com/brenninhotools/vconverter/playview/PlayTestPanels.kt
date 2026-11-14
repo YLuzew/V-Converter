@@ -43,9 +43,9 @@ private fun Check(label: String, checked: Boolean, onChange: (Boolean) -> Unit) 
 fun PlayTestSetupPanel(state: PlayTestState, modifier: Modifier = Modifier, onStart: () -> Unit = { state.start() }) {
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        EditorSectionTitle("Song")
+        EditorSectionTitle("歌曲")
         Text(state.source, fontSize = 13.sp, color = scheme.onSurfaceVariant)
-        if (state.busy) Text("Loading…", fontSize = 13.sp, color = scheme.primary)
+        if (state.busy) Text("加载中…", fontSize = 13.sp, color = scheme.primary)
         state.error?.let { Text(it, fontSize = 13.sp, color = scheme.error) }
         if (state.songs.size > 1) {
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -64,13 +64,13 @@ fun PlayTestSetupPanel(state: PlayTestState, modifier: Modifier = Modifier, onSt
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Check("Botplay", state.botplay) { state.botplay = it }
-            Check("Downscroll", state.downscroll) { state.downscroll = it }
+            Check("自动游玩", state.botplay) { state.botplay = it }
+            Check("下滚", state.downscroll) { state.downscroll = it }
             Check("背景与人物", state.showStage) { state.showStage = it }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             NumberField("开始于（秒）", state.startAt / 1000.0, Modifier.weight(1f)) { v -> state.startAt = (v * 1000.0).coerceAtLeast(0.0) }
-            EditorChip(if (state.phase == PlayPhase.LOADING) "Loading…" else "Play", true, onStart)
+            EditorChip(if (state.phase == PlayPhase.LOADING) "加载中…" else "播放", true, onStart)
         }
         val errors = state.issues.count { it.level == IssueLevel.ERROR }
         val warnings = state.issues.count { it.level == IssueLevel.WARNING }
@@ -83,13 +83,13 @@ fun PlayTestSetupPanel(state: PlayTestState, modifier: Modifier = Modifier, onSt
 fun PlayTestControls(state: PlayTestState, modifier: Modifier = Modifier, onClose: (() -> Unit)? = null) {
     FlowRow(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         when (state.phase) {
-            PlayPhase.PLAYING -> EditorChip("Pause", false) { state.pause() }
-            PlayPhase.PAUSED -> EditorChip("Resume", true) { state.resume() }
+            PlayPhase.PLAYING -> EditorChip("暂停", false) { state.pause() }
+            PlayPhase.PAUSED -> EditorChip("继续", true) { state.resume() }
             else -> EditorChip("再播一次", false) { state.start() }
         }
-        EditorChip("Botplay", state.botplay) { state.toggleBotplay() }
-        if (state.phase == PlayPhase.PLAYING || state.phase == PlayPhase.PAUSED) EditorChip("Stop", false) { state.stop() }
-        if (onClose != null) EditorChip("Close", false) {
+        EditorChip("自动游玩", state.botplay) { state.toggleBotplay() }
+        if (state.phase == PlayPhase.PLAYING || state.phase == PlayPhase.PAUSED) EditorChip("停止", false) { state.stop() }
+        if (onClose != null) EditorChip("关闭", false) {
             state.backToSetup()
             onClose()
         }
@@ -101,7 +101,7 @@ fun PlayTestResultsPanel(state: PlayTestState, modifier: Modifier = Modifier) {
     val game = state.engine ?: return
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        EditorSectionTitle("Results")
+        EditorSectionTitle("结果")
         Text("${game.rating} · ${fmt("%.2f", game.accuracy * 100)}% · ${game.score} points", fontWeight = FontWeight.Bold, fontSize = 16.sp)
         Text(Judgement.entries.joinToString("   ") { "${it.label} ${game.counts.getValue(it)}" } + "   MISS ${game.misses}", fontSize = 13.sp)
         Text("Max combo ${game.maxCombo} · dropped holds ${game.holdDrops} · lowest health ${fmt("%.0f", game.lowestHealth * 50)}%", fontSize = 13.sp, color = scheme.onSurfaceVariant)
@@ -118,7 +118,7 @@ fun PlayTestResultsPanel(state: PlayTestState, modifier: Modifier = Modifier) {
 fun PlayTestIssuesPanel(state: PlayTestState, modifier: Modifier = Modifier) {
     val scheme = MaterialTheme.colorScheme
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Report")
+        EditorSectionTitle("报告")
         val issues = state.issues
         if (state.document == null) {
             Text("加载一首歌来检查。", fontSize = 13.sp, color = scheme.onSurfaceVariant)

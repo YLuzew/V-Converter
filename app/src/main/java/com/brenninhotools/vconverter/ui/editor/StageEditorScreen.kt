@@ -50,7 +50,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class StageEditorViewModel(application: Application) : BaseConverterViewModel(application) {
-    val editor = StageEditorState(StageDocument("new-stage", "New Stage"))
+    val editor = StageEditorState(StageDocument("new-stage", "新建背景"))
     val live = com.brenninhotools.vconverter.editorview.LiveSession(com.brenninhotools.vconverter.editorview.StageLiveAdapter(editor) { asset -> decode(asset) }) { block -> android.os.Handler(android.os.Looper.getMainLooper()).post(block) }
     var target by mutableStateOf(ExportTarget.VSLICE)
         private set
@@ -112,7 +112,7 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
             try {
                 val files = readAll(uris)
                 val pngs = files.filter { it.first.endsWith(".png", true) }
-                require(pngs.isNotEmpty()) { "Pick at least one .png (with its .xml for animated props)." }
+                require(pngs.isNotEmpty()) { "至少挑一张 .png（要动画物件就再带上它的 .xml）。" }
                 val xmls = files.filter { it.first.endsWith(".xml", true) }.associate { it.first.substringAfterLast('/').substringBeforeLast('.').lowercase() to it.second.toString(Charsets.UTF_8) }
                 pngs.forEach { (path, bytes) ->
                     val stem = path.substringAfterLast('/').substringBeforeLast('.')
@@ -129,13 +129,13 @@ class StageEditorViewModel(application: Application) : BaseConverterViewModel(ap
                 invalidate()
                 status = null
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not add the images.")
+                status = StatusMessage.Error(e.message ?: "加不了这些图片。")
             }
         }
     }
 
     fun createNew() {
-        editor.load(StageDocument("new-stage", "New Stage"), emptyMap(), emptyMap())
+        editor.load(StageDocument("new-stage", "新建背景"), emptyMap(), emptyMap())
         source = "新建一个背景"
         invalidate()
         status = StatusMessage.Info("已新建背景，人物位置用的是本体默认值。加上图片就能搭起来。")
@@ -171,7 +171,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Stage", accent, 1)
+            SectionTitle("背景", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
                 title = "打开背景",
@@ -184,7 +184,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             OutlineButton("新建背景", accent, onClick = viewModel::createNew, enabled = !busy)
         }
         FunkinCard {
-            SectionTitle("Preview", accent, 2)
+            SectionTitle("预览", accent, 2)
             StageToolbar(editor)
             StagePreview(
                 editor,
@@ -197,7 +197,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             StageSelectionPanel(editor)
         }
         FunkinCard {
-            SectionTitle("Layers", accent, 3)
+            SectionTitle("图层", accent, 3)
             StageLayersPanel(editor, onAddImage = { imagePicker.launch(arrayOf("image/png", "text/xml", "application/xml", "*/*")) })
         }
         FunkinCard {
@@ -234,7 +234,7 @@ fun StageEditorScreen(viewModel: StageEditorViewModel, modFolderName: String?, o
             onConvert = viewModel::export,
             onSave = onSave,
             modFolderName = modFolderName,
-            title = "Export",
+            title = "导出",
             buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )

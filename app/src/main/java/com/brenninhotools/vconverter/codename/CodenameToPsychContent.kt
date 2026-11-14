@@ -67,7 +67,7 @@ object CodenameToPsychCharacter {
         report.stat("Side", slot.name.lowercase())
         built.notes.warnings.forEach(report::warn)
         built.notes.sections.forEach { report.section(it.title, it.lines) }
-        if (character.extraSheets.isNotEmpty()) report.section("Spritesheets", listOf("Extra sheets were joined into the image field: ${built.character.image}"))
+        if (character.extraSheets.isNotEmpty()) report.section("图集", listOf("Extra sheets were joined into the image field: ${built.character.image}"))
         if (atlases.isEmpty() && !animate) report.warn("没有提供图集 XML，所以镜像偏移和居中摄像机的修正是近似的。")
         if (animate) report.section("Animate 图集", listOf("帧标签动画变成了主符号的序号（Psych 只播符号），偏移里已经算上每个符号的边界。"))
         if (missingSymbols.isNotEmpty()) report.warn("These animations match no symbol or frame label in Animation.json: ${missingSymbols.joinToString()}.")

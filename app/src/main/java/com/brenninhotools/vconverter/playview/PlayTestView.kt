@@ -199,7 +199,7 @@ private fun DrawScope.drawHud(state: PlayTestState, screen: Screen, skin: NoteSk
         val age = (time - popup.time).toFloat()
         val alpha = (1f - age / 700f).coerceIn(0f, 1f)
         val color = when (popup.text) {
-            "MISS", "DROP" -> Color(0xFFFF4F4F)
+            "失误", "漏音" -> Color(0xFFFF4F4F)
             "SICK!!" -> Color(0xFF7CF7FF)
             else -> Color.White
         }
@@ -208,18 +208,18 @@ private fun DrawScope.drawHud(state: PlayTestState, screen: Screen, skin: NoteSk
         val y = GAME_H * 0.42f - age * 0.03f
         drawText(layout, topLeft = Offset(screen.x(PLAYER_X - 160f) - layout.size.width / 2f, screen.y(y)))
         val combo = game?.combo ?: 0
-        if (combo >= 2 && popup.text != "MISS") {
+        if (combo >= 2 && popup.text != "失误") {
             val c = measurer.measure("$combo", style.copy(fontSize = (32f * screen.k).toSp()))
             drawText(c, topLeft = Offset(screen.x(PLAYER_X - 160f) - c.size.width / 2f, screen.y(y + 54f)))
         }
     }
     if (state.botplay) {
-        val layout = measurer.measure("BOTPLAY", text.copy(fontSize = (32f * screen.k).toSp(), fontWeight = FontWeight.Bold))
+        val layout = measurer.measure("自动游玩", text.copy(fontSize = (32f * screen.k).toSp(), fontWeight = FontWeight.Bold))
         drawText(layout, topLeft = Offset(screen.x(GAME_W / 2f) - layout.size.width / 2f, screen.y(if (down) GAME_H - 110f else 90f)))
     }
     if (state.phase == PlayPhase.PAUSED || state.phase == PlayPhase.LOADING) {
         drawRect(Color.Black.copy(alpha = 0.55f), Offset(screen.ox, screen.oy), Size(GAME_W * screen.k, GAME_H * screen.k))
-        val layout = measurer.measure(if (state.phase == PlayPhase.PAUSED) "PAUSED" else "LOADING…", text.copy(fontSize = (56f * screen.k).toSp(), fontWeight = FontWeight.Bold))
+        val layout = measurer.measure(if (state.phase == PlayPhase.PAUSED) "已暂停" else "加载中…", text.copy(fontSize = (56f * screen.k).toSp(), fontWeight = FontWeight.Bold))
         drawText(layout, topLeft = Offset(screen.x(GAME_W / 2f) - layout.size.width / 2f, screen.y(GAME_H / 2f) - layout.size.height / 2f))
     }
 }

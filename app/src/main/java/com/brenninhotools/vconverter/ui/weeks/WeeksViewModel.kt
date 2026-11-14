@@ -104,7 +104,7 @@ class WeeksViewModel(application: Application) : BaseConverterViewModel(applicat
                         listOf(OutputFile(listOf("data", "levels"), "$id.json", converted.json)) + converted.extra.map { (path, text) -> OutputFile.of(path, text, null) }
                     }
                     combined.section(
-                        "Notes",
+                        "音符",
                         listOf(
                             "歌曲 ID 用 Psych 的歌曲路径格式（\"Dad Battle\" → \"dad-battle\"），和谱子转换器保持一致。",
                             "把周目的图片（storymenu、menubackgrounds、menucharacters）复制到模组的 images 文件夹里。"

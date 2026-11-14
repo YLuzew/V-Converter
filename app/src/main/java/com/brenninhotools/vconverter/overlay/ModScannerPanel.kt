@@ -135,7 +135,7 @@ fun ModScannerPanel(
             ) {
                 Column(modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(
-                        (if (cancelling) "CANCELLING" else progress.phase.ifBlank { "Scanning" }.uppercase()) + "…",
+                        (if (cancelling) "取消中" else progress.phase.ifBlank { "扫描中" }.uppercase()) + "…",
                         color = accent,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
@@ -197,7 +197,7 @@ fun ModScannerPanel(
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                if (determinate) "${(fraction * 100).toInt()}%  ·  ${progress.done}/${progress.total}" else "Working…",
+                if (determinate) "${(fraction * 100).toInt()}%  ·  ${progress.done}/${progress.total}" else "处理中…",
                 color = colors.text,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -224,7 +224,7 @@ fun ModScannerPanel(
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.outlinedButtonColors(contentColor = colors.danger)
             ) {
-                Text(if (cancelling) "Cancelling…" else "Cancel conversion")
+                Text(if (cancelling) "取消中…" else "取消转换")
             }
         }
     }

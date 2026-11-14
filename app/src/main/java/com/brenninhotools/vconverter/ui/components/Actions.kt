@@ -139,7 +139,7 @@ fun DownloadCard(viewModel: BaseConverterViewModel, accent: Color) {
                 }
                 Spacer(Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("DOWNLOADED", style = MaterialTheme.typography.labelSmall, color = Funkin.Up)
+                    Text("已下载", style = MaterialTheme.typography.labelSmall, color = Funkin.Up)
                     Text(file.name, style = MaterialTheme.typography.titleSmall, color = Funkin.Text, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(
                         "${file.entries} files · ${file.location}",
@@ -151,9 +151,9 @@ fun DownloadCard(viewModel: BaseConverterViewModel, accent: Color) {
                 }
             }
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlineButton("Share", accent, viewModel::shareDownload, Modifier.weight(1f), R.drawable.ic_share)
+                OutlineButton("分享", accent, viewModel::shareDownload, Modifier.weight(1f), R.drawable.ic_share)
                 if (!Downloads.needsPicker) {
-                    OutlineButton("Downloads", Funkin.Up, viewModel::openDownloads, Modifier.weight(1f), R.drawable.ic_folder)
+                    OutlineButton("下载", Funkin.Up, viewModel::openDownloads, Modifier.weight(1f), R.drawable.ic_folder)
                 }
             }
         }

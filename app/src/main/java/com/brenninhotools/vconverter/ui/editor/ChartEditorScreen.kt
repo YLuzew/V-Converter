@@ -67,7 +67,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
     var audio by mutableStateOf<List<EditorAudio>>(emptyList())
         private set
     var target by mutableStateOf(ExportTarget.VSLICE)
-    var source by mutableStateOf("New song")
+    var source by mutableStateOf("新建歌曲")
         private set
     var newName by mutableStateOf("")
     var newBpm by mutableStateOf("120")
@@ -105,7 +105,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
         }
         val name = newName.trim().ifEmpty { "新歌曲" }
         editor.load(ChartDocument.blank(Ids.of(name).ifEmpty { "new-song" }, name, bpm, difficultyOptions.filter { it in newDifficulties }))
-        source = "New song"
+        source = "新建歌曲"
         invalidate()
         status = StatusMessage.Info("Started $name at ${newBpm.trim()} BPM.")
     }
@@ -174,7 +174,7 @@ class ChartEditorViewModel(application: Application) : BaseConverterViewModel(ap
         viewModelScope.launch {
             val player = withContext(Dispatchers.IO) { runCatching { AndroidSongPlayer.create(context, snapshot) }.getOrNull() }
             if (player == null) {
-                status = StatusMessage.Error("Could not play the audio. The chart still saves fine.")
+                status = StatusMessage.Error("音频播不出来，谱面照样能保存。")
             } else if (snapshot == audio) {
                 editor.attach(player)
             } else {
@@ -242,7 +242,7 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Song", accent, 1)
+            SectionTitle("歌曲", accent, 1)
             Text(viewModel.source, color = Funkin.Muted)
             DropZone(
                 title = "打开谱子",
@@ -265,12 +265,12 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
                     accent = accent,
                     enabled = !busy
                 )
-                OutlineButton("Create", accent, onClick = { viewModel.createNew(); showNew = false })
+                OutlineButton("创建", accent, onClick = { viewModel.createNew(); showNew = false })
             }
         }
         FunkinCard {
-            SectionTitle("Audio", accent, 2)
-            AssetPicker("Instrumental", viewModel.audioFor(AudioRole.INST)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.INST) }, { viewModel.clearAudio(AudioRole.INST) }, enabled = !busy)
+            SectionTitle("音频", accent, 2)
+            AssetPicker("伴奏", viewModel.audioFor(AudioRole.INST)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.INST) }, { viewModel.clearAudio(AudioRole.INST) }, enabled = !busy)
             val split = if (splitVoices >= 0) splitVoices == 1 else viewModel.audioFor(AudioRole.PLAYER) != null || viewModel.audioFor(AudioRole.OPPONENT) != null
             ChoiceChips(
                 options = listOf(false, true),
@@ -284,12 +284,12 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
                 AssetPicker("玩家音轨", viewModel.audioFor(AudioRole.PLAYER)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.PLAYER) }, { viewModel.clearAudio(AudioRole.PLAYER) }, enabled = !busy)
                 AssetPicker("对手音轨", viewModel.audioFor(AudioRole.OPPONENT)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.OPPONENT) }, { viewModel.clearAudio(AudioRole.OPPONENT) }, enabled = !busy)
             } else {
-                AssetPicker("Voices", viewModel.audioFor(AudioRole.VOICES)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.VOICES) }, { viewModel.clearAudio(AudioRole.VOICES) }, enabled = !busy)
+                AssetPicker("人声", viewModel.audioFor(AudioRole.VOICES)?.name, accent, audioTypes, { viewModel.pickAudio(it, AudioRole.VOICES) }, { viewModel.clearAudio(AudioRole.VOICES) }, enabled = !busy)
             }
             if (editor.player == null && viewModel.audio.isNotEmpty()) Text("正在加载音频…", color = Funkin.Muted)
         }
         FunkinCard {
-            SectionTitle("Chart", accent, 3)
+            SectionTitle("谱子", accent, 3)
             ChartEditorWorkspace(editor, Modifier.fillMaxWidth(), skin, eventIcon, gridHeight = 540.dp)
             com.brenninhotools.vconverter.ui.playtest.LocalPlayTest.current?.let { launcher ->
                 OutlineButton("试玩这张谱子", accent, onClick = { launcher.chart(editor.document, viewModel.audio) })
@@ -327,7 +327,7 @@ fun ChartEditorScreen(viewModel: ChartEditorViewModel, modFolderName: String?, o
             onConvert = viewModel::export,
             onSave = onSave,
             modFolderName = modFolderName,
-            title = "Export",
+            title = "导出",
             buttonText = "导出 ${viewModel.target.label}",
             buttonIcon = R.drawable.ic_magic
         )

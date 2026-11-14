@@ -47,7 +47,7 @@ class OnlineViewModel(application: Application) : AndroidViewModel(application) 
                     val bytes = app.contentResolver.openInputStream(uri)?.use { it.readBytes() } ?: throw IllegalStateException("读不到这个文件。")
                     name to bytes
                 }
-                require(picked.first.endsWith(".zip", ignoreCase = true)) { "Pick a .zip file." }
+                require(picked.first.endsWith(".zip", ignoreCase = true)) { "挑一个 .zip 文件。" }
                 state.file = picked
                 if (state.title.isBlank()) state.title = picked.first.substringBeforeLast('.')
             } catch (e: Exception) {

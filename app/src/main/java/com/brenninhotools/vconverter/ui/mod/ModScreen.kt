@@ -33,7 +33,7 @@ fun ModScreen(
     viewModel: ModViewModel,
     modFolderName: String?,
     onConvert: () -> Unit,
-    intro: String = "Convert a whole Psych Engine mod at once: songs, characters, stages, weeks, Lua/HScript scripts, images and audio.",
+    intro: String = "一次转换整个 Psych Engine 模组：歌曲、人物、背景、周目、Lua/HScript 脚本、图片和音频。",
     infoNote: String = "已写入 _polymod_meta.json。pack.png 会成为模组图标。",
     convertNote: String = "把转换好的模组下载成 .zip（解压到 V-Slice 的 mods 文件夹），或者直接写进一个空的模组文件夹。"
 ) {
@@ -49,7 +49,7 @@ fun ModScreen(
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         FunkinCard {
-            SectionTitle("Psych mod", accent, 1)
+            SectionTitle("Psych 模组", accent, 1)
             Text(
                 intro,
                 style = MaterialTheme.typography.bodySmall,
@@ -88,12 +88,12 @@ fun ModScreen(
                 ReportView(
                     Report(
                         stats = listOf(
-                            ReportStat("Songs", scan.songs.size.toString()),
-                            ReportStat("Characters", scan.characters.size.toString()),
-                            ReportStat("Stages", scan.stages.size.toString()),
-                            ReportStat("Weeks", scan.weeks.size.toString()),
-                            ReportStat("Assets", scan.assets.size.toString()),
-                            ReportStat("Scripts", scan.scripts.size.toString())
+                            ReportStat("歌曲", scan.songs.size.toString()),
+                            ReportStat("人物", scan.characters.size.toString()),
+                            ReportStat("背景", scan.stages.size.toString()),
+                            ReportStat("周目", scan.weeks.size.toString()),
+                            ReportStat("资源", scan.assets.size.toString()),
+                            ReportStat("脚本", scan.scripts.size.toString())
                         )
                     ),
                     accent
@@ -115,9 +115,9 @@ fun ModScreen(
         if (viewModel.mod != null) {
             FunkinCard {
                 SectionTitle("模组信息", accent, 2)
-                FunkinTextField(viewModel.title, { viewModel.title = it }, "Title", accent, enabled = !busy)
-                FunkinTextField(viewModel.description, { viewModel.description = it }, "Description", accent, enabled = !busy)
-                FunkinTextField(viewModel.author, { viewModel.author = it }, "Author", accent, enabled = !busy)
+                FunkinTextField(viewModel.title, { viewModel.title = it }, "标题", accent, enabled = !busy)
+                FunkinTextField(viewModel.description, { viewModel.description = it }, "描述", accent, enabled = !busy)
+                FunkinTextField(viewModel.author, { viewModel.author = it }, "作者", accent, enabled = !busy)
                 Text(
                     infoNote,
                     style = MaterialTheme.typography.bodySmall,
@@ -127,7 +127,7 @@ fun ModScreen(
         }
 
         FunkinCard(accent = if (viewModel.result != null) accent else null) {
-            SectionTitle("Convert", accent, 3)
+            SectionTitle("转换", accent, 3)
             Text(
                 convertNote,
                 style = MaterialTheme.typography.bodySmall,

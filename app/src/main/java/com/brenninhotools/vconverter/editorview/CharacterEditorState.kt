@@ -63,7 +63,7 @@ class EditHistory<T>(initial: T, private val limit: Int = 200) {
 
 class CharacterSprite(val image: ImageBitmap, val atlas: SpriteAtlas, val sheetScale: Float = 1f)
 
-enum class DragMode(val label: String) { OFFSET("Offset"), CAMERA("Camera"), VIEW("View") }
+enum class DragMode(val label: String) { OFFSET("偏移"), CAMERA("摄像机"), VIEW("视图") }
 
 class CharacterEditorState(initial: CharacterDocument) {
     private val history = EditHistory(initial)

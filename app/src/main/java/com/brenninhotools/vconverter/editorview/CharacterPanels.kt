@@ -38,16 +38,16 @@ private fun CheckRow(label: String, checked: Boolean, onChange: (Boolean) -> Uni
 @Composable
 fun CharacterToolbar(state: CharacterEditorState, modifier: Modifier = Modifier) {
     FlowRow(modifier, horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorChip(if (state.playing) "Pause" else "Play", state.playing) { state.togglePlay() }
+        EditorChip(if (state.playing) "暂停" else "播放", state.playing) { state.togglePlay() }
         EditorChip("< Frame", false) { state.step(-1) }
-        EditorChip("Frame >", false) { state.step(1) }
-        EditorChip("Undo", false) { if (state.canUndo) state.undo() }
-        EditorChip("Redo", false) { if (state.canRedo) state.redo() }
-        EditorChip("Ghost", state.ghost) { state.ghost = !state.ghost }
-        EditorChip("Camera", state.showCamera) { state.showCamera = !state.showCamera }
-        EditorChip("Stage", state.showBackground) { state.showBackground = !state.showBackground }
-        EditorChip("Zoom -", false) { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.05f) }
-        EditorChip("Zoom +", false) { state.zoom = (state.zoom * 1.25f).coerceAtMost(8f) }
+        EditorChip("帧 >", false) { state.step(1) }
+        EditorChip("撤销", false) { if (state.canUndo) state.undo() }
+        EditorChip("重做", false) { if (state.canRedo) state.redo() }
+        EditorChip("残影", state.ghost) { state.ghost = !state.ghost }
+        EditorChip("摄像机", state.showCamera) { state.showCamera = !state.showCamera }
+        EditorChip("背景", state.showBackground) { state.showBackground = !state.showBackground }
+        EditorChip("缩小", false) { state.zoom = (state.zoom / 1.25f).coerceAtLeast(0.05f) }
+        EditorChip("放大", false) { state.zoom = (state.zoom * 1.25f).coerceAtMost(8f) }
         EditorChip("重置视图", false) { state.resetView() }
     }
 }
@@ -68,7 +68,7 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
     val scheme = MaterialTheme.colorScheme
     var adding by remember { mutableStateOf(false) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        EditorSectionTitle("Animations")
+        EditorSectionTitle("动画")
         document.animations.forEachIndexed { index, anim ->
             val active = index == state.selected
             val frames = state.framesOf(anim).size
@@ -91,10 +91,10 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
             }
         }
         FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(top = 4.dp)) {
-            EditorChip(if (adding) "Close" else "加动画", adding) { adding = !adding }
-            EditorChip("Move up", false) { state.moveSelected(-1) }
+            EditorChip(if (adding) "关闭" else "加动画", adding) { adding = !adding }
+            EditorChip("上移", false) { state.moveSelected(-1) }
             EditorChip("下移", false) { state.moveSelected(1) }
-            EditorChip("Delete", false) { state.removeSelected() }
+            EditorChip("删除", false) { state.removeSelected() }
         }
         if (adding) {
             val prefixes = state.sprite?.atlas?.prefixes() ?: emptyList()
@@ -102,7 +102,7 @@ fun AnimationListPanel(state: CharacterEditorState, modifier: Modifier = Modifie
                 var prefix by remember { mutableStateOf("") }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     TextValueField("图集里的前缀", prefix, Modifier.weight(1f)) { prefix = it }
-                    EditorChip("Add", false) { if (prefix.isNotBlank()) { state.addAnimation(prefix.trim()); adding = false } }
+                    EditorChip("添加", false) { if (prefix.isNotBlank()) { state.addAnimation(prefix.trim()); adding = false } }
                 }
             } else {
                 Text("从图集里选一个前缀：", fontSize = 12.sp, color = scheme.onSurfaceVariant)
@@ -123,7 +123,7 @@ fun AnimationPanel(state: CharacterEditorState, modifier: Modifier = Modifier) {
     val anim = state.animation
     val index = state.selected
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Animation")
+        EditorSectionTitle("动画")
         if (anim == null) {
             Text("添加一个动画才能编辑。", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             return@Column
@@ -134,7 +134,7 @@ fun AnimationPanel(state: CharacterEditorState, modifier: Modifier = Modifier) {
             TextValueField("名称（idle、singLEFT…）", anim.name, Modifier.weight(1f)) { v -> update { it.copy(name = v.trim()) } }
             NumberField("FPS", anim.frameRate.toDouble(), Modifier.weight(0.5f)) { v -> if (v >= 1) update { it.copy(frameRate = v.toInt()) } }
         }
-        TextValueField("Prefix", anim.prefix, Modifier.fillMaxWidth()) { v -> update { it.copy(prefix = v) } }
+        TextValueField("前缀", anim.prefix, Modifier.fillMaxWidth()) { v -> update { it.copy(prefix = v) } }
         TextValueField("帧序号（留空 = 全部帧）", anim.indices.joinToString(","), Modifier.fillMaxWidth()) { v ->
             val list = v.split(',', ' ').mapNotNull { it.trim().toIntOrNull() }
             update { it.copy(indices = list) }
@@ -154,12 +154,12 @@ fun AnimationPanel(state: CharacterEditorState, modifier: Modifier = Modifier) {
             EditorChip("↓ 10", false) { state.nudgeOffset(0.0, -10.0) }
         }
         Row {
-            CheckRow("Loop", anim.looped) { v -> update { it.copy(looped = v) } }
-            CheckRow("Flip X", anim.flipX) { v -> update { it.copy(flipX = v) } }
+            CheckRow("循环", anim.looped) { v -> update { it.copy(looped = v) } }
+            CheckRow("水平翻转", anim.flipX) { v -> update { it.copy(flipX = v) } }
         }
         val names = state.document.animations.map { it.name }.filter { it.isNotEmpty() }
         if (names.isNotEmpty()) {
-            ChoiceField("Ghost", state.ghostAnimation?.name ?: names.first(), names.map { it to it }, Modifier.fillMaxWidth()) { state.ghostAnim = it }
+            ChoiceField("残影", state.ghostAnimation?.name ?: names.first(), names.map { it to it }, Modifier.fillMaxWidth()) { state.ghostAnim = it }
         }
     }
 }
@@ -169,27 +169,27 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
     val doc = state.document
     fun update(change: (com.brenninhotools.vconverter.editor.CharacterDocument) -> com.brenninhotools.vconverter.editor.CharacterDocument) = state.edit(change)
     Column(modifier, verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        EditorSectionTitle("Character")
+        EditorSectionTitle("人物")
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             TextValueField("人物 ID", doc.id, Modifier.weight(1f)) { v ->
                 val clean = v.trim().lowercase().replace(Regex("[^a-z0-9-]+"), "-").trim('-')
                 if (clean.isNotEmpty()) update { it.copy(id = clean) }
             }
-            TextValueField("Name", doc.name, Modifier.weight(1f)) { v -> update { it.copy(name = v) } }
+            TextValueField("名字", doc.name, Modifier.weight(1f)) { v -> update { it.copy(name = v) } }
         }
         TextValueField("图集路径（images/…）", doc.assetPath, Modifier.fillMaxWidth()) { v -> update { it.copy(assetPath = v.trim()) } }
-        ChoiceField("Side", doc.slot, CharacterSlot.entries.map { it to it.label }, Modifier.fillMaxWidth()) { v -> update { it.copy(slot = v) } }
+        ChoiceField("阵营", doc.slot, CharacterSlot.entries.map { it to it.label }, Modifier.fillMaxWidth()) { v -> update { it.copy(slot = v) } }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            NumberField("Scale", doc.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
+            NumberField("缩放", doc.scale, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(scale = v) } }
             NumberField("演唱时长", doc.singTime, Modifier.weight(1f)) { v -> if (v > 0) update { it.copy(singTime = v) } }
-            NumberField("Dance every", doc.danceEvery, Modifier.weight(1f)) { v -> if (v >= 0) update { it.copy(danceEvery = v) } }
+            NumberField("跳动间隔", doc.danceEvery, Modifier.weight(1f)) { v -> if (v >= 0) update { it.copy(danceEvery = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             NumberField("位置 X", doc.offsetX, Modifier.weight(1f)) { v -> update { it.copy(offsetX = v) } }
             NumberField("位置 Y", doc.offsetY, Modifier.weight(1f)) { v -> update { it.copy(offsetY = v) } }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            NumberField("Camera X", doc.cameraX, Modifier.weight(1f)) { v -> update { it.copy(cameraX = v) } }
+            NumberField("摄像机 X", doc.cameraX, Modifier.weight(1f)) { v -> update { it.copy(cameraX = v) } }
             NumberField("摄像机 Y", doc.cameraY, Modifier.weight(1f)) { v -> update { it.copy(cameraY = v) } }
             NumberField("预览缩放", state.stageZoom.toDouble(), Modifier.weight(1f)) { v -> if (v > 0) state.stageZoom = v.toFloat() }
         }
@@ -207,7 +207,7 @@ fun CharacterInfoPanel(state: CharacterEditorState, modifier: Modifier = Modifie
             ChoiceField("起始动画", doc.startingAnimation.takeIf { it in names } ?: names.first(), names.map { it to it }, Modifier.fillMaxWidth()) { v -> update { it.copy(startingAnimation = v) } }
         }
         Row {
-            CheckRow("Flip X", doc.flipX) { v -> update { it.copy(flipX = v) } }
+            CheckRow("水平翻转", doc.flipX) { v -> update { it.copy(flipX = v) } }
             CheckRow("像素画风", doc.isPixel) { v -> update { it.copy(isPixel = v) } }
         }
     }

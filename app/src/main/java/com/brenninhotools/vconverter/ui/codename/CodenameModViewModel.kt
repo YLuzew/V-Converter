@@ -51,14 +51,14 @@ open class CodenameModViewModel(application: Application) : BaseConverterViewMod
 
     fun openFolder(treeUri: Uri) {
         runTask {
-            _progress.value = ModProgress(0, 0, "Reading folder…")
+            _progress.value = ModProgress(0, 0, "正在读取文件夹…")
             try {
                 val files = withContext(Dispatchers.IO) {
                     TreeModFiles(context, treeUri) { found -> _progress.value = ModProgress(0, 0, "Reading folder… $found files") }
                 }
                 accept(DocumentIO.folderName(context, treeUri), files, null)
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not read the folder.")
+                status = StatusMessage.Error(e.message ?: "读不了这个文件夹。")
             } finally {
                 _progress.value = null
             }
@@ -67,7 +67,7 @@ open class CodenameModViewModel(application: Application) : BaseConverterViewMod
 
     fun openArchive(uri: Uri) {
         runTask {
-            _progress.value = ModProgress(0, 0, "Opening archive…")
+            _progress.value = ModProgress(0, 0, "正在打开压缩包…")
             try {
                 val extracted = withContext(Dispatchers.IO) {
                     val name = DocumentIO.displayName(context, uri)
@@ -79,7 +79,7 @@ open class CodenameModViewModel(application: Application) : BaseConverterViewMod
                 }
                 accept("${extracted.name} (${extracted.kind.label})", extracted.files, extracted)
             } catch (e: Exception) {
-                status = StatusMessage.Error(e.message ?: "Could not open the archive.")
+                status = StatusMessage.Error(e.message ?: "打不开这个压缩包。")
             } finally {
                 _progress.value = null
             }

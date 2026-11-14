@@ -206,4 +206,4 @@ fun AssetPicker(
 }
 
 @Composable
-fun CodePreview(code: String, title: String = "Preview", accent: Color = Funkin.Down) = CodeView(code, title, accent)
+fun CodePreview(code: String, title: String = "预览", accent: Color = Funkin.Down) = CodeView(code, title, accent)

@@ -215,7 +215,7 @@ enum class Engine(val label: String, val title: String, val detail: String, val 
     val short: String get() = when (this) {
         PSYCH -> "PE"
         CODENAME -> "CNE"
-        VSLICE -> "V-SLICE"
+        VSLICE -> "V-S"
         NMV -> "NMV"
         FPSPLUS -> "FPSP"
     }

@@ -506,6 +506,8 @@ The desktop app (Windows, Linux and macOS) is a [Compose Multiplatform](https://
 
 ### Credits
 
+**简体中文汉化**：[YLuzew](https://github.com/YLuzew)（发起与维护）、[LS_Xenith](https://github.com/LS_Xenith)（玄虚，汉化）
+
 - Archives are extracted with `java.util.zip` (ZIP) and [7-Zip-JBinding-4Android](https://github.com/omicronapps/7-Zip-JBinding-4Android) / [7-Zip-JBinding](https://sevenzipjbind.sourceforge.net/) on Windows, Linux and Intel Macs (RAR, RAR5, 7z; on Apple Silicon Macs those archives need to be extracted first)
 - The desktop Chart Editor plays `.ogg` and `.mp3` with [VorbisSPI](https://github.com/pdudits/soundlibs) and MP3SPI; on iOS, `.ogg` is decoded with Sean Barrett's [stb_vorbis](https://github.com/nothings/stb) (public domain)
 - The UI uses the Friday Night Funkin' style font in `assets/fonts/funkin.ttf`

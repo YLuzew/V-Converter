@@ -212,6 +212,14 @@ enum class Engine(val label: String, val title: String, val detail: String, val 
     NMV("NMV", "NightmareVision", "HScript · JSON", Funkin.Purple),
     FPSPLUS("FPS PLUS", "FPS Plus", "Polymod · .hxc", Funkin.Right);
 
+    val short: String get() = when (this) {
+        PSYCH -> "PE"
+        CODENAME -> "CNE"
+        VSLICE -> "V-SLICE"
+        NMV -> "NMV"
+        FPSPLUS -> "FPSP"
+    }
+
     val key: String get() = when (this) {
         PSYCH -> "psych"
         CODENAME -> "codename"
@@ -596,7 +604,7 @@ private fun Header(
             AppLogo(40)
             Spacer(Modifier.width(10.dp))
             Column(modifier = Modifier.weight(1f)) {
-                Text("V-CONVERTER", style = MaterialTheme.typography.titleLarge, color = Funkin.Text, maxLines = 1)
+                Text("V-转换器", style = MaterialTheme.typography.titleLarge, color = Funkin.Text, maxLines = 1)
                 AnimatedContent(targetState = section to direction, transitionSpec = { fadeIn() togetherWith fadeOut() }, label = "subtitle") { (current, currentDirection) ->
                     if (current == Section.GENERATOR) {
                         Text("新建 V-Slice 内容", style = MaterialTheme.typography.labelSmall, color = Funkin.Warning, maxLines = 1)
@@ -862,7 +870,7 @@ private fun SourcePicker(caption: String, selected: Engine, enabled: List<Engine
                     .soundClickable(enabled = usable) { onSelect(engine) },
                 contentAlignment = Alignment.Center
             ) {
-                Text(engine.label, style = MaterialTheme.typography.labelMedium, color = content, maxLines = 1)
+                Text(engine.short, style = MaterialTheme.typography.labelMedium, color = content, maxLines = 1)
             }
         }
     }

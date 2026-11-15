@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -109,6 +110,7 @@ class AppSettings(context: Context) {
         const val KEY_VOLUME = "music_volume"
         const val KEY_SERVER = "server_url"
         const val KEY_REPORTS = "error_reports"
+        const val DEFAULT_SERVER = "https://yluzewvconverter.dpdns.org"
     }
 }
 
@@ -189,7 +191,19 @@ fun OptionsDialog(settings: AppSettings, onDismiss: () -> Unit) {
                 onValueChange = settings::updateServerUrl,
                 label = "在线服务器地址",
                 accent = Funkin.Down,
-                placeholder = "https://my-server.example.com"
+                placeholder = DEFAULT_SERVER
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                com.brenninhotools.vconverter.ui.components.ChunkyButton(
+                    text = "用汉化版服务器",
+                    accent = Funkin.Down,
+                    onClick = { settings.updateServerUrl(DEFAULT_SERVER) }
+                )
+            }
+            Text(
+                "汉化版自建的公共服务器：$DEFAULT_SERVER（模组画廊、分享、多人房间、公告）。留空则不使用在线功能。",
+                style = MaterialTheme.typography.bodySmall,
+                color = Funkin.Muted
             )
             ToggleRow(
                 label = "发送错误报告",

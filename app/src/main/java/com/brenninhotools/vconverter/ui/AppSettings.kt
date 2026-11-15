@@ -36,6 +36,9 @@ import com.brenninhotools.vconverter.ui.components.ToggleRow
 import com.brenninhotools.vconverter.ui.theme.Funkin
 import kotlin.math.roundToInt
 
+/** 汉化版自建的公共服务器地址（设置页可一键填入）。 */
+const val DEFAULT_SERVER = "https://yluzewvconverter.dpdns.org"
+
 class AppSettings(context: Context) {
     private val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
@@ -110,7 +113,6 @@ class AppSettings(context: Context) {
         const val KEY_VOLUME = "music_volume"
         const val KEY_SERVER = "server_url"
         const val KEY_REPORTS = "error_reports"
-        const val DEFAULT_SERVER = "https://yluzewvconverter.dpdns.org"
     }
 }
 

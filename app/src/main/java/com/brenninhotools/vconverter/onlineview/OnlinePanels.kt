@@ -66,15 +66,15 @@ fun OnlineNewsPanel(state: OnlineState, onOpenLink: (String) -> Unit, modifier: 
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(scheme.primary).padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text("Version ${version.latest} is out", color = scheme.onPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                Text("You have ${version.current}.", color = scheme.onPrimary, fontSize = 13.sp)
+                Text("新版本 ${version.latest} 出来了", color = scheme.onPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                Text("你现在是 ${version.current}。", color = scheme.onPrimary, fontSize = 13.sp)
                 if (version.notes.isNotBlank()) Text(version.notes.take(600), color = scheme.onPrimary, fontSize = 12.sp, maxLines = 12, overflow = TextOverflow.Ellipsis)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     if (version.url.isNotBlank()) EditorChip("下载", false) { onOpenLink(version.url) }
                     if (version.page.isNotBlank()) EditorChip("发布页", false) { onOpenLink(version.page) }
                 }
             }
-            version.latest != null -> Text("You have the latest version (${version.current}).", fontSize = 13.sp, color = scheme.onSurfaceVariant)
+            version.latest != null -> Text("你已经是最新版本了（${version.current}）。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
         }
         state.announcements.forEach { a ->
             Column(
@@ -120,7 +120,7 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
         state.message?.let { Text(it, fontSize = 13.sp, color = scheme.primary) }
         val page = state.page
         if (page != null) {
-            Text("${page.total} mod(s)", fontSize = 12.sp, color = scheme.onSurfaceVariant)
+            Text("${page.total} 个模组", fontSize = 12.sp, color = scheme.onSurfaceVariant)
             page.mods.forEach { mod ->
                 Column(
                     Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(scheme.surfaceVariant).padding(12.dp),
@@ -129,10 +129,10 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
                     Text(mod.title, fontWeight = FontWeight.Bold, fontSize = 15.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
                     Text(
                         listOfNotNull(
-                            mod.author.takeIf { it.isNotBlank() }?.let { "by $it" },
+                            mod.author.takeIf { it.isNotBlank() }?.let { "作者：$it" },
                             ModEngine.of(mod.engine).label,
                             size(mod.size),
-                            "${mod.downloads} download(s)",
+                            "下载 ${mod.downloads} 次",
                             mod.createdAt.take(10)
                         ).joinToString(" · "),
                         fontSize = 12.sp,
@@ -150,9 +150,9 @@ fun ModGalleryPanel(state: OnlineState, onDownload: (ModEntry) -> Unit, modifier
             if (page.mods.isEmpty()) Text("没有找到模组。", fontSize = 13.sp, color = scheme.onSurfaceVariant)
             if (page.pages > 1) {
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                    if (state.pageNumber > 1) EditorChip("← Previous", false) { state.search(state.pageNumber - 1) }
-                    Text("Page ${state.pageNumber} of ${page.pages}", fontSize = 12.sp)
-                    if (state.pageNumber < page.pages) EditorChip("Next →", false) { state.search(state.pageNumber + 1) }
+                    if (state.pageNumber > 1) EditorChip("← 上一页", false) { state.search(state.pageNumber - 1) }
+                    Text("第 ${state.pageNumber} / ${page.pages} 页", fontSize = 12.sp)
+                    if (state.pageNumber < page.pages) EditorChip("下一页 →", false) { state.search(state.pageNumber + 1) }
                 }
             }
         }
@@ -189,9 +189,9 @@ fun ModSharePanel(state: OnlineState, onPickFile: () -> Unit, modifier: Modifier
                 Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(scheme.surfaceVariant).padding(12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Text("\"${done.mod.title}\" is in the gallery.", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Text("「${done.mod.title}」已经进画廊了。", fontWeight = FontWeight.Bold, fontSize = 14.sp)
                 SelectionContainer {
-                    Text("Mod id: ${done.mod.id}\nDelete key: ${done.deleteToken}\nLink: ${done.mod.downloadUrl}", fontSize = 12.sp)
+                    Text("模组 id：${done.mod.id}\n删除密钥：${done.deleteToken}\n链接：${done.mod.downloadUrl}", fontSize = 12.sp)
                 }
                 Text("保管好删除密钥：以后只能靠它才能删掉这个模组。", fontSize = 12.sp, color = scheme.onSurfaceVariant)
                 EditorChip("删除它", false) { state.deleteUploaded() }
@@ -234,8 +234,8 @@ fun PublicRoomsPanel(state: OnlineState, onJoin: (RoomInfo) -> Unit, modifier: M
                     Text(
                         listOfNotNull(
                             roomKinds.firstOrNull { it.first == room.kind }?.second,
-                            room.host.takeIf { it.isNotBlank() }?.let { "by $it" },
-                            "${room.peers.size} editing",
+                            room.host.takeIf { it.isNotBlank() }?.let { "作者：$it" },
+                            "${room.peers.size} 人正在编辑",
                             room.code
                         ).joinToString(" · "),
                         fontSize = 12.sp,

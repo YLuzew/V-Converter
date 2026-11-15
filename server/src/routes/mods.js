@@ -71,7 +71,7 @@ export function modsRouter({ db, config }) {
     }
     const engine = text(req.query.engine, 20).toLowerCase();
     if (engine) {
-      if (!engines.has(engine)) throw new HttpError(400, 'Unknown engine.');
+      if (!engines.has(engine)) throw new HttpError(400, '没这个引擎。');
       where.push('engine = ?');
       params.push(engine);
     }
@@ -84,15 +84,15 @@ export function modsRouter({ db, config }) {
 
   router.get('/:id', (req, res) => {
     const row = db.prepare('SELECT * FROM mods WHERE id = ?').get(req.params.id);
-    if (!row || (row.hidden && !req.isAdmin)) throw new HttpError(404, 'Mod not found.');
+    if (!row || (row.hidden && !req.isAdmin)) throw new HttpError(404, '没找到这个模组。');
     res.json(view(row, base(req)));
   });
 
   router.get('/:id/download', (req, res) => {
     const row = db.prepare('SELECT * FROM mods WHERE id = ?').get(req.params.id);
-    if (!row || (row.hidden && !req.isAdmin)) throw new HttpError(404, 'Mod not found.');
+    if (!row || (row.hidden && !req.isAdmin)) throw new HttpError(404, '没找到这个模组。');
     const file = path.join(config.uploadDir, `${row.id}.zip`);
-    if (!fs.existsSync(file)) throw new HttpError(410, 'The file is no longer available.');
+    if (!fs.existsSync(file)) throw new HttpError(410, '这个文件已经没了。');
     db.prepare('UPDATE mods SET downloads = downloads + 1 WHERE id = ?').run(row.id);
     res.download(file, row.file_name);
   });
@@ -100,15 +100,15 @@ export function modsRouter({ db, config }) {
   router.post('/', uploadLimit, upload.single('file'), asyncRoute(async (req, res) => {
     const file = req.file;
     try {
-      if (!file) throw new HttpError(400, 'Send the mod as a .zip in the "file" field.');
-      if (!isZip(file.path)) throw new HttpError(400, 'Only .zip files can be uploaded.');
+      if (!file) throw new HttpError(400, '请把模组作为 .zip 放在 "file" 字段里上传。');
+      if (!isZip(file.path)) throw new HttpError(400, '只能上传 .zip 文件。');
       const title = text(req.body.title, 80);
-      if (!title) throw new HttpError(400, 'A title is required.');
+      if (!title) throw new HttpError(400, '得填标题。');
       const engine = text(req.body.engine, 20, 'vslice').toLowerCase() || 'vslice';
-      if (!engines.has(engine)) throw new HttpError(400, 'Unknown engine.');
+      if (!engines.has(engine)) throw new HttpError(400, '没这个引擎。');
       const hash = await hashFile(file.path);
       const existing = db.prepare('SELECT id FROM mods WHERE sha256 = ?').get(hash);
-      if (existing) throw Object.assign(new HttpError(409, 'This exact file was already uploaded.'), { extra: { id: existing.id } });
+      if (existing) throw Object.assign(new HttpError(409, '这个一模一样的文件已经传过了。'), { extra: { id: existing.id } });
       const id = randomId();
       const deleteToken = crypto.randomBytes(24).toString('base64url');
       const tags = text(req.body.tags, 200).split(',').map((t) => t.trim().toLowerCase()).filter(Boolean).slice(0, 10).join(',');
@@ -127,9 +127,9 @@ export function modsRouter({ db, config }) {
   }));
 
   router.patch('/:id', (req, res) => {
-    if (!req.isAdmin) throw new HttpError(403, 'Admin token required.');
+    if (!req.isAdmin) throw new HttpError(403, '需要管理员令牌。');
     const row = db.prepare('SELECT * FROM mods WHERE id = ?').get(req.params.id);
-    if (!row) throw new HttpError(404, 'Mod not found.');
+    if (!row) throw new HttpError(404, '没找到这个模组。');
     const body = req.body || {};
     db.prepare('UPDATE mods SET title = ?, description = ?, hidden = ? WHERE id = ?').run(
       text(body.title, 80) || row.title,
@@ -142,9 +142,9 @@ export function modsRouter({ db, config }) {
 
   router.delete('/:id', (req, res) => {
     const row = db.prepare('SELECT * FROM mods WHERE id = ?').get(req.params.id);
-    if (!row) throw new HttpError(404, 'Mod not found.');
+    if (!row) throw new HttpError(404, '没找到这个模组。');
     const token = req.get('X-Delete-Token') || '';
-    if (!req.isAdmin && (!token || sha256(token) !== row.delete_hash)) throw new HttpError(403, 'Wrong delete token.');
+    if (!req.isAdmin && (!token || sha256(token) !== row.delete_hash)) throw new HttpError(403, '删除密钥不对。');
     db.prepare('DELETE FROM mods WHERE id = ?').run(row.id);
     fs.rmSync(path.join(config.uploadDir, `${row.id}.zip`), { force: true });
     res.status(204).end();

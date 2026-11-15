@@ -25,8 +25,8 @@
 
 > [!TIP]
 > **在线服务器（汉化版自建，可直接用）：`https://yluzewvconverter.dpdns.org`**
-> App 里打开「设置 → 服务器地址」，粘上面这行，「在线」页的**模组画廊、分享、房间（多人实时改谱）、新闻公告**就都能用了。
-> 这个服务器由汉化者 [YLuzew](https://github.com/YLuzew) 自建，不是原作者官方服务；域名是 Cloudflare 隧道，随开随关。
+> App 里打开「设置 → 在线服务器地址」，粘上面这行，「在线」页的**模组画廊、分享、房间（多人实时改谱）、新闻公告**就都能用了。
+> 这个服务器由汉化者 [YLuzew](https://github.com/YLuzew) 自建，不是原作者官方服务。
 > 想自己搭：服务端在 [`server/`](server/) 目录，Node 22+，有现成的 Dockerfile —— 见 [在线服务器](#在线服务器)。
 
 > [!NOTE]

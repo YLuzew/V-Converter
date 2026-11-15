@@ -58,7 +58,7 @@ class OnlineApi(baseUrl: String, private val timeoutMs: Int = 20_000) {
     private fun failure(response: HttpResponse): Nothing {
         val body = response.body.decodeToString()
         val message = runCatching { JSONObject(body).optString("error") }.getOrNull()?.takeIf { it.isNotBlank() }
-            ?: "The server answered ${response.status}."
+            ?: "服务器返回 ${response.status}。"
         throw OnlineException(message, response.status)
     }
 
@@ -138,7 +138,7 @@ class OnlineApi(baseUrl: String, private val timeoutMs: Int = 20_000) {
     }
 
     fun download(id: String, out: OutputStream, onProgress: (Long, Long) -> Unit = { _, _ -> }) {
-        out.write(send("/api/mods/${encode(id)}/download", "GET", failure = "The download failed", onProgress = onProgress))
+        out.write(send("/api/mods/${encode(id)}/download", "GET", failure = "下载失败", onProgress = onProgress))
     }
 
     fun download(id: String): ByteArray = ByteArrayOutputStream().also { download(id, it) }.toByteArray()
@@ -161,7 +161,7 @@ class OnlineApi(baseUrl: String, private val timeoutMs: Int = 20_000) {
         body.write(bytes)
         body.write("\r\n--$boundary--\r\n".encodeToByteArray())
         val payload = body.toByteArray()
-        val root = JSONObject(send("/api/mods", "POST", payload, mapOf("Content-Type" to "multipart/form-data; boundary=$boundary"), "The upload failed").decodeToString())
+        val root = JSONObject(send("/api/mods", "POST", payload, mapOf("Content-Type" to "multipart/form-data; boundary=$boundary"), "上传失败").decodeToString())
         return UploadedMod(mod(root), root.optString("deleteToken"))
     }
 
@@ -198,11 +198,11 @@ class OnlineApi(baseUrl: String, private val timeoutMs: Int = 20_000) {
         "/api/rooms/${encode(code.trim().uppercase())}/assets/" + name.split('/').joinToString("/") { encode(it).replace("+", "%20") }
 
     fun uploadRoomAsset(code: String, name: String, bytes: ByteArray) {
-        send(assetPath(code, name), "PUT", bytes, mapOf("Content-Type" to "application/octet-stream"), "Could not share ${name.substringAfterLast('/')}")
+        send(assetPath(code, name), "PUT", bytes, mapOf("Content-Type" to "application/octet-stream"), "分享不了 ${name.substringAfterLast('/')}")
     }
 
     fun downloadRoomAsset(code: String, name: String): ByteArray =
-        send(assetPath(code, name), "GET", failure = "Could not get ${name.substringAfterLast('/')}")
+        send(assetPath(code, name), "GET", failure = "取不到 ${name.substringAfterLast('/')}")
 
     fun room(code: String): RoomInfo = room(JSONObject(request("/api/rooms/${encode(code.trim().uppercase())}")))
 

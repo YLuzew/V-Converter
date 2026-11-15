@@ -36,24 +36,24 @@ export function createApp({ config, db, rooms, latest = createReleaseSource(conf
   app.use('/api/rooms', roomRoutes);
   app.limits = [mods.uploadLimit, reports.limit, roomRoutes.limit, roomRoutes.assetLimit];
 
-  app.use((req, res, next) => next(new HttpError(404, 'Not found.')));
+  app.use((req, res, next) => next(new HttpError(404, '没找到这个地址。')));
   app.use((error, req, res, next) => {
     let status = error.status || error.statusCode || 500;
-    let message = error.message || 'Server error.';
+    let message = error.message || '服务器出错了。';
     if (error.code === 'LIMIT_FILE_SIZE') {
       status = 413;
-      message = `The file is larger than ${config.maxUploadMb} MB.`;
+      message = `文件超过 ${config.maxUploadMb} MB 了。`;
     } else if (error.name === 'MulterError') {
       status = 400;
     } else if (error.type === 'entity.too.large') {
       status = 413;
-      message = 'The request is too large.';
+      message = '请求太大了。';
     } else if (error.type === 'entity.parse.failed') {
       status = 400;
-      message = 'The body is not valid JSON.';
+      message = '请求内容不是合法的 JSON。';
     }
     if (status >= 500) console.error(error);
-    res.status(status).json({ error: status >= 500 ? 'Server error.' : message, ...(error.extra || {}) });
+    res.status(status).json({ error: status >= 500 ? '服务器出错了。' : message, ...(error.extra || {}) });
   });
   return app;
 }

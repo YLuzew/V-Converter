@@ -178,7 +178,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
     }
 
     private fun open(room: String) {
-        status = "Connecting to $room…"
+        status = "正在连接 $room…"
         lock.withLock { known.clear() }
         val live = CollabSession(Online.api().socketUrl(room, displayName()), object : CollabListener {
             override fun onWelcome(welcome: RoomWelcome) {
@@ -187,7 +187,7 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
                         session?.close()
                         session = null
                         connecting = false
-                        status = "Room $room is for the ${LiveKind.of(welcome.kind).label}; open that editor to join it."
+                        status = "房间 $room 是给${LiveKind.of(welcome.kind).label}用的，打开那个编辑器就能加入。"
                     }
                     return
                 }
@@ -198,12 +198,12 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
                     val snapshot = welcome.snapshot
                     if (snapshot != null) {
                         runCatching { adapter.load(snapshot, welcome.ops) }
-                            .onSuccess { status = "Joined \"${welcome.title.ifBlank { room }}\" ($room) with ${welcome.peers.size} other editor(s)." }
-                            .onFailure { status = "Joined $room, but its content could not be read: ${it.message}" }
+                            .onSuccess { status = "已加入「${welcome.title.ifBlank { room }}」（$room），还有 ${welcome.peers.size} 人在编辑。" }
+                            .onFailure { status = "加入了 $room，但读不到里面的内容：${it.message}" }
                     } else {
                         lastSnapshot = Platform.currentTimeMillis()
                         session?.sendSnapshot(adapter.snapshot())
-                        status = if (hosting) "Room $room is open${if (publicRoom) " and listed publicly" else ""}: share the code so others can join." else "Joined $room and shared your work with it."
+                        status = if (hosting) "房间 $room 已开放${if (publicRoom) "，并且在公开列表里" else ""}：把房间码分享给别人就能加入。" else "已加入 $room，并把你的工作共享过去了。"
                     }
                     fetch(welcome.assets)
                     shareNewFiles()
@@ -222,12 +222,12 @@ class LiveSession(private val adapter: LiveAdapter, private val post: (() -> Uni
             }
 
             override fun onCursor(from: Int, time: Double, difficulty: String) = post {
-                val who = peers.firstOrNull { it.id == from }?.name ?: "Editor $from"
+                val who = peers.firstOrNull { it.id == from }?.name ?: "来自 $from 的编辑"
                 cursors = cursors + (from to PeerCursor(who, time, difficulty))
             }
 
             override fun onChat(from: Int, name: String, text: String) = post {
-                chat = (chat + "$name: $text").takeLast(30)
+                chat = (chat + "$name：$text").takeLast(30)
             }
 
             override fun onClosed(reason: String) = post {
@@ -293,12 +293,12 @@ fun LiveSessionPanel(live: LiveSession, modifier: Modifier = Modifier, cursor: P
             )
         } else {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                SelectionContainer { Text("Room ${live.code}", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.primary) }
-                if (live.publicRoom) Text("public", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                SelectionContainer { Text("房间 ${live.code}", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.primary) }
+                if (live.publicRoom) Text("公开", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 EditorChip("离开", false) { live.leave() }
             }
             Text(if (live.peers.isEmpty()) "还没有别人进来。" else "成员：" + live.peers.joinToString { it.name }, fontSize = 13.sp)
-            if (live.files > 0) Text("${live.files} shared file(s)", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            if (live.files > 0) Text("${live.files} 个共享文件", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             live.cursors.values.forEach { c ->
                 Text("${c.name} · ${formatTime(c.time)} · ${c.difficulty}", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }

@@ -1,0 +1,45 @@
+# Render 蓝图：点 New → Blueprint → 选本仓库，即可一键部署官方 server。
+# 仓库自带 server/Dockerfile，构建上下文是 server/。
+services:
+  - type: web
+    name: v-converter-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATA_DIR
+        value: /data
+      - key: TRUST_PROXY
+        value: "true"
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: GITHUB_REPO
+        value: YLuzew/V-Converter
+      - key: PUBLIC_URL
+        sync: false
+      - key: MAX_UPLOAD_MB
+        value: 100
+      - key: UPLOADS_PER_HOUR
+        value: 10
+      - key: REPORTS_PER_HOUR
+        value: 60
+      - key: ROOMS_PER_HOUR
+        value: 30
+      - key: ROOM_ASSETS_PER_HOUR
+        value: 600
+      - key: MAX_ROOM_ASSET_MB
+        value: 40
+      - key: MAX_ROOM_ASSETS_MB
+        value: 200
+      - key: ROOM_IDLE_MINUTES
+        value: 120
+      - key: MAX_PEERS_PER_ROOM
+        value: 16
+      - key: MAX_MESSAGE_MB
+        value: 8

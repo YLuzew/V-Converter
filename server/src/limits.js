@@ -18,7 +18,7 @@ export function rateLimit({ limit, windowMs = 60 * 60 * 1000, name }) {
     const list = (hits.get(key) || []).filter((t) => now - t < windowMs);
     if (list.length >= limit) {
       res.set('Retry-After', String(Math.ceil((windowMs - (now - list[0])) / 1000)));
-      return next(new HttpError(429, `Too many ${name}; try again later.`));
+      return next(new HttpError(429, `${name}太多了，等会儿再试。`));
     }
     list.push(now);
     hits.set(key, list);

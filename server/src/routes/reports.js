@@ -11,7 +11,7 @@ export function reportsRouter({ db, config }) {
   router.post('/', limit, (req, res) => {
     const body = req.body || {};
     const message = text(body.message, 2000);
-    if (!message) throw new HttpError(400, 'A message is required.');
+    if (!message) throw new HttpError(400, '得写点内容。');
     const kind = kinds.has(body.kind) ? body.kind : 'other';
     const context = typeof body.context === 'object' && body.context !== null ? JSON.stringify(body.context).slice(0, 8000) : text(body.context, 8000);
     const result = db.prepare('INSERT INTO reports (kind, platform, app_version, message, stack, context, client, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
@@ -20,7 +20,7 @@ export function reportsRouter({ db, config }) {
   });
 
   router.get('/', (req, res) => {
-    if (!req.isAdmin) throw new HttpError(403, 'Admin token required.');
+    if (!req.isAdmin) throw new HttpError(403, '需要管理员令牌。');
     const size = Math.min(200, Math.max(1, Number.parseInt(req.query.size, 10) || 50));
     const where = [];
     const params = [];
@@ -39,7 +39,7 @@ export function reportsRouter({ db, config }) {
   });
 
   router.delete('/:id', (req, res) => {
-    if (!req.isAdmin) throw new HttpError(403, 'Admin token required.');
+    if (!req.isAdmin) throw new HttpError(403, '需要管理员令牌。');
     db.prepare('DELETE FROM reports WHERE id = ?').run(Number(req.params.id));
     res.status(204).end();
   });

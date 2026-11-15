@@ -104,35 +104,35 @@ export function roomsRouter({ rooms, config }) {
 
   router.get('/:code', (req, res) => {
     const room = rooms.get(req.params.code);
-    if (!room) throw new HttpError(404, 'Room not found.');
+    if (!room) throw new HttpError(404, '没找到这个房间。');
     res.json(rooms.info(room));
   });
 
   router.get('/:code/assets', (req, res) => {
     const room = rooms.get(req.params.code);
-    if (!room) throw new HttpError(404, 'Room not found.');
+    if (!room) throw new HttpError(404, '没找到这个房间。');
     res.json({ assets: [...room.assets.entries()].map(([name, data]) => ({ name, size: data.length })) });
   });
 
   router.get('/:code/assets/*', (req, res) => {
     const room = rooms.get(req.params.code);
-    if (!room) throw new HttpError(404, 'Room not found.');
+    if (!room) throw new HttpError(404, '没找到这个房间。');
     const name = assetName(req.params[0]);
     const data = name && room.assets.get(name);
-    if (!data) throw new HttpError(404, 'Asset not found.');
+    if (!data) throw new HttpError(404, '没找到这个文件。');
     res.type('application/octet-stream').send(data);
   });
 
   router.put('/:code/assets/*', assetLimit, raw, (req, res) => {
     const room = rooms.get(req.params.code);
-    if (!room) throw new HttpError(404, 'Room not found.');
+    if (!room) throw new HttpError(404, '没找到这个房间。');
     const name = assetName(req.params[0]);
-    if (!name) throw new HttpError(400, 'Bad asset name.');
+    if (!name) throw new HttpError(400, '文件名不合法。');
     const data = Buffer.isBuffer(req.body) ? req.body : Buffer.alloc(0);
-    if (data.length === 0) throw new HttpError(400, 'The asset is empty.');
+    if (data.length === 0) throw new HttpError(400, '这个文件是空的。');
     const previous = room.assets.get(name);
     const total = room.assetBytes - (previous ? previous.length : 0) + data.length;
-    if (total > config.maxRoomAssetsMb * 1024 * 1024) throw new HttpError(413, `This room already holds ${config.maxRoomAssetsMb} MB of files.`);
+    if (total > config.maxRoomAssetsMb * 1024 * 1024) throw new HttpError(413, `这个房间已经存了 ${config.maxRoomAssetsMb} MB 的文件了。`);
     room.assets.set(name, data);
     room.assetBytes = total;
     room.touched = Date.now();
@@ -194,7 +194,7 @@ export function attachCollab(server, { rooms, config }) {
       try {
         message = JSON.parse(data.toString('utf8'));
       } catch {
-        send(ws, { type: 'error', message: 'Messages must be JSON.' });
+        send(ws, { type: 'error', message: '消息必须是 JSON。' });
         return;
       }
       room.touched = Date.now();
@@ -230,7 +230,7 @@ export function attachCollab(server, { rooms, config }) {
           send(ws, { type: 'pong' });
           break;
         default:
-          send(ws, { type: 'error', message: 'Unknown message type.' });
+          send(ws, { type: 'error', message: '没这种消息类型。' });
       }
     });
     ws.on('close', () => {

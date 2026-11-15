@@ -16,7 +16,7 @@ export function createReleaseSource(config, fetcher = globalThis.fetch) {
       const headers = { Accept: 'application/vnd.github+json', 'User-Agent': 'v-converter-server' };
       if (config.githubToken) headers.Authorization = `Bearer ${config.githubToken}`;
       const response = await fetcher(`https://api.github.com/repos/${config.githubRepo}/releases/latest`, { headers, signal: AbortSignal.timeout(8000) });
-      if (!response.ok) throw new Error(`GitHub answered ${response.status}`);
+      if (!response.ok) throw new Error(`GitHub 返回 ${response.status}`);
       const release = await response.json();
       cached = {
         version: String(release.tag_name || '').replace(/^v/i, ''),
@@ -74,16 +74,16 @@ export function updatesRouter({ db, latest }) {
   });
 
   router.post('/announcements', (req, res) => {
-    if (!req.isAdmin) throw new HttpError(403, 'Admin token required.');
+    if (!req.isAdmin) throw new HttpError(403, '需要管理员令牌。');
     const body = req.body || {};
     const title = text(body.title, 120);
-    if (!title) throw new HttpError(400, 'A title is required.');
+    if (!title) throw new HttpError(400, '得填标题。');
     const level = ['info', 'warning', 'update'].includes(body.level) ? body.level : 'info';
     const platforms = Array.isArray(body.platforms) ? body.platforms.map((p) => text(p, 20).toLowerCase()).filter(Boolean).join(',') : '';
     let expires = null;
     if (body.expiresAt) {
       const date = new Date(body.expiresAt);
-      if (Number.isNaN(date.getTime())) throw new HttpError(400, 'expiresAt is not a date.');
+      if (Number.isNaN(date.getTime())) throw new HttpError(400, 'expiresAt 不是个日期。');
       expires = date.toISOString();
     }
     const result = db.prepare('INSERT INTO announcements (title, body, level, url, platforms, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
@@ -92,9 +92,9 @@ export function updatesRouter({ db, latest }) {
   });
 
   router.delete('/announcements/:id', (req, res) => {
-    if (!req.isAdmin) throw new HttpError(403, 'Admin token required.');
+    if (!req.isAdmin) throw new HttpError(403, '需要管理员令牌。');
     const result = db.prepare('DELETE FROM announcements WHERE id = ?').run(Number(req.params.id));
-    if (result.changes === 0) throw new HttpError(404, 'Announcement not found.');
+    if (result.changes === 0) throw new HttpError(404, '没找到这条公告。');
     res.status(204).end();
   });
 

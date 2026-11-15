@@ -33,7 +33,7 @@ class CollabSession(socketUrl: String, private val listener: CollabListener) {
         override fun onText(text: String) = handle(text)
         override fun onClose(code: Int, reason: String) {
             welcomed = false
-            listener.onClosed(if (code == 1000) "The live session ended." else reason.ifBlank { "The connection to the room was lost." })
+            listener.onClosed(if (code == 1000) "实时会话结束了。" else reason.ifBlank { "和房间的连接断了。" })
         }
     })
 

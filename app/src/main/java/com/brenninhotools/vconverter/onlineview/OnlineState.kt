@@ -187,7 +187,7 @@ class OnlineState(private val scope: CoroutineScope) {
             try {
                 withContext(ioDispatcher) { Online.api().deleteMod(mod.mod.id, mod.deleteToken) }
                 uploaded = null
-                uploadError = "Removed \"${mod.mod.title}\" from the gallery."
+                uploadError = "已经从画廊里删掉「${mod.mod.title}」了。"
                 search()
             } catch (e: Exception) {
                 uploadError = e.message ?: "删不掉这个模组。"

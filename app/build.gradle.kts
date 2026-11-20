@@ -6,24 +6,28 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+val abis = (findProperty("vconverter.abis") as String?)?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }
+    ?: listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+
 val keystoreProperties = Properties().apply {
     val file = rootProject.file("keystore/keystore.properties")
     if (file.exists()) file.inputStream().use { load(it) }
 }
 
 android {
-    namespace = "com.brenninhotools.vconverter"
+    namespace = "com.vconvertercrew.vconverter"
     compileSdk = 36
+    System.getenv("ANDROID_NDK_HOME")?.let { File(it).name }?.takeIf { it.firstOrNull()?.isDigit() == true }?.let { ndkVersion = it }
 
     defaultConfig {
-        applicationId = "com.brenninhotools.vconverter"
+        applicationId = "com.vconvertercrew.vconverter"
         minSdk = 26
         targetSdk = 37
-        versionCode = 4
-        versionName = "0.0.2"
+        versionCode = 5
+        versionName = "0.1.0-playtest"
 
         ndk {
-            abiFilters += setOf("arm64-v8a", "armeabi-v7a", "x86_64")
+            abiFilters += abis
         }
     }
 
@@ -53,7 +57,26 @@ android {
 
     sourceSets {
         getByName("main") {
-            assets.srcDir("../assets")
+            manifest.srcFile("../source/android/AndroidManifest.xml")
+            java.setSrcDirs(listOf("../source/v-converterui", "../source/v-touch", "../source/shared", "../source/jvm", "../source/android"))
+            res.setSrcDirs(listOf("../source/android/res"))
+            assets.setSrcDirs(listOf("../assets"))
+            resources.setSrcDirs(emptyList<String>())
+        }
+        getByName("test") {
+            java.setSrcDirs(listOf("../source/test"))
+            resources.setSrcDirs(listOf("../source/test/resources", "../assets"))
+        }
+    }
+
+    androidResources {
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~:!README.txt:!desktop"
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("../source/native/CMakeLists.txt")
+            version = "3.22.1"
         }
     }
 

@@ -1,0 +1,61 @@
+package com.vconvertercrew.vconverter.io
+
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.OpenableColumns
+import androidx.documentfile.provider.DocumentFile
+import java.io.IOException
+
+object DocumentIO {
+    fun displayName(context: Context, uri: Uri): String {
+        context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (index >= 0) cursor.getString(index)?.let { return it }
+            }
+        }
+        return uri.lastPathSegment?.substringAfterLast('/') ?: "file"
+    }
+
+    fun readBytes(context: Context, uri: Uri): ByteArray =
+        context.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+            ?: throw IOException("Could not open ${displayName(context, uri)}")
+
+    fun readText(context: Context, uri: Uri): String =
+        context.contentResolver.openInputStream(uri)?.use { it.bufferedReader(Charsets.UTF_8).readText() }
+            ?: throw IOException("Could not open ${displayName(context, uri)}")
+
+    fun folderName(context: Context, treeUri: Uri): String =
+        DocumentFile.fromTreeUri(context, treeUri)?.name ?: "已选文件夹"
+
+    fun hasAccess(context: Context, treeUri: Uri): Boolean =
+        context.contentResolver.persistedUriPermissions.any { it.uri == treeUri && it.isWritePermission } &&
+            DocumentFile.fromTreeUri(context, treeUri)?.canWrite() == true
+
+    fun keepAccess(context: Context, treeUri: Uri) {
+        val flags = Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+        runCatching { context.contentResolver.takePersistableUriPermission(treeUri, flags) }
+    }
+
+    fun writeFiles(context: Context, treeUri: Uri, files: List<OutputFile>, vslice: Boolean = false): List<String> {
+        if (DocumentFile.fromTreeUri(context, treeUri)?.canWrite() != true) {
+            throw IOException("The mod folder is read-only or missing. Pick it again to grant access.")
+        }
+        val tree = TreeModWriter(context, treeUri)
+        val written = ArrayList<String>()
+        val recorder = object : com.vconvertercrew.vconverter.mod.ModWriter {
+            override fun writeText(path: String, text: String) {
+                tree.writeText(path, text)
+                written += path
+            }
+
+            override fun copy(path: String, source: () -> com.vconvertercrew.vconverter.platform.InputStream) {
+                tree.copy(path, source)
+                written += path
+            }
+        }
+        com.vconvertercrew.vconverter.vslice.VSlicePreview.write(recorder, vslice) { writer -> files.forEach { it.writeTo(writer) } }
+        return written
+    }
+}

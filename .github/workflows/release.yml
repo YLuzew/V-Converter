@@ -6,7 +6,7 @@ on:
       version:
         description: "Version to release (reads docs/releases/v<version>.md)"
         required: true
-        default: "0.0.2"
+        default: "0.1.0-playtest"
       prerelease:
         description: "Mark as pre-release"
         type: boolean
@@ -18,6 +18,9 @@ permissions:
 concurrency:
   group: release
   cancel-in-progress: false
+
+env:
+  ORG_GRADLE_PROJECT_kotlin.incremental: "false"
 
 jobs:
   android:
@@ -46,7 +49,7 @@ jobs:
           fi
 
       - name: Build release APK
-        run: ./gradlew :app:assembleRelease -Pvconverter.modules=app
+        run: ./gradlew :app:assembleRelease -Pvconverter.modules=app --build-cache
 
       - name: Name the APK
         run: |
@@ -77,6 +80,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Cache WiX
+        uses: actions/cache@v4
+        with:
+          path: build/wixToolset
+          key: wix-3.11.2
 
       - name: Build installer
         shell: bash
@@ -205,8 +214,9 @@ jobs:
         run: |
           cd iosApp
           set -o pipefail
-          xcodebuild -quiet -project VConverter.xcodeproj -target VConverter -configuration Release -sdk iphoneos -jobs 8 \
-            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" SWIFT_ENABLE_EXPLICIT_MODULES=NO build 2>&1 | tee xcodebuild.log \
+          xcodebuild -quiet -project VConverter.xcodeproj -target VConverter -configuration Release -sdk iphoneos -jobs "$(sysctl -n hw.ncpu)" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" SWIFT_ENABLE_EXPLICIT_MODULES=NO \
+            ONLY_ACTIVE_ARCH=YES ARCHS=arm64 DEBUG_INFORMATION_FORMAT=dwarf COMPILER_INDEX_STORE_ENABLE=NO SWIFT_COMPILATION_MODE=wholemodule build 2>&1 | tee xcodebuild.log \
             || { grep -E "error:|fatal error|Undefined symbol|ld:" xcodebuild.log | head -60; exit 1; }
 
       - name: Package the IPA
@@ -222,9 +232,56 @@ jobs:
           path: out/V Converter-IOS.ipa
           compression-level: 0
 
+  web:
+    name: V Converter-Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Cache Node.js, Yarn, Binaryen and npm packages for Kotlin/Wasm
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/nodejs
+            ~/.gradle/yarn
+            ~/.gradle/binaryen
+            ~/.cache/yarn
+            build/js/node_modules
+            kotlin-js-store
+          key: kotlin-web-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml', 'web/build.gradle.kts') }}
+          restore-keys: kotlin-web-${{ runner.os }}-
+
+      - name: Build the web app
+        run: ./gradlew :web:wasmJsBrowserDistribution -Pvconverter.modules=web --no-configuration-cache
+
+      - name: Collect the site
+        run: |
+          mkdir -p out
+          cp -R web/build/dist/wasmJs/productionExecutable out/site
+          cd out/site && zip -qr "../V Converter-Web.zip" .
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: V Converter-Web
+          path: out/V Converter-Web.zip
+          compression-level: 0
+
   release:
     name: Publish v${{ inputs.version }}
-    needs: [android, windows, linux, macos, ios]
+    needs: [android, windows, linux, macos, ios, web]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -254,4 +311,5 @@ jobs:
             "out/V Converter-Linux.tar.gz#V Converter-Linux.tar.gz" \
             "out/V Converter-MacOS.dmg#V Converter-MacOS.dmg" \
             "out/V Converter-MacOS.zip#V Converter-MacOS.zip" \
-            "out/V Converter-IOS.ipa#V Converter-IOS.ipa"
+            "out/V Converter-IOS.ipa#V Converter-IOS.ipa" \
+            "out/V Converter-Web.zip#V Converter-Web.zip"

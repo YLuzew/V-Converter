@@ -43,7 +43,7 @@ jobs:
   image:
     name: Server image
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'VConverterCrew/V-Converter'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -69,7 +69,7 @@ jobs:
         with:
           context: server
           push: true
-          tags: ghcr.io/vconvertercrew/v-converter-server:latest
+          tags: ghcr.io/${{ github.repository_owner }}/v-converter-server:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

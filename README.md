@@ -26,7 +26,7 @@
 > - 已内置换过中文字形的 `assets/fonts/funkin.ttf`，装完能直接显示中文。
 > - 安装包名 `V-转换器`，英文系统会显示 `V-Converter`。
 > - 发现漏翻或译错，请到 [这里提 issue](https://github.com/YLuzew/V-Converter/issues)。
-> - 本分支暂不包含自建在线服务器（`server/`、`render.yaml` 已移除），要连在线功能请在设置里填服务器地址。
+> - 在线功能默认不填任何服务器地址，需要自己在设置（齿轮）里填 **服务器地址**；`server/` 的部署方式见下文 Online server。
 >
 > 上游已在 [`docs/util/CHINESE.md`](docs/util/CHINESE.md) 中把本汉化版列为官方认可的社区本地化。
 
